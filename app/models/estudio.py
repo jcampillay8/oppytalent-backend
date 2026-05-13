@@ -11,3 +11,4 @@ class Estudio(BaseModel):
     institucion: Mapped[str] = mapped_column(String(255), nullable=False)
     titulo: Mapped[str] = mapped_column(String(255), nullable=False)
     anio_obtencion: Mapped[int] = mapped_column(Integer, nullable=False)
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)

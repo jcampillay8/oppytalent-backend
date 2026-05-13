@@ -16,3 +16,4 @@ class Experiencia(BaseModel):
     periodo_fin: Mapped[date | None] = mapped_column(Date, nullable=True)
     descripcion_logros: Mapped[str] = mapped_column(Text, nullable=False)
     tags_industria: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)

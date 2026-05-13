@@ -19,3 +19,4 @@ class Proyecto(BaseModel):
     link_demo: Mapped[str | None] = mapped_column(String(500), nullable=True)
     kpis: Mapped[dict | None] = mapped_column(JSON, nullable=True, default=dict)
     tags: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)

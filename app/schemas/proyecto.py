@@ -12,6 +12,7 @@ class ProyectoBase(BaseModel):
     link_demo: str | None = None
     kpis: dict | None = None
     tags: list[str] = []
+    image_url: str | None = None
 
 
 class ProyectoCreate(ProyectoBase):
@@ -28,6 +29,7 @@ class ProyectoUpdate(BaseModel):
     link_demo: str | None = None
     kpis: dict | None = None
     tags: list[str] | None = None
+    image_url: str | None = None
 
 
 class ProyectoOut(ProyectoBase):

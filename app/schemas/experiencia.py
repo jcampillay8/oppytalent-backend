@@ -9,6 +9,7 @@ class ExperienciaBase(BaseModel):
     periodo_fin: date | None = None
     descripcion_logros: str
     tags_industria: list[str] = []
+    image_url: str | None = None
 
 
 class ExperienciaCreate(ExperienciaBase):
@@ -22,6 +23,7 @@ class ExperienciaUpdate(BaseModel):
     periodo_fin: date | None = None
     descripcion_logros: str | None = None
     tags_industria: list[str] | None = None
+    image_url: str | None = None
 
 
 class ExperienciaOut(ExperienciaBase):

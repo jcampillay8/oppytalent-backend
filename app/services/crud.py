@@ -4,6 +4,7 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import BaseModel
+from app.services.image import parse_image_url
 
 
 async def get_all(
@@ -43,6 +44,8 @@ async def get_by_id(db: AsyncSession, model: type[BaseModel], entity_id: int) ->
 
 
 async def create(db: AsyncSession, model: type[BaseModel], data: dict) -> BaseModel:
+    if "image_url" in data:
+        data["image_url"] = parse_image_url(data.get("image_url"))
     entity = model(**data)
     db.add(entity)
     await db.flush()
@@ -51,6 +54,8 @@ async def create(db: AsyncSession, model: type[BaseModel], data: dict) -> BaseMo
 
 
 async def update(db: AsyncSession, entity: BaseModel, data: dict) -> BaseModel:
+    if "image_url" in data:
+        data["image_url"] = parse_image_url(data.get("image_url"))
     for field, value in data.items():
         if value is not None:
             setattr(entity, field, value)

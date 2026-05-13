@@ -6,6 +6,7 @@ class EstudioBase(BaseModel):
     institucion: str
     titulo: str
     anio_obtencion: int
+    image_url: str | None = None
 
 
 class EstudioCreate(EstudioBase):
@@ -16,6 +17,7 @@ class EstudioUpdate(BaseModel):
     institucion: str | None = None
     titulo: str | None = None
     anio_obtencion: int | None = None
+    image_url: str | None = None
 
 
 class EstudioOut(EstudioBase):
