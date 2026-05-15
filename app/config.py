@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    database_url: str = "postgresql+asyncpg://portafolio:portafolio_secret@[::1]:5443/portafolio"
+    database_url: str = "postgresql+asyncpg://jcampillay:BTC.100K.jc@[::1]:5443/portafolio"
     redis_url: str = "redis://localhost:6379/0"
     secret_key: str = "super-secret-key-change-in-production"
     algorithm: str = "HS256"
