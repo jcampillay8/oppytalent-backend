@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     admin_username: str = "admin"
     admin_password: str = "admin123"
+    gemini_api_key: str = ""
 
     class Config:
         env_file = ".env"

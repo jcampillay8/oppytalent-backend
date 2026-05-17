@@ -6,6 +6,7 @@ from app.dependencies import get_admin_user
 from app.models.proyecto import Proyecto
 from app.schemas.proyecto import ProyectoCreate, ProyectoOut, ProyectoUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
+from app.services.json_sync import sync_all_json
 
 router = APIRouter(prefix="/proyectos", tags=["proyectos"])
 
@@ -37,7 +38,9 @@ async def create_proyecto(
     db: AsyncSession = Depends(get_db),
     _=Depends(get_admin_user),
 ):
-    return await create(db, Proyecto, body.model_dump())
+    entity = await create(db, Proyecto, body.model_dump())
+    await sync_all_json(db)
+    return entity
 
 
 @router.put("/{proyecto_id}", response_model=ProyectoOut)
@@ -50,7 +53,9 @@ async def update_proyecto(
     proyecto = await get_by_id(db, Proyecto, proyecto_id)
     if not proyecto:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Proyecto not found")
-    return await update(db, proyecto, body.model_dump(exclude_none=True))
+    entity = await update(db, proyecto, body.model_dump(exclude_none=True))
+    await sync_all_json(db)
+    return entity
 
 
 @router.delete("/{proyecto_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -63,3 +68,4 @@ async def delete_proyecto(
     if not proyecto:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Proyecto not found")
     await soft_delete(db, proyecto)
+    await sync_all_json(db)

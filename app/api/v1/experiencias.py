@@ -6,6 +6,7 @@ from app.dependencies import get_admin_user
 from app.models.experiencia import Experiencia
 from app.schemas.experiencia import ExperienciaCreate, ExperienciaOut, ExperienciaUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
+from app.services.json_sync import sync_all_json
 
 router = APIRouter(prefix="/experiencias", tags=["experiencias"])
 
@@ -37,7 +38,9 @@ async def create_experiencia(
     db: AsyncSession = Depends(get_db),
     _=Depends(get_admin_user),
 ):
-    return await create(db, Experiencia, body.model_dump())
+    entity = await create(db, Experiencia, body.model_dump())
+    await sync_all_json(db)
+    return entity
 
 
 @router.put("/{experiencia_id}", response_model=ExperienciaOut)
@@ -50,7 +53,9 @@ async def update_experiencia(
     exp = await get_by_id(db, Experiencia, experiencia_id)
     if not exp:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiencia not found")
-    return await update(db, exp, body.model_dump(exclude_none=True))
+    entity = await update(db, exp, body.model_dump(exclude_none=True))
+    await sync_all_json(db)
+    return entity
 
 
 @router.delete("/{experiencia_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -63,3 +68,4 @@ async def delete_experiencia(
     if not exp:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiencia not found")
     await soft_delete(db, exp)
+    await sync_all_json(db)

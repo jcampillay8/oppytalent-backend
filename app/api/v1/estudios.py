@@ -6,6 +6,7 @@ from app.dependencies import get_admin_user
 from app.models.estudio import Estudio
 from app.schemas.estudio import EstudioCreate, EstudioOut, EstudioUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
+from app.services.json_sync import sync_all_json
 
 router = APIRouter(prefix="/estudios", tags=["estudios"])
 
@@ -33,7 +34,9 @@ async def create_estudio(
     db: AsyncSession = Depends(get_db),
     _=Depends(get_admin_user),
 ):
-    return await create(db, Estudio, body.model_dump())
+    entity = await create(db, Estudio, body.model_dump())
+    await sync_all_json(db)
+    return entity
 
 
 @router.put("/{estudio_id}", response_model=EstudioOut)
@@ -46,7 +49,9 @@ async def update_estudio(
     estudio = await get_by_id(db, Estudio, estudio_id)
     if not estudio:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Estudio not found")
-    return await update(db, estudio, body.model_dump(exclude_none=True))
+    entity = await update(db, estudio, body.model_dump(exclude_none=True))
+    await sync_all_json(db)
+    return entity
 
 
 @router.delete("/{estudio_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -59,3 +64,4 @@ async def delete_estudio(
     if not estudio:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Estudio not found")
     await soft_delete(db, estudio)
+    await sync_all_json(db)

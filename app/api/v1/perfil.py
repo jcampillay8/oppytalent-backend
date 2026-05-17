@@ -6,6 +6,7 @@ from app.dependencies import get_admin_user
 from app.models.perfil import Perfil
 from app.schemas.perfil import PerfilCreate, PerfilOut, PerfilUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
+from app.services.json_sync import sync_all_json
 
 router = APIRouter(prefix="/perfil", tags=["perfil"])
 
@@ -29,7 +30,9 @@ async def create_perfil(
     db: AsyncSession = Depends(get_db),
     _=Depends(get_admin_user),
 ):
-    return await create(db, Perfil, body.model_dump())
+    entity = await create(db, Perfil, body.model_dump())
+    await sync_all_json(db)
+    return entity
 
 
 @router.put("/{perfil_id}", response_model=PerfilOut)
@@ -42,7 +45,9 @@ async def update_perfil(
     perfil = await get_by_id(db, Perfil, perfil_id)
     if not perfil:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Perfil not found")
-    return await update(db, perfil, body.model_dump(exclude_none=True))
+    entity = await update(db, perfil, body.model_dump(exclude_none=True))
+    await sync_all_json(db)
+    return entity
 
 
 @router.delete("/{perfil_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -55,3 +60,4 @@ async def delete_perfil(
     if not perfil:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Perfil not found")
     await soft_delete(db, perfil)
+    await sync_all_json(db)

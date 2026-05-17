@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@portafolio.local",
+    "hashed_password": "$2b$12$z0nvaXP8F2IL.iYQ44mBpOd6iEBtS0SitnHGb0ZOJjdjm3jaqt7L.",
+    "role": "ADMIN",
+    "created_at": "2026-05-15 14:37:46.025867 +00:00",
+    "updated_at": "2026-05-15 14:37:46.025867 +00:00",
+    "is_active": true
+  }
+]

@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import async_session, init_db
-from app.api.v1 import auth, proyectos, experiencias, estudios, perfil, images
+from app.api.v1 import auth, proyectos, experiencias, estudios, perfil, images, chat
 from app.services.auth import seed_admin_user
 
 
@@ -38,6 +38,7 @@ app.include_router(experiencias.router, prefix="/api/v1")
 app.include_router(estudios.router, prefix="/api/v1")
 app.include_router(perfil.router, prefix="/api/v1")
 app.include_router(images.router, prefix="/api/v1/images")
+app.include_router(chat.router, prefix="/api/v1")
 
 
 @app.get("/health")
