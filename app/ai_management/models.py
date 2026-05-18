@@ -12,7 +12,7 @@ class LLMRequestLog(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     
     user_id: Mapped[int | None] = mapped_column(
-        ForeignKey(f"{settings.DB_SCHEMA}.users.id"), 
+        ForeignKey(f"{settings.DB_SCHEMA + '.' if settings.DB_SCHEMA else ''}usuarios.id"), 
         nullable=True
     )
     
@@ -27,7 +27,7 @@ class LLMRequestLog(BaseModel):
     api_success: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    user: Mapped["User"] = relationship(back_populates="llm_requests")
+    user: Mapped["Usuario"] = relationship()
 
 
 class AIModelConfig(BaseModel):

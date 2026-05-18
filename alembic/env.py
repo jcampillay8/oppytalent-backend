@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 from app.database import Base
 from app.models import *  # noqa: F401, F403
+from app.ai_management.models import LLMRequestLog, AIModelConfig  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:
