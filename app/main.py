@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.database import async_session, init_db
+from app.database import async_session, init_db, sync_database_sequences
 from app.api.v1 import auth, proyectos, experiencias, estudios, perfil, images, chat
 from app.services.auth import seed_admin_user
 
@@ -14,6 +14,8 @@ async def lifespan(app: FastAPI):
     async with async_session() as session:
         await seed_admin_user(session)
         await session.commit()
+    # Sincronizamos secuencialmente las secuencias de base de datos en PostgreSQL
+    await sync_database_sequences()
     yield
 
 
