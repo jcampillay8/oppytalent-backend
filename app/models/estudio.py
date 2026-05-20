@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer
+from sqlalchemy import String, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import BaseModel
@@ -11,4 +11,6 @@ class Estudio(BaseModel):
     institucion: Mapped[str] = mapped_column(String(255), nullable=False)
     titulo: Mapped[str] = mapped_column(String(255), nullable=False)
     anio_obtencion: Mapped[int] = mapped_column(Integer, nullable=False)
+    descripcion_detallada: Mapped[str] = mapped_column(Text, nullable=False)
+    link: Mapped[str | None] = mapped_column(String(500), nullable=True)
     image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)

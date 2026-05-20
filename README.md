@@ -1,5 +1,4 @@
 # 🚀 Portafolio API Backend Service
-
 Este repositorio contiene el *backend* de la API para gestionar todos los datos del portafolio profesional. Está diseñado bajo una arquitectura moderna y escalable utilizando **FastAPI** en Python, con soporte asíncrono (`asyncio`), lo que garantiza un alto rendimiento al manejar múltiples peticiones simultáneamente.
 
 ## ⚙️ Visión General y Arquitectura
@@ -30,11 +29,11 @@ El sistema utiliza **Alembic** para gestionar la evolución del esquema de la ba
 
 1.  **Crear las Migraciones:** Genera los scripts necesarios para actualizar el esquema:
     ```bash
-    alembic revision --autogenerate -m "Descripción de la nueva funcionalidad"
+alembic revision --autogenerate -m "Descripción de la nueva funcionalidad"
     ```
 2.  **Aplicar Migraciones:** Ejecuta las migraciones para aplicar los cambios a la base de datos:
     ```bash
-    alembic upgrade head
+alembic upgrade head
     ```
 
 ## 📂 Estructura Modular del Código
@@ -94,4 +93,3 @@ El archivo `app/main.py` es el punto de entrada y define el ciclo de vida (lifes
 3.  **Middleware CORS:** Configura los permisos de origen (`allow_origins=["*"]`) y métodos HTTP, lo cual es vital para la comunicación entre el frontend (que puede correr en otro puerto/dominio) y el backend.
 
 ---
-*(Este README fue generado automáticamente basándose en la estructura del código fuente.)*
