@@ -10,6 +10,7 @@ class ExperienciaBase(BaseModel):
     descripcion_logros: str
     tags_industria: list[str] = []
     link: str | None = None
+    link_demo: str | None = None
     image_url: str | None = None
 
 
@@ -25,6 +26,7 @@ class ExperienciaUpdate(BaseModel):
     descripcion_logros: str | None = None
     tags_industria: list[str] | None = None
     link: str | None = None
+    link_demo: str | None = None
     image_url: str | None = None
 
 
