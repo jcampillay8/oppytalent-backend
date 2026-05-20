@@ -6,6 +6,11 @@ class PerfilBase(BaseModel):
     descripcion: str
     image_url: str | None = None
     avatar_url: str | None = None
+    telefono: str | None = None
+    email: str | None = None
+    linkedin: str | None = None
+    github: str | None = None
+    ciudad: str | None = None
 
 
 class PerfilCreate(PerfilBase):
@@ -16,6 +21,11 @@ class PerfilUpdate(BaseModel):
     descripcion: str | None = None
     image_url: str | None = None
     avatar_url: str | None = None
+    telefono: str | None = None
+    email: str | None = None
+    linkedin: str | None = None
+    github: str | None = None
+    ciudad: str | None = None
 
 
 class PerfilOut(PerfilBase):
