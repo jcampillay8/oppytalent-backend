@@ -3,5 +3,6 @@ from app.models.proyecto import Proyecto
 from app.models.experiencia import Experiencia
 from app.models.estudio import Estudio
 from app.models.perfil import Perfil
+from app.models.frase import FraseCelebre
 
-__all__ = ["Usuario", "Proyecto", "Experiencia", "Estudio", "Perfil"]
+__all__ = ["Usuario", "Proyecto", "Experiencia", "Estudio", "Perfil", "FraseCelebre"]
