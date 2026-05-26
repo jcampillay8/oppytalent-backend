@@ -11,7 +11,7 @@ class Proyecto(BaseModel):
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     titulo: Mapped[str] = mapped_column(String(255), nullable=False)
-    descripcion_corta: Mapped[str] = mapped_column(String(500), nullable=False)
+    descripcion_corta: Mapped[str] = mapped_column(Text, nullable=False)
     descripcion_detallada: Mapped[str] = mapped_column(Text, nullable=False)
     stack_tecnologico: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
     fecha_proyecto: Mapped[date] = mapped_column(Date, nullable=False)
