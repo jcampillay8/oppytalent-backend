@@ -11,6 +11,9 @@ class PerfilBase(BaseModel):
     linkedin: str | None = None
     github: str | None = None
     ciudad: str | None = None
+    youtube_url: str | None = None
+    certificaciones: list[dict] = []
+    idiomas: list[dict] = []
 
 
 class PerfilCreate(PerfilBase):
@@ -26,6 +29,9 @@ class PerfilUpdate(BaseModel):
     linkedin: str | None = None
     github: str | None = None
     ciudad: str | None = None
+    youtube_url: str | None = None
+    certificaciones: list[dict] | None = None
+    idiomas: list[dict] | None = None
 
 
 class PerfilOut(PerfilBase):

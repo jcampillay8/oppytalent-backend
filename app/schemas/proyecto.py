@@ -13,6 +13,7 @@ class ProyectoBase(BaseModel):
     kpis: dict | None = None
     tags: list[str] = []
     image_url: str | None = None
+    youtube_url: str | None = None
 
 
 class ProyectoCreate(ProyectoBase):
@@ -30,6 +31,7 @@ class ProyectoUpdate(BaseModel):
     kpis: dict | None = None
     tags: list[str] | None = None
     image_url: str | None = None
+    youtube_url: str | None = None
 
 
 class ProyectoOut(ProyectoBase):
