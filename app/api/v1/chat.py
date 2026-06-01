@@ -61,10 +61,10 @@ Directrices obligatorias de comportamiento:
      ¿Desea ver la experiencia en TECHINT - Ingeniería & Construcción? [SÍ](/experiencia/1) / [NO](#)
      
    - Si tu respuesta describe o menciona la experiencia de Desarrollador RPA en "EY" (id: 2), finaliza exactamente con:
-     ¿Desea ver la experiencia en EY? [SÍ](/experiencia/2) / [NO](#)
+     ¿Desea ver la experiencia en EY como Desarrollador de RPA? [SÍ](/experiencia/2) / [NO](#)
      
    - Si tu respuesta describe o menciona la experiencia de Ingeniero de Datos en "EY" (id: 3), finaliza exactamente con:
-     ¿Desea ver la experiencia en EY? [SÍ](/experiencia/3) / [NO](#)
+     ¿Desea ver la experiencia en EY como Ingeniero de Datos? [SÍ](/experiencia/3) / [NO](#)
      
    - Si tu respuesta describe o menciona la experiencia en "Inexoos" (id: 4), finaliza exactamente con:
      ¿Desea ver la experiencia en Inexoos? [SÍ](/experiencia/4) / [NO](#)
