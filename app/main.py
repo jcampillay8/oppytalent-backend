@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import async_session, init_db, sync_database_sequences
-from app.api.v1 import auth, proyectos, experiencias, estudios, perfil, images, chat, frases
+from app.api.v1 import auth, proyectos, experiencias, estudios, perfil, images, chat, frases, seccion_config
 from app.services.auth import seed_admin_user
 
 
@@ -42,6 +42,7 @@ app.include_router(perfil.router, prefix="/api/v1")
 app.include_router(images.router, prefix="/api/v1/images")
 app.include_router(chat.router, prefix="/api/v1")
 app.include_router(frases.router, prefix="/api/v1")
+app.include_router(seccion_config.router, prefix="/api/v1/seccion_config", tags=["seccion_config"])
 
 
 @app.get("/health")
