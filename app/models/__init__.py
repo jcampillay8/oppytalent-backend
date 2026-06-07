@@ -5,5 +5,6 @@ from app.models.estudio import Estudio
 from app.models.perfil import Perfil
 from app.models.frase import FraseCelebre
 from app.models.seccion_config import SeccionConfig
+from app.models.chat_log import ChatLog
 
-__all__ = ["Usuario", "Proyecto", "Experiencia", "Estudio", "Perfil", "FraseCelebre", "SeccionConfig"]
+__all__ = ["Usuario", "Proyecto", "Experiencia", "Estudio", "Perfil", "FraseCelebre", "SeccionConfig", "ChatLog"]

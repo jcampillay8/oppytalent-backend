@@ -1,9 +1,18 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends, Request
 from pydantic import BaseModel
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func
+from typing import List
+from datetime import datetime
 
 from app.ai_management.client import call_gemini_api
 from app.ai_management.config import DEFAULT_MODEL, GEMINI_PRICING
 from app.services.json_sync import load_json_context
+from app.database import get_db
+from app.models.chat_log import ChatLog
+from app.dependencies import get_admin_user
+from app.models.usuario import Usuario
+from app.services.rate_limit import check_rate_limit
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -26,6 +35,14 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     content: str
+
+
+class ChatLogResponse(BaseModel):
+    id: int
+    ip_address: str | None
+    user_message: str
+    ai_response: str
+    created_at: datetime
 
 
 SYSTEM_PROMPT_TEMPLATE = """Eres el asistente virtual del portafolio profesional de Jaime Gabriel Campillay Rojas. Tu objetivo es responder preguntas de reclutadores, Tech Leads y gerentes basándote estrictamente en los JSON de su portafolio. Tu meta no es solo informar, sino defender y vender su perfil de forma profesional, técnica y ejecutiva, destacando sus KPIs de rendimiento y decisiones de arquitectura.
@@ -85,15 +102,25 @@ Responde SOLO con información que esté en estos datos. Sé directo, técnico, 
 
 
 @router.post("/", response_model=ChatResponse)
-async def chat(request: ChatRequest):
-    if not request.messages:
+async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depends(get_db)):
+    if not payload.messages:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No messages provided")
+
+    # Extract IP address early for rate limiting
+    ip_address = request.headers.get("X-Forwarded-For")
+    if not ip_address:
+        ip_address = request.client.host if request.client else "unknown"
+    else:
+        ip_address = ip_address.split(",")[0].strip()
+
+    # Check rate limit (e.g. max 5 requests per 60 seconds)
+    await check_rate_limit(ip_address, max_requests=5, window_seconds=60)
 
     context = load_json_context()
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(context=context)
 
     user_lines = []
-    for m in request.messages:
+    for m in payload.messages:
         prefix = "Usuario" if m.role == "user" else "Asistente"
         user_lines.append(f"{prefix}: {m.content}")
     user_prompt = "\n".join(user_lines)
@@ -108,4 +135,51 @@ async def chat(request: ChatRequest):
         expect_json=False,
     )
 
+    # Extract last user message
+    last_user_msg = "No message"
+    for msg in reversed(payload.messages):
+        if msg.role == "user":
+            last_user_msg = msg.content
+            break
+
+    # Save to database
+    chat_log = ChatLog(
+        ip_address=ip_address,
+        user_message=last_user_msg,
+        ai_response=ai_res.content
+    )
+    db.add(chat_log)
+    await db.commit()
+
     return ChatResponse(content=ai_res.content)
+
+
+@router.get("/logs", response_model=List[ChatLogResponse])
+async def get_chat_logs(
+    limit: int = 100, 
+    db: AsyncSession = Depends(get_db), 
+    current_user: Usuario = Depends(get_admin_user)
+):
+    result = await db.execute(select(ChatLog).order_by(ChatLog.created_at.desc()).limit(limit))
+    logs = result.scalars().all()
+    return logs
+
+
+@router.get("/stats")
+async def get_chat_stats(
+    db: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_admin_user)
+):
+    # Get the count of interactions per day for the last 30 days
+    query = (
+        select(
+            func.date(ChatLog.created_at).label('date'),
+            func.count(ChatLog.id).label('count')
+        )
+        .group_by(func.date(ChatLog.created_at))
+        .order_by(func.date(ChatLog.created_at).asc())
+        .limit(30)
+    )
+    result = await db.execute(query)
+    stats = [{"date": str(row.date), "count": row.count} for row in result.all()]
+    return stats

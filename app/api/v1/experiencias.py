@@ -7,6 +7,7 @@ from app.models.experiencia import Experiencia
 from app.schemas.experiencia import ExperienciaCreate, ExperienciaOut, ExperienciaUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
 from app.services.json_sync import sync_all_json
+from app.services.cache import get_cached_json, set_cached_json, clear_cache_namespace
 
 router = APIRouter(prefix="/experiencias", tags=["experiencias"])
 
@@ -18,17 +19,31 @@ async def list_experiencias(
     tag: str | None = None,
     db: AsyncSession = Depends(get_db),
 ):
+    cache_key = f"api:experiencias:all:{skip}:{limit}:{tag}"
+    cached_data = await get_cached_json(cache_key)
+    if cached_data is not None:
+        return cached_data
+
     filters = None
     if tag:
         filters = {"tags_industria": [tag]}
-    return await get_all(db, Experiencia, skip=skip, limit=limit, filters=filters)
+    data = await get_all(db, Experiencia, skip=skip, limit=limit, filters=filters)
+    await set_cached_json(cache_key, data)
+    return data
 
 
 @router.get("/{experiencia_id}", response_model=ExperienciaOut)
 async def get_experiencia(experiencia_id: int, db: AsyncSession = Depends(get_db)):
+    cache_key = f"api:experiencias:{experiencia_id}"
+    cached_data = await get_cached_json(cache_key)
+    if cached_data is not None:
+        return cached_data
+
     exp = await get_by_id(db, Experiencia, experiencia_id)
     if not exp:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiencia not found")
+    
+    await set_cached_json(cache_key, exp)
     return exp
 
 
@@ -40,6 +55,7 @@ async def create_experiencia(
 ):
     entity = await create(db, Experiencia, body.model_dump())
     await sync_all_json(db)
+    await clear_cache_namespace("api:experiencias")
     return entity
 
 
@@ -55,6 +71,7 @@ async def update_experiencia(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiencia not found")
     entity = await update(db, exp, body.model_dump(exclude_none=True))
     await sync_all_json(db)
+    await clear_cache_namespace("api:experiencias")
     return entity
 
 
@@ -69,3 +86,4 @@ async def delete_experiencia(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiencia not found")
     await soft_delete(db, exp)
     await sync_all_json(db)
+    await clear_cache_namespace("api:experiencias")
