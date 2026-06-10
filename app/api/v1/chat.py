@@ -40,6 +40,9 @@ class ChatResponse(BaseModel):
 class ChatLogResponse(BaseModel):
     id: int
     ip_address: str | None
+    city: str | None = None
+    region: str | None = None
+    country: str | None = None
     user_message: str
     ai_response: str
     created_at: datetime
@@ -107,11 +110,16 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No messages provided")
 
     # Extract IP address early for rate limiting
-    ip_address = request.headers.get("X-Forwarded-For")
+    # 1. Try custom header from frontend Nginx
+    ip_address = request.headers.get("X-Original-IP")
     if not ip_address:
-        ip_address = request.client.host if request.client else "unknown"
-    else:
-        ip_address = ip_address.split(",")[0].strip()
+        # 2. Try standard Railway/Cloudflare header
+        ip_address = request.headers.get("X-Forwarded-For")
+        if not ip_address:
+            ip_address = request.client.host if request.client else "unknown"
+    
+    # In case of multiple IPs, take the first one (original client)
+    ip_address = ip_address.split(",")[0].strip()
 
     # Check rate limit (e.g. max 5 requests per 60 seconds)
     await check_rate_limit(ip_address, max_requests=5, window_seconds=60)
@@ -142,9 +150,27 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
             last_user_msg = msg.content
             break
 
+    # Fetch location info from ipinfo.io
+    city, region, country = None, None, None
+    if ip_address and ip_address != "unknown" and ip_address != "127.0.0.1":
+        try:
+            import httpx
+            async with httpx.AsyncClient(timeout=3.0) as client:
+                res = await client.get(f"https://ipinfo.io/{ip_address}/json")
+                if res.status_code == 200:
+                    data = res.json()
+                    city = data.get("city")
+                    region = data.get("region")
+                    country = data.get("country")
+        except Exception:
+            pass # Ignore errors fetching IP info so chat still works
+
     # Save to database
     chat_log = ChatLog(
         ip_address=ip_address,
+        city=city,
+        region=region,
+        country=country,
         user_message=last_user_msg,
         ai_response=ai_res.content
     )

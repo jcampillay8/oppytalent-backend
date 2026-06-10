@@ -7,6 +7,9 @@ class ChatLog(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     ip_address = Column(String(50), nullable=True, index=True)
+    city = Column(String(100), nullable=True)
+    region = Column(String(100), nullable=True)
+    country = Column(String(50), nullable=True)
     user_message = Column(Text, nullable=False)
     ai_response = Column(Text, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
