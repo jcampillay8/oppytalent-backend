@@ -45,6 +45,7 @@ async def sync_all_json(db: AsyncSession | None = None):
 
 
 async def _sync_with_session(db: AsyncSession, models: dict):
+    os.makedirs(JSON_DIR, exist_ok=True)
     for filename, model in models.items():
         result = await db.execute(select(model).where(model.is_active == True))
         rows = result.scalars().all()

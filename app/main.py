@@ -8,6 +8,9 @@ from app.api.v1 import auth, proyectos, experiencias, estudios, perfil, images, 
 from app.services.auth import seed_admin_user
 
 
+from app.services.json_sync import sync_all_json
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
@@ -16,6 +19,8 @@ async def lifespan(app: FastAPI):
         await session.commit()
     # Sincronizamos secuencialmente las secuencias de base de datos en PostgreSQL
     await sync_database_sequences()
+    # Sincronizamos los archivos JSON para la IA con el estado actual de la BD
+    await sync_all_json()
     yield
 
 
