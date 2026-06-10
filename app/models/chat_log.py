@@ -12,4 +12,5 @@ class ChatLog(Base):
     country = Column(String(50), nullable=True)
     user_message = Column(Text, nullable=False)
     ai_response = Column(Text, nullable=False)
+    clicked_link = Column(String(255), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

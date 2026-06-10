@@ -35,6 +35,7 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     content: str
+    log_id: int
 
 
 class ChatLogResponse(BaseModel):
@@ -45,6 +46,7 @@ class ChatLogResponse(BaseModel):
     country: str | None = None
     user_message: str
     ai_response: str
+    clicked_link: str | None = None
     created_at: datetime
 
 
@@ -176,8 +178,23 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
     )
     db.add(chat_log)
     await db.commit()
+    await db.refresh(chat_log)
 
-    return ChatResponse(content=ai_res.content)
+    return ChatResponse(content=ai_res.content, log_id=chat_log.id)
+
+class ChatClickRequest(BaseModel):
+    clicked_link: str
+
+@router.patch("/{log_id}/click")
+async def register_click(log_id: int, payload: ChatClickRequest, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(ChatLog).where(ChatLog.id == log_id))
+    chat_log = result.scalar_one_or_none()
+    if not chat_log:
+        raise HTTPException(status_code=404, detail="Chat log not found")
+    
+    chat_log.clicked_link = payload.clicked_link
+    await db.commit()
+    return {"status": "success"}
 
 
 @router.get("/logs", response_model=List[ChatLogResponse])
