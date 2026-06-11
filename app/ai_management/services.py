@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 async def ask_oppy_ai(
     db: AsyncSession,
     messages: List[Dict[str, str]],
-    user_id: int,
     caller: str,
+    user_id: Optional[int] = None,
     model_name: Optional[str] = None,
     expect_json: bool = False,
     retries: int = 2,

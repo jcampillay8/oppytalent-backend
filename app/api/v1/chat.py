@@ -5,8 +5,8 @@ from sqlalchemy import select, func
 from typing import List
 from datetime import datetime
 
-from app.ai_management.client import call_gemini_api
-from app.ai_management.config import DEFAULT_MODEL, GEMINI_PRICING
+from app.ai_management.services import ask_oppy_ai
+from app.ai_management.config import DEFAULT_MODEL
 from app.services.json_sync import load_json_context
 from app.database import get_db
 from app.models.chat_log import ChatLog
@@ -17,11 +17,7 @@ from app.services.rate_limit import check_rate_limit
 router = APIRouter(prefix="/chat", tags=["chat"])
 
 
-class SimpleModelCfg:
-    def __init__(self, model_name: str):
-        self.model_name = model_name
-        self.input_price_per_million = GEMINI_PRICING.get(model_name, {}).get("input_price_per_million", 0)
-        self.output_price_per_million = GEMINI_PRICING.get(model_name, {}).get("output_price_per_million", 0)
+
 
 
 class ChatMessage(BaseModel):
@@ -129,20 +125,18 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
     context = load_json_context()
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(context=context)
 
-    user_lines = []
+    messages_for_ai = [{"role": "system", "content": system_prompt}]
     for m in payload.messages:
-        prefix = "Usuario" if m.role == "user" else "Asistente"
-        user_lines.append(f"{prefix}: {m.content}")
-    user_prompt = "\n".join(user_lines)
+        role = "user" if m.role == "user" else "assistant"
+        messages_for_ai.append({"role": role, "content": m.content})
 
-    model_cfg = SimpleModelCfg(DEFAULT_MODEL)
-
-    ai_res = await call_gemini_api(
-        system_instruction=system_prompt,
-        user_prompt=user_prompt,
-        model_cfg=model_cfg,
+    ai_res_content = await ask_oppy_ai(
+        db=db,
+        messages=messages_for_ai,
+        caller="portafolio_chat",
+        model_name=DEFAULT_MODEL,
         temperature=0.7,
-        expect_json=False,
+        expect_json=False
     )
 
     # Extract last user message
@@ -174,13 +168,13 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
         region=region,
         country=country,
         user_message=last_user_msg,
-        ai_response=ai_res.content
+        ai_response=ai_res_content
     )
     db.add(chat_log)
     await db.commit()
     await db.refresh(chat_log)
 
-    return ChatResponse(content=ai_res.content, log_id=chat_log.id)
+    return ChatResponse(content=ai_res_content, log_id=chat_log.id)
 
 class ChatClickRequest(BaseModel):
     clicked_link: str
