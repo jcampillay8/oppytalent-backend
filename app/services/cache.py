@@ -18,16 +18,12 @@ async def get_cached_json(key: str):
         pass
     return None
 
+from fastapi.encoders import jsonable_encoder
+
 async def set_cached_json(key: str, data: any, ttl: int = 3600):
     """Serializes and stores data in Redis."""
     try:
-        if isinstance(data, list):
-            serialized = [item.model_dump() if hasattr(item, "model_dump") else item for item in data]
-        elif hasattr(data, "model_dump"):
-            serialized = data.model_dump()
-        else:
-            serialized = data
-            
+        serialized = jsonable_encoder(data)
         json_str = json.dumps(serialized, cls=CustomJSONEncoder)
         await redis_client.setex(key, ttl, json_str)
     except Exception as e:

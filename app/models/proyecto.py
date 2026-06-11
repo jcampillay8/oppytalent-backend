@@ -1,7 +1,7 @@
 from datetime import date
-from sqlalchemy import String, Text, Date
+from sqlalchemy import String, Text, Date, ForeignKey
 from sqlalchemy.types import JSON
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import BaseModel
 
@@ -21,3 +21,23 @@ class Proyecto(BaseModel):
     tags: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
     image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     youtube_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+
+    traducciones: Mapped[list["ProyectoTraduccion"]] = relationship("ProyectoTraduccion", back_populates="proyecto", cascade="all, delete-orphan", lazy="selectin")
+
+
+class ProyectoTraduccion(BaseModel):
+    __tablename__ = "proyecto_traducciones"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    proyecto_id: Mapped[int] = mapped_column(ForeignKey("proyectos.id", ondelete="CASCADE"), nullable=False, index=True)
+    idioma: Mapped[str] = mapped_column(String(5), nullable=False, index=True) # ej: 'en', 'es'
+    
+    # Campos traducibles
+    titulo: Mapped[str] = mapped_column(String(255), nullable=False)
+    descripcion_corta: Mapped[str] = mapped_column(Text, nullable=False)
+    descripcion_detallada: Mapped[str] = mapped_column(Text, nullable=False)
+    stack_tecnologico: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
+    kpis: Mapped[dict | None] = mapped_column(JSON, nullable=True, default=dict)
+    tags: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
+
+    proyecto: Mapped["Proyecto"] = relationship("Proyecto", back_populates="traducciones")

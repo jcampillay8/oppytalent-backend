@@ -2,6 +2,20 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
+class EstudioTraduccionBase(BaseModel):
+    idioma: str
+    titulo: str
+    descripcion_detallada: str
+
+class EstudioTraduccionCreate(EstudioTraduccionBase):
+    pass
+
+class EstudioTraduccionOut(EstudioTraduccionBase):
+    id: int
+    estudio_id: int
+
+    model_config = {"from_attributes": True}
+
 class EstudioBase(BaseModel):
     institucion: str
     titulo: str
@@ -12,7 +26,7 @@ class EstudioBase(BaseModel):
 
 
 class EstudioCreate(EstudioBase):
-    pass
+    traducciones: list[EstudioTraduccionCreate] = []
 
 
 class EstudioUpdate(BaseModel):
@@ -22,6 +36,7 @@ class EstudioUpdate(BaseModel):
     descripcion_detallada: str | None = None
     link: str | None = None
     image_url: str | None = None
+    traducciones: list[EstudioTraduccionCreate] | None = None
 
 
 class EstudioOut(EstudioBase):
@@ -29,5 +44,6 @@ class EstudioOut(EstudioBase):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+    traducciones: list[EstudioTraduccionOut] = []
 
     model_config = {"from_attributes": True}

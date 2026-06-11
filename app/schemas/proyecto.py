@@ -2,6 +2,24 @@ from datetime import date, datetime
 from pydantic import BaseModel
 
 
+class ProyectoTraduccionBase(BaseModel):
+    idioma: str
+    titulo: str
+    descripcion_corta: str
+    descripcion_detallada: str
+    stack_tecnologico: list[str] = []
+    kpis: dict | None = None
+    tags: list[str] = []
+
+class ProyectoTraduccionCreate(ProyectoTraduccionBase):
+    pass
+
+class ProyectoTraduccionOut(ProyectoTraduccionBase):
+    id: int
+    proyecto_id: int
+
+    model_config = {"from_attributes": True}
+
 class ProyectoBase(BaseModel):
     titulo: str
     descripcion_corta: str
@@ -17,7 +35,7 @@ class ProyectoBase(BaseModel):
 
 
 class ProyectoCreate(ProyectoBase):
-    pass
+    traducciones: list[ProyectoTraduccionCreate] = []
 
 
 class ProyectoUpdate(BaseModel):
@@ -32,6 +50,7 @@ class ProyectoUpdate(BaseModel):
     tags: list[str] | None = None
     image_url: str | None = None
     youtube_url: str | None = None
+    traducciones: list[ProyectoTraduccionCreate] | None = None
 
 
 class ProyectoOut(ProyectoBase):
@@ -39,5 +58,6 @@ class ProyectoOut(ProyectoBase):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+    traducciones: list[ProyectoTraduccionOut] = []
 
     model_config = {"from_attributes": True}

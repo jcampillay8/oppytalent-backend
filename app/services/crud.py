@@ -44,10 +44,17 @@ async def get_by_id(db: AsyncSession, model: type[BaseModel], entity_id: int) ->
 
 
 async def create(db: AsyncSession, model: type[BaseModel], data: dict) -> BaseModel:
+    traducciones_data = data.pop("traducciones", None)
+    
     for key in ("image_url", "avatar_url"):
         if key in data:
             data[key] = parse_image_url(data.get(key))
     entity = model(**data)
+    
+    if traducciones_data is not None and hasattr(model, 'traducciones'):
+        TranslationModel = model.traducciones.property.mapper.class_
+        entity.traducciones = [TranslationModel(**t) for t in traducciones_data]
+        
     db.add(entity)
     await db.flush()
     await db.refresh(entity)
@@ -55,12 +62,20 @@ async def create(db: AsyncSession, model: type[BaseModel], data: dict) -> BaseMo
 
 
 async def update(db: AsyncSession, entity: BaseModel, data: dict) -> BaseModel:
+    traducciones_data = data.pop("traducciones", None)
+    
     for key in ("image_url", "avatar_url"):
         if key in data:
             data[key] = parse_image_url(data.get(key))
     for field, value in data.items():
         if value is not None:
             setattr(entity, field, value)
+            
+    if traducciones_data is not None and hasattr(entity, 'traducciones'):
+        model = type(entity)
+        TranslationModel = model.traducciones.property.mapper.class_
+        entity.traducciones = [TranslationModel(**t) for t in traducciones_data]
+        
     await db.flush()
     await db.refresh(entity)
     return entity

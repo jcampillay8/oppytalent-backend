@@ -2,6 +2,19 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
+class PerfilTraduccionBase(BaseModel):
+    idioma: str
+    descripcion: str
+
+class PerfilTraduccionCreate(PerfilTraduccionBase):
+    pass
+
+class PerfilTraduccionOut(PerfilTraduccionBase):
+    id: int
+    perfil_id: int
+
+    model_config = {"from_attributes": True}
+
 class PerfilBase(BaseModel):
     descripcion: str
     image_url: str | None = None
@@ -17,7 +30,7 @@ class PerfilBase(BaseModel):
 
 
 class PerfilCreate(PerfilBase):
-    pass
+    traducciones: list[PerfilTraduccionCreate] = []
 
 
 class PerfilUpdate(BaseModel):
@@ -32,6 +45,7 @@ class PerfilUpdate(BaseModel):
     youtube_url: str | None = None
     certificaciones: list[dict] | None = None
     idiomas: list[dict] | None = None
+    traducciones: list[PerfilTraduccionCreate] | None = None
 
 
 class PerfilOut(PerfilBase):
@@ -39,5 +53,6 @@ class PerfilOut(PerfilBase):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+    traducciones: list[PerfilTraduccionOut] = []
 
     model_config = {"from_attributes": True}
