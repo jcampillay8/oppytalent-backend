@@ -1,1 +1,58 @@
-[]
+[
+  {
+    "id": 1,
+    "titulo": "Ecosistema de Representación Virtual Autónomo (Portafolio Inteligente)",
+    "descripcion_corta": "Plataforma interactiva construida con un backend asíncrono en FastAPI (Python) y base de datos PostgreSQL, integrada con agentes de IA autónomos con persistencia de memoria para interactuar y responder consultas ejecutivas y métricas de trayectoria profesional en tiempo real. Despliegue automatizado contenerizado en Railway acoplado a la capa de seguridad, optimización y administración DNS global de Cloudflare.",
+    "descripcion_detallada": "Plataforma interactiva construida con un backend asíncrono en FastAPI (Python) y base de datos PostgreSQL, integrada con agentes de IA autónomos con persistencia de memoria para interactuar y responder consultas ejecutivas y métricas de trayectoria profesional en tiempo real. Despliegue automatizado contenerizado en Railway acoplado a la capa de seguridad, optimización y administración DNS global de Cloudflare.",
+    "stack_tecnologico": [
+      "FastAPI",
+      "Python",
+      "PostgreSQL",
+      "IA",
+      "Railway",
+      "Cloudflare"
+    ],
+    "fecha_proyecto": "2026-06-12",
+    "link_github": null,
+    "link_demo": null,
+    "kpis": null,
+    "tags": [
+      "FastAPI",
+      "Python",
+      "PostgreSQL",
+      "IA",
+      "Railway",
+      "Cloudflare"
+    ],
+    "image_url": null,
+    "youtube_url": null,
+    "created_at": "2026-06-12T21:46:11.190640+00:00",
+    "updated_at": "2026-06-12T21:46:11.190640+00:00",
+    "is_active": true
+  },
+  {
+    "id": 2,
+    "titulo": "Plataforma de Analítica Industrial y Confiabilidad Predictiva",
+    "descripcion_corta": "Ingesta, limpieza y transformación de alta velocidad para un dataset de telemetría industrial de +870k registros utilizando Polars y Python. Automatización del cálculo de indicadores críticos de mantenimiento (MTBF, MTTR) acoplado a diagnósticos generativos dinámicos interpretados por modelos LLM.",
+    "descripcion_detallada": "Ingesta, limpieza y transformación de alta velocidad para un dataset de telemetría industrial de +870k registros utilizando Polars y Python. Automatización del cálculo de indicadores críticos de mantenimiento (MTBF, MTTR) acoplado a diagnósticos generativos dinámicos interpretados por modelos LLM.",
+    "stack_tecnologico": [
+      "Polars",
+      "Python",
+      "LLM"
+    ],
+    "fecha_proyecto": "2026-06-12",
+    "link_github": null,
+    "link_demo": null,
+    "kpis": null,
+    "tags": [
+      "Polars",
+      "Python",
+      "LLM"
+    ],
+    "image_url": null,
+    "youtube_url": null,
+    "created_at": "2026-06-12T21:46:13.342734+00:00",
+    "updated_at": "2026-06-12T21:46:13.342734+00:00",
+    "is_active": true
+  }
+]

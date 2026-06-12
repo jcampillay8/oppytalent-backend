@@ -18,24 +18,6 @@
     "is_active": true
   },
   {
-    "id": 2,
-    "username": "jcampillayworks@gmail.com",
-    "email": "jcampillayworks@gmail.com",
-    "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$pDTGuPce49xbK0VISal1bg$WF9kIN+jjozWl4Hywu6gFVo7kv/Sm7ZiwmHEVmDMxVY",
-    "role": "VIEWER",
-    "first_name": "Jaime",
-    "last_name": "Campillay",
-    "user_image": null,
-    "is_deleted": false,
-    "has_accepted_terms": false,
-    "last_login": "2026-06-12T19:20:32.954127+00:00",
-    "failed_login_attempts": 0,
-    "locked_until": null,
-    "created_at": "2026-06-12T16:02:13.824292+00:00",
-    "updated_at": "2026-06-12T19:20:32.953481+00:00",
-    "is_active": true
-  },
-  {
     "id": 3,
     "username": "oppychat",
     "email": "oppychat@gmail.com",
@@ -51,6 +33,42 @@
     "locked_until": null,
     "created_at": "2026-06-12T20:01:17.637652+00:00",
     "updated_at": "2026-06-12T20:01:17.637652+00:00",
+    "is_active": true
+  },
+  {
+    "id": 4,
+    "username": "jgcampill@gmail.com",
+    "email": "jgcampill@gmail.com",
+    "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$8h4jhLBWSolxrnWOsVaqFQ$79VniwqrA8g15c9ajl/VwF+WNkC5KaCheiNcKwNs1X0",
+    "role": "VIEWER",
+    "first_name": null,
+    "last_name": null,
+    "user_image": null,
+    "is_deleted": false,
+    "has_accepted_terms": false,
+    "last_login": "2026-06-12T20:13:39.288547+00:00",
+    "failed_login_attempts": 0,
+    "locked_until": null,
+    "created_at": "2026-06-12T20:08:28.888017+00:00",
+    "updated_at": "2026-06-12T20:13:39.287763+00:00",
+    "is_active": true
+  },
+  {
+    "id": 2,
+    "username": "jcampillayworks@gmail.com",
+    "email": "jcampillayworks@gmail.com",
+    "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$pDTGuPce49xbK0VISal1bg$WF9kIN+jjozWl4Hywu6gFVo7kv/Sm7ZiwmHEVmDMxVY",
+    "role": "VIEWER",
+    "first_name": "Jaime",
+    "last_name": "Campillay",
+    "user_image": null,
+    "is_deleted": false,
+    "has_accepted_terms": false,
+    "last_login": "2026-06-12T21:40:40.376235+00:00",
+    "failed_login_attempts": 0,
+    "locked_until": null,
+    "created_at": "2026-06-12T16:02:13.824292+00:00",
+    "updated_at": "2026-06-12T21:40:40.375542+00:00",
     "is_active": true
   }
 ]

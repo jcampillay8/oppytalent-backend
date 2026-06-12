@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.dependencies import get_admin_user
+from app.dependencies import get_current_user
 from app.models.experiencia import Experiencia
 from app.schemas.experiencia import ExperienciaCreate, ExperienciaOut, ExperienciaUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
@@ -51,7 +51,7 @@ async def get_experiencia(experiencia_id: int, db: AsyncSession = Depends(get_db
 async def create_experiencia(
     body: ExperienciaCreate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     entity = await create(db, Experiencia, body.model_dump())
     await sync_all_json(db)
@@ -64,7 +64,7 @@ async def update_experiencia(
     experiencia_id: int,
     body: ExperienciaUpdate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     exp = await get_by_id(db, Experiencia, experiencia_id)
     if not exp:
@@ -79,7 +79,7 @@ async def update_experiencia(
 async def delete_experiencia(
     experiencia_id: int,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     exp = await get_by_id(db, Experiencia, experiencia_id)
     if not exp:

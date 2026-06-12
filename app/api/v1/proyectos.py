@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.dependencies import get_admin_user
+from app.dependencies import get_current_user
 from app.models.proyecto import Proyecto
 from app.schemas.proyecto import ProyectoCreate, ProyectoOut, ProyectoUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
@@ -51,7 +51,7 @@ async def get_proyecto(proyecto_id: int, db: AsyncSession = Depends(get_db)):
 async def create_proyecto(
     body: ProyectoCreate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     entity = await create(db, Proyecto, body.model_dump())
     await sync_all_json(db)
@@ -64,7 +64,7 @@ async def update_proyecto(
     proyecto_id: int,
     body: ProyectoUpdate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     proyecto = await get_by_id(db, Proyecto, proyecto_id)
     if not proyecto:
@@ -79,7 +79,7 @@ async def update_proyecto(
 async def delete_proyecto(
     proyecto_id: int,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     proyecto = await get_by_id(db, Proyecto, proyecto_id)
     if not proyecto:

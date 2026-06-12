@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.dependencies import get_admin_user
+from app.dependencies import get_current_user
 from app.models.perfil import Perfil
 from app.schemas.perfil import PerfilCreate, PerfilOut, PerfilUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
@@ -28,7 +28,7 @@ async def get_perfil(perfil_id: int, db: AsyncSession = Depends(get_db)):
 async def create_perfil(
     body: PerfilCreate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     entity = await create(db, Perfil, body.model_dump())
     await sync_all_json(db)
@@ -40,7 +40,7 @@ async def update_perfil(
     perfil_id: int,
     body: PerfilUpdate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     perfil = await get_by_id(db, Perfil, perfil_id)
     if not perfil:
@@ -54,7 +54,7 @@ async def update_perfil(
 async def delete_perfil(
     perfil_id: int,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     perfil = await get_by_id(db, Perfil, perfil_id)
     if not perfil:

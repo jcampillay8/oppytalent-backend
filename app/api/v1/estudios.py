@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.dependencies import get_admin_user
+from app.dependencies import get_current_user
 from app.models.estudio import Estudio
 from app.schemas.estudio import EstudioCreate, EstudioOut, EstudioUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
@@ -32,7 +32,7 @@ async def get_estudio(estudio_id: int, db: AsyncSession = Depends(get_db)):
 async def create_estudio(
     body: EstudioCreate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     entity = await create(db, Estudio, body.model_dump())
     await sync_all_json(db)
@@ -44,7 +44,7 @@ async def update_estudio(
     estudio_id: int,
     body: EstudioUpdate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     estudio = await get_by_id(db, Estudio, estudio_id)
     if not estudio:
@@ -58,7 +58,7 @@ async def update_estudio(
 async def delete_estudio(
     estudio_id: int,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user),
+    _=Depends(get_current_user),
 ):
     estudio = await get_by_id(db, Estudio, estudio_id)
     if not estudio:
