@@ -59,9 +59,9 @@ async def login(
     if not user:
         raise HTTPException(status_code=401, detail="Credenciales incorrectas")
         
-    # 2. Generación de Tokens (Inyectando el schema_name para ruteo en el middleware)
-    access_token = create_access_token(user.email, schema_name=user.schema_name)
-    refresh_token = create_refresh_token(user.email, schema_name=user.schema_name)
+    # 2. Generación de Tokens (Sin schema_name ya que es single-tenant)
+    access_token = create_access_token(user.email)
+    refresh_token = create_refresh_token(user.email)
     
     # 3. Registro en DB (Fundamental para la seguridad)
     refresh_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)

@@ -28,11 +28,11 @@ class UsuarioPublicSchema(BaseModel):
     )
 
     id: int
-    user_guid: UUID4 = Field(..., alias="guid") 
+    user_guid: Optional[UUID4] = Field(None, alias="guid") 
     username: str
     email: str
-    first_name: str = Field(..., alias="firstName")
-    last_name: str = Field(..., alias="lastName")
+    first_name: Optional[str] = Field(None, alias="firstName")
+    last_name: Optional[str] = Field(None, alias="lastName")
     user_image: Optional[str] = Field(None, alias="userImage")
     occupation: Optional[str] = Field(None, alias="occupation")
     nombre_visible: Optional[str] = Field(None, alias="nombreVisible")
