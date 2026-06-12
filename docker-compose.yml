@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: portafolio-db
+    container_name: oppytalent-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -19,7 +19,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: portafolio-redis
+    container_name: oppytalent-redis
     restart: unless-stopped
     ports:
       - "6379:6379"
@@ -33,7 +33,7 @@ services:
     build:
       context: . # Cambio clave: ahora el contexto es la misma carpeta del backend
       dockerfile: Dockerfile
-    container_name: portafolio-api
+    container_name: oppytalent-api
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -45,6 +45,8 @@ services:
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
       ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - .:/app
     depends_on:
       postgres:
         condition: service_healthy

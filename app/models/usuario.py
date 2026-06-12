@@ -1,5 +1,10 @@
-from sqlalchemy import String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Text, Boolean, DateTime, Integer
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import datetime
+from typing import TYPE_CHECKING, List
+
+if TYPE_CHECKING:
+    from app.authentication.models import UsuarioSessionHistory, PasswordResetToken, RefreshToken, EmailConfirmationToken
 
 from app.database import BaseModel
 
@@ -12,3 +17,18 @@ class Usuario(BaseModel):
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(Text, nullable=False)
     role: Mapped[str] = mapped_column(String(20), default="VIEWER", nullable=False)
+    
+    first_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    last_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    user_image: Mapped[str | None] = mapped_column(String(1048), nullable=True)
+    is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    has_accepted_terms: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    
+    last_login: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    failed_login_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    
+    session_history: Mapped[List["UsuarioSessionHistory"]] = relationship("UsuarioSessionHistory", back_populates="user")
+    password_reset_tokens: Mapped[List["PasswordResetToken"]] = relationship("PasswordResetToken", back_populates="user")
+    refresh_tokens: Mapped[List["RefreshToken"]] = relationship("RefreshToken", back_populates="user")
+    email_confirmation_tokens: Mapped[List["EmailConfirmationToken"]] = relationship("EmailConfirmationToken", back_populates="user")

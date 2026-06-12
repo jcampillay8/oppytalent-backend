@@ -1,8 +1,8 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Boolean, func, text
+from sqlalchemy import DateTime, Boolean, func, text, MetaData
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncAttrs
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, registry
 
 from app.config import settings
 
@@ -10,8 +10,11 @@ engine = create_async_engine(settings.database_url, echo=False)
 async_session = async_sessionmaker(engine, expire_on_commit=False)
 
 
+target_metadata = MetaData(schema=settings.DB_SCHEMA) if settings.DB_SCHEMA else MetaData()
+mapper_registry = registry(metadata=target_metadata)
+
 class Base(DeclarativeBase, AsyncAttrs):
-    pass
+    registry = mapper_registry
 
 
 class BaseModel(Base):

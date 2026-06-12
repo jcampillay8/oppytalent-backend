@@ -1,12 +1,38 @@
 [
   {
     "id": 1,
-    "username": "admin",
-    "email": "admin@portafolio.local",
-    "hashed_password": "$2b$12$z0nvaXP8F2IL.iYQ44mBpOd6iEBtS0SitnHGb0ZOJjdjm3jaqt7L.",
+    "username": "jcampillay",
+    "email": "jcampillay@portafolio.local",
+    "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$4RwDQMj5X+u9NyaEcE7pfQ$y8zjtb0skAwO227R4rl2bfdnAsD6tBWoZimn32zr5p8",
     "role": "ADMIN",
-    "created_at": "2026-05-15 14:37:46.025867 +00:00",
-    "updated_at": "2026-05-15 14:37:46.025867 +00:00",
+    "first_name": null,
+    "last_name": null,
+    "user_image": null,
+    "is_deleted": false,
+    "has_accepted_terms": false,
+    "last_login": null,
+    "failed_login_attempts": 0,
+    "locked_until": null,
+    "created_at": "2026-06-11T23:02:11.317961+00:00",
+    "updated_at": "2026-06-11T23:02:11.317961+00:00",
+    "is_active": true
+  },
+  {
+    "id": 2,
+    "username": "jcampillayworks@gmail.com",
+    "email": "jcampillayworks@gmail.com",
+    "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$pDTGuPce49xbK0VISal1bg$WF9kIN+jjozWl4Hywu6gFVo7kv/Sm7ZiwmHEVmDMxVY",
+    "role": "VIEWER",
+    "first_name": null,
+    "last_name": null,
+    "user_image": null,
+    "is_deleted": false,
+    "has_accepted_terms": false,
+    "last_login": null,
+    "failed_login_attempts": 0,
+    "locked_until": null,
+    "created_at": "2026-06-12T16:02:13.824292+00:00",
+    "updated_at": "2026-06-12T16:02:13.824292+00:00",
     "is_active": true
   }
 ]

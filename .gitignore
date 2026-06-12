@@ -6,9 +6,14 @@ build/
 .venv/
 venv/
 .env
+.env.*
+!.env.example
 *.log
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.DS_Store
+.vscode/
+.idea/
 
 Notas/

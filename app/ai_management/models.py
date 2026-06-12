@@ -7,12 +7,11 @@ from app.config import settings
 
 class LLMRequestLog(BaseModel): 
     __tablename__ = "llm_request_log" 
-    __table_args__ = {'schema': settings.DB_SCHEMA}
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     
     user_id: Mapped[int | None] = mapped_column(
-        ForeignKey(f"{settings.DB_SCHEMA + '.' if settings.DB_SCHEMA else ''}usuarios.id"), 
+        ForeignKey("usuarios.id"), 
         nullable=True
     )
     
@@ -33,7 +32,6 @@ class LLMRequestLog(BaseModel):
 class AIModelConfig(BaseModel):
     """Configuración dinámica de modelos y precios."""
     __tablename__ = "ai_model_configs"
-    __table_args__ = {'schema': settings.DB_SCHEMA}
 
     id: Mapped[int] = mapped_column(primary_key=True)
     model_name: Mapped[str] = mapped_column(String(100), unique=True)

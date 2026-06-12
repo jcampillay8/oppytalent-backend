@@ -11,6 +11,36 @@ class Settings(BaseSettings):
     admin_password: str = "admin123"
     gemini_api_key: str = ""
     DB_SCHEMA: str | None = None
+    
+    # Auth & Env
+    ENVIRONMENT: str = "development"
+    API_URL: str = "http://localhost:8000/api"
+    WEBSITE_URL: str = "http://localhost:5173"
+    JWT_ACCESS_SECRET_KEY: str = "super-secret-access"
+    JWT_REFRESH_SECRET_KEY: str = "super-secret-refresh"
+    ENCRYPTION_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = 1440
+    PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 60
+    
+    # Email
+    EMAIL_PROVIDER: str = "smtp"
+    MAIL_USERNAME: str = "dummy_user"
+    MAIL_PASSWORD: str = "dummy_password"
+    MAIL_FROM: str = "no-reply@example.com"
+    MAIL_PORT: int = 587
+    MAIL_SERVER: str = "smtp.example.com"
+    MAIL_FROM_NAME: str = "OppyTalent"
+    MAIL_STARTTLS: bool = True
+    MAIL_SSL_TLS: bool = False
+    USE_CREDENTIALS: bool = True
+    VALIDATE_CERTS: bool = True
+    SUPPORT_EMAIL: str = "support@example.com"
+    RESEND_API_KEY: str | None = None
+
+    # Google OAuth
+    GOOGLE_CLIENT_ID: str = ""
+    GOOGLE_CLIENT_SECRET: str = ""
 
     # Pydantic leerá el archivo .env en local de manera automática
     model_config = SettingsConfigDict(
