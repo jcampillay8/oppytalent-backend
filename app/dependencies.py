@@ -21,16 +21,23 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        payload = jwt.decode(token, settings.JWT_ACCESS_SECRET_KEY, algorithms=[settings.ENCRYPTION_ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
+            print("JWT decode failed: sub is None")
             raise credentials_exception
-    except JWTError:
+    except JWTError as e:
+        print(f"JWTError: {e}")
         raise credentials_exception
 
-    result = await db.execute(select(Usuario).where(Usuario.username == username))
+    from sqlalchemy import or_
+    result = await db.execute(select(Usuario).where(or_(Usuario.username == username, Usuario.email == username)))
     user = result.scalar_one_or_none()
-    if user is None or user.is_deleted:
+    if user is None:
+        print(f"User not found for username/email: {username}")
+        raise credentials_exception
+    if getattr(user, 'is_deleted', False):
+        print(f"User is deleted: {username}")
         raise credentials_exception
     return user
 

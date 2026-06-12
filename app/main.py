@@ -9,6 +9,7 @@ from app.database import async_session, init_db, sync_database_sequences
 from app.api.v1 import proyectos, experiencias, estudios, perfil, images, chat, frases, seccion_config, ai
 from app.authentication.router import auth_router
 from app.authentication.google_oauth_router import google_router
+from app.authentication.user_details_router import user_details_router
 from app.registration.router import account_router
 from app.services.auth import seed_admin_user
 
@@ -47,6 +48,7 @@ app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
 
 app.include_router(auth_router, prefix="/api/v1/auth")
 app.include_router(google_router, prefix="/api/v1")
+app.include_router(user_details_router, prefix="/api/v1")
 app.include_router(account_router, prefix="/api/v1/auth")
 app.include_router(proyectos.router, prefix="/api/v1")
 app.include_router(experiencias.router, prefix="/api/v1")
