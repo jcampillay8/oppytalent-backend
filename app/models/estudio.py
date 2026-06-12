@@ -8,6 +8,7 @@ class Estudio(BaseModel):
     __tablename__ = "estudios"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
     institucion: Mapped[str] = mapped_column(String(255), nullable=False)
     titulo: Mapped[str] = mapped_column(String(255), nullable=False)
     anio_obtencion: Mapped[int] = mapped_column(Integer, nullable=False)

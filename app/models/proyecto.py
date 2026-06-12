@@ -10,6 +10,7 @@ class Proyecto(BaseModel):
     __tablename__ = "proyectos"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
     titulo: Mapped[str] = mapped_column(String(255), nullable=False)
     descripcion_corta: Mapped[str] = mapped_column(Text, nullable=False)
     descripcion_detallada: Mapped[str] = mapped_column(Text, nullable=False)

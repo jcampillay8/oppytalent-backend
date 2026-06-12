@@ -6,6 +6,7 @@ class FraseCelebre(BaseModel):
     __tablename__ = "frases_celebres"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
     texto: Mapped[str] = mapped_column(Text, nullable=False)
     autor: Mapped[str] = mapped_column(String(255), nullable=False)
 

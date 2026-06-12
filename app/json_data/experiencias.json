@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "usuario_id": 1,
     "empresa": "OppyChat SpA",
     "rol": "Founder & Lead Architect (Ingeniería de IA y Datos)",
     "periodo_inicio": "2025-06-01",
@@ -16,6 +17,7 @@
   },
   {
     "id": 2,
+    "usuario_id": 1,
     "empresa": "Inexoos - Legora",
     "rol": "Ingeniero de Software Senior (Transformación Digital)",
     "periodo_inicio": "2024-08-01",
@@ -31,6 +33,7 @@
   },
   {
     "id": 3,
+    "usuario_id": 1,
     "empresa": "EY Chile",
     "rol": "Ingeniero de Datos y Especialista RPA",
     "periodo_inicio": "2021-08-01",
@@ -46,6 +49,7 @@
   },
   {
     "id": 4,
+    "usuario_id": 1,
     "empresa": "Techint Ingeniería y Construcción",
     "rol": "Analista en Programación y Control de Gestión",
     "periodo_inicio": "2019-04-01",
@@ -57,6 +61,70 @@
     "image_url": null,
     "created_at": "2026-06-12T21:46:16.742392+00:00",
     "updated_at": "2026-06-12T21:46:16.742392+00:00",
+    "is_active": true
+  },
+  {
+    "id": 5,
+    "usuario_id": 2,
+    "empresa": "Inexoos - Legora",
+    "rol": "Ingeniero de Software Senior (Transformación Digital)",
+    "periodo_inicio": "2024-08-01",
+    "periodo_fin": "2025-03-01",
+    "descripcion_logros": "Desarrollo de microservicios con Flask orientados a la automatización de validación contractual y georreferenciación de activos industriales. Modelamiento e integración en MySQL procesando y estructurando formatos complejos como JSON y XML para garantizar la integridad y trazabilidad documental.",
+    "tags_industria": [],
+    "link": null,
+    "link_demo": null,
+    "image_url": null,
+    "created_at": "2026-06-12T22:20:25.040299+00:00",
+    "updated_at": "2026-06-12T22:20:25.040299+00:00",
+    "is_active": true
+  },
+  {
+    "id": 6,
+    "usuario_id": 2,
+    "empresa": "EY Chile",
+    "rol": "Ingeniero de Datos y Especialista RPA",
+    "periodo_inicio": "2021-08-01",
+    "periodo_fin": "2024-03-01",
+    "descripcion_logros": "Construcción de flujos automatizados de extracción, limpieza y transformación de datos desde fuentes heterogéneas (APIs REST, XML, bases de datos) utilizando Python y Pandas. Implementación de flujos con técnicas de OCR para la estructuración de datos semiestructurados hacia PostgreSQL y SQL Server. Diseño y despliegue de robots automatizados en UiPath (.NET) combinados con dashboards en Dash, Plotly y Power BI para el control analítico de métricas de riesgo corporativo.",
+    "tags_industria": [],
+    "link": null,
+    "link_demo": null,
+    "image_url": null,
+    "created_at": "2026-06-12T22:20:29.112460+00:00",
+    "updated_at": "2026-06-12T22:20:29.112460+00:00",
+    "is_active": true
+  },
+  {
+    "id": 7,
+    "usuario_id": 2,
+    "empresa": "Techint Ingeniería y Construcción",
+    "rol": "Analista en Programación y Control de Gestión",
+    "periodo_inicio": "2019-04-01",
+    "periodo_fin": "2020-10-01",
+    "descripcion_logros": "Desarrollé e implementé una solución móvil para automatizar la captura de KPIs en faena de alta montaña, eliminando errores de transcripción manual de datos operacionales. Consolidación analítica y reporting maestro de dotación, control de maquinaria pesada y consumos para la alta dirección minera.",
+    "tags_industria": [],
+    "link": null,
+    "link_demo": null,
+    "image_url": null,
+    "created_at": "2026-06-12T22:20:31.191600+00:00",
+    "updated_at": "2026-06-12T22:20:31.191600+00:00",
+    "is_active": true
+  },
+  {
+    "id": 8,
+    "usuario_id": 2,
+    "empresa": "OppyChat SpA",
+    "rol": "Founder & Lead Architect (Ingeniería de IA y Datos)",
+    "periodo_inicio": "2025-06-01",
+    "periodo_fin": "2025-03-01",
+    "descripcion_logros": "Diseño e implementación de pipelines asíncronos utilizando FastAPI, Python y PostgreSQL integrados con LLMs avanzados (Gemini/OpenAI) para procesamiento de lenguaje natural en tiempo real. Desarrollo de flujos automatizados de ingesta y visualización de KPIs críticos mediante componentes dinámicos con bases de datos relacionales optimizadas para eventos de alta frecuencia.",
+    "tags_industria": [],
+    "link": null,
+    "link_demo": null,
+    "image_url": null,
+    "created_at": "2026-06-12T22:20:50.562659+00:00",
+    "updated_at": "2026-06-12T22:20:50.562659+00:00",
     "is_active": true
   }
 ]

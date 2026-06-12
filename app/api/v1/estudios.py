@@ -15,9 +15,27 @@ router = APIRouter(prefix="/estudios", tags=["estudios"])
 async def list_estudios(
     skip: int = 0,
     limit: int = 100,
+    username: str | None = None,
     db: AsyncSession = Depends(get_db),
 ):
-    return await get_all(db, Estudio, skip=skip, limit=limit)
+    filters = {}
+    if username:
+        from sqlalchemy import select as sa_select, or_
+        from app.models.usuario import Usuario
+        result = await db.execute(sa_select(Usuario).where(
+            or_(
+                Usuario.username == username,
+                Usuario.email == username,
+                Usuario.username.ilike(f"{username}@%")
+            )
+        ))
+        user = result.scalar_one_or_none()
+        if user:
+            filters["usuario_id"] = user.id
+        else:
+            return []
+
+    return await get_all(db, Estudio, skip=skip, limit=limit, filters=filters)
 
 
 @router.get("/{estudio_id}", response_model=EstudioOut)
@@ -32,9 +50,11 @@ async def get_estudio(estudio_id: int, db: AsyncSession = Depends(get_db)):
 async def create_estudio(
     body: EstudioCreate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_current_user),
+    current_user=Depends(get_current_user),
 ):
-    entity = await create(db, Estudio, body.model_dump())
+    data = body.model_dump()
+    data["usuario_id"] = current_user.id
+    entity = await create(db, Estudio, data)
     await sync_all_json(db)
     return entity
 

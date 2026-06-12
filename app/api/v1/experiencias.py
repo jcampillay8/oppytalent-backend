@@ -17,16 +17,33 @@ async def list_experiencias(
     skip: int = 0,
     limit: int = 100,
     tag: str | None = None,
+    username: str | None = None,
     db: AsyncSession = Depends(get_db),
 ):
-    cache_key = f"api:experiencias:all:{skip}:{limit}:{tag}"
+    cache_key = f"api:experiencias:all:{skip}:{limit}:{tag}:{username}"
     cached_data = await get_cached_json(cache_key)
     if cached_data is not None:
         return cached_data
 
-    filters = None
+    filters = {}
     if tag:
-        filters = {"tags_industria": [tag]}
+        filters["tags_industria"] = [tag]
+    if username:
+        from sqlalchemy import select as sa_select, or_
+        from app.models.usuario import Usuario
+        result = await db.execute(sa_select(Usuario).where(
+            or_(
+                Usuario.username == username,
+                Usuario.email == username,
+                Usuario.username.ilike(f"{username}@%")
+            )
+        ))
+        user = result.scalar_one_or_none()
+        if user:
+            filters["usuario_id"] = user.id
+        else:
+            return []
+
     data = await get_all(db, Experiencia, skip=skip, limit=limit, filters=filters)
     await set_cached_json(cache_key, data)
     return data
@@ -51,9 +68,11 @@ async def get_experiencia(experiencia_id: int, db: AsyncSession = Depends(get_db
 async def create_experiencia(
     body: ExperienciaCreate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_current_user),
+    current_user=Depends(get_current_user),
 ):
-    entity = await create(db, Experiencia, body.model_dump())
+    data = body.model_dump()
+    data["usuario_id"] = current_user.id
+    entity = await create(db, Experiencia, data)
     await sync_all_json(db)
     await clear_cache_namespace("api:experiencias")
     return entity

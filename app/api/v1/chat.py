@@ -10,7 +10,7 @@ from app.ai_management.config import DEFAULT_MODEL
 from app.services.json_sync import load_json_context
 from app.database import get_db
 from app.models.chat_log import ChatLog
-from app.dependencies import get_admin_user
+from app.dependencies import get_admin_user, get_current_user
 from app.models.usuario import Usuario
 from app.services.rate_limit import check_rate_limit
 
@@ -26,6 +26,7 @@ class ChatMessage(BaseModel):
 
 
 class ChatRequest(BaseModel):
+    username: str
     messages: list[ChatMessage]
 
 
@@ -161,8 +162,24 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
         except Exception:
             pass # Ignore errors fetching IP info so chat still works
 
+    # Fetch the portfolio user
+    from sqlalchemy import or_
+    result = await db.execute(
+        select(Usuario).where(
+            or_(
+                Usuario.username == payload.username,
+                Usuario.email == payload.username,
+                Usuario.username.ilike(f"{payload.username}@%")
+            )
+        )
+    )
+    portfolio_user = result.scalar_one_or_none()
+    if not portfolio_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Portfolio user not found")
+
     # Save to database
     chat_log = ChatLog(
+        usuario_id=portfolio_user.id,
         ip_address=ip_address,
         city=city,
         region=region,
@@ -195,9 +212,14 @@ async def register_click(log_id: int, payload: ChatClickRequest, db: AsyncSessio
 async def get_chat_logs(
     limit: int = 100, 
     db: AsyncSession = Depends(get_db), 
-    current_user: Usuario = Depends(get_admin_user)
+    current_user: Usuario = Depends(get_current_user)
 ):
-    result = await db.execute(select(ChatLog).order_by(ChatLog.created_at.desc()).limit(limit))
+    result = await db.execute(
+        select(ChatLog)
+        .where(ChatLog.usuario_id == current_user.id)
+        .order_by(ChatLog.created_at.desc())
+        .limit(limit)
+    )
     logs = result.scalars().all()
     return logs
 
@@ -205,7 +227,7 @@ async def get_chat_logs(
 @router.get("/stats")
 async def get_chat_stats(
     db: AsyncSession = Depends(get_db),
-    current_user: Usuario = Depends(get_admin_user)
+    current_user: Usuario = Depends(get_current_user)
 ):
     # Get the count of interactions per day for the last 30 days
     query = (
@@ -213,6 +235,7 @@ async def get_chat_stats(
             func.date(ChatLog.created_at).label('date'),
             func.count(ChatLog.id).label('count')
         )
+        .where(ChatLog.usuario_id == current_user.id)
         .group_by(func.date(ChatLog.created_at))
         .order_by(func.date(ChatLog.created_at).asc())
         .limit(30)

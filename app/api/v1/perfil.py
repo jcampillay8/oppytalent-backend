@@ -12,8 +12,28 @@ router = APIRouter(prefix="/perfil", tags=["perfil"])
 
 
 @router.get("/", response_model=list[PerfilOut])
-async def list_perfiles(db: AsyncSession = Depends(get_db)):
-    return await get_all(db, Perfil)
+async def list_perfiles(
+    username: str | None = None,
+    db: AsyncSession = Depends(get_db)
+):
+    filters = {}
+    if username:
+        from sqlalchemy import select as sa_select, or_
+        from app.models.usuario import Usuario
+        result = await db.execute(sa_select(Usuario).where(
+            or_(
+                Usuario.username == username,
+                Usuario.email == username,
+                Usuario.username.ilike(f"{username}@%")
+            )
+        ))
+        user = result.scalar_one_or_none()
+        if user:
+            filters["usuario_id"] = user.id
+        else:
+            return []
+
+    return await get_all(db, Perfil, filters=filters)
 
 
 @router.get("/{perfil_id}", response_model=PerfilOut)
@@ -28,9 +48,11 @@ async def get_perfil(perfil_id: int, db: AsyncSession = Depends(get_db)):
 async def create_perfil(
     body: PerfilCreate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_current_user),
+    current_user=Depends(get_current_user),
 ):
-    entity = await create(db, Perfil, body.model_dump())
+    data = body.model_dump()
+    data["usuario_id"] = current_user.id
+    entity = await create(db, Perfil, data)
     await sync_all_json(db)
     return entity
 

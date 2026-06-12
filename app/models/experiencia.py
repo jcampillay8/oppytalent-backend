@@ -10,6 +10,7 @@ class Experiencia(BaseModel):
     __tablename__ = "experiencias"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
     empresa: Mapped[str] = mapped_column(String(255), nullable=False)
     rol: Mapped[str] = mapped_column(String(255), nullable=False)
     periodo_inicio: Mapped[date] = mapped_column(Date, nullable=False)
