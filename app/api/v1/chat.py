@@ -3,22 +3,69 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from typing import List
-from datetime import datetime
+from datetime import datetime, date
+import json
 
 from app.ai_management.services import ask_oppy_ai
 from app.ai_management.config import DEFAULT_MODEL
-from app.services.json_sync import load_json_context
 from app.database import get_db
 from app.models.chat_log import ChatLog
 from app.dependencies import get_admin_user, get_current_user
 from app.models.usuario import Usuario
+from app.models.perfil import Perfil
+from app.models.proyecto import Proyecto
+from app.models.experiencia import Experiencia
+from app.models.estudio import Estudio
 from app.services.rate_limit import check_rate_limit
+from app.services.cache import redis_client
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
+def _serialize(obj):
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    return obj
 
+def _model_to_dict(entity):
+    data = {}
+    for column in entity.__table__.columns:
+        val = getattr(entity, column.name)
+        data[column.name] = _serialize(val)
+    return data
 
+async def load_db_context(db: AsyncSession, usuario_id: int) -> str:
+    cache_key = f"ai_context:{usuario_id}"
+    try:
+        cached = await redis_client.get(cache_key)
+        if cached:
+            return cached.decode("utf-8") if isinstance(cached, bytes) else cached
+    except Exception:
+        pass
 
+    sections = []
+    models_mapping = {
+        "PERFIL": Perfil,
+        "EXPERIENCIAS": Experiencia,
+        "PROYECTOS": Proyecto,
+        "ESTUDIOS": Estudio
+    }
+    
+    for section_name, model in models_mapping.items():
+        query = select(model).where(model.is_active == True, model.usuario_id == usuario_id)
+        result = await db.execute(query)
+        rows = result.scalars().all()
+        if rows:
+            data = [_model_to_dict(r) for r in rows]
+            sections.append(f"=== {section_name} ===\n{json.dumps(data, indent=2, ensure_ascii=False)}")
+            
+    context_str = "\n\n".join(sections)
+    
+    try:
+        await redis_client.setex(cache_key, 1800, context_str)
+    except Exception:
+        pass
+        
+    return context_str
 
 class ChatMessage(BaseModel):
     role: str
@@ -117,7 +164,39 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
     if not portfolio_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Portfolio user not found")
 
-    context = load_json_context(portfolio_user.id)
+    # Check Authentication
+    is_authenticated = False
+    authorization = request.headers.get("Authorization")
+    if authorization:
+        from fastapi.security.utils import get_authorization_scheme_param
+        scheme, token = get_authorization_scheme_param(authorization)
+        if scheme.lower() == "bearer":
+            from jose import jwt
+            from app.config import settings
+            try:
+                payload = jwt.decode(token, settings.JWT_ACCESS_SECRET_KEY, algorithms=[settings.ENCRYPTION_ALGORITHM])
+                if payload.get("sub"):
+                    is_authenticated = True
+            except Exception:
+                pass
+                
+    # Enforce Daily Quota for Unauthenticated Users (e.g., 10 messages per IP per Portfolio)
+    if not is_authenticated and ip_address and ip_address != "unknown":
+        quota_key = f"chat_quota:{ip_address}:{portfolio_user.id}"
+        try:
+            current_count = await redis_client.incr(quota_key)
+            if current_count == 1:
+                # Set expiration for 24 hours (86400 seconds)
+                await redis_client.expire(quota_key, 86400)
+            
+            MAX_UNAUTH_MESSAGES = 10
+            if current_count > MAX_UNAUTH_MESSAGES:
+                fallback_msg = "🤖 Espero haber resuelto tus principales dudas sobre mi perfil profesional. Como mi tiempo de procesamiento en vivo es limitado, te invito a agendar una entrevista directa conmigo o enviarme un mensaje a través de mi [Sección de Contacto](/contactame). ¡Estaré encantado de hablar contigo en persona!"
+                return ChatResponse(content=fallback_msg, log_id=0)
+        except Exception:
+            pass # Ignore redis errors and allow chat if redis fails
+
+    context = await load_db_context(db, portfolio_user.id)
     
     # Get the user's full name to inject in the prompt
     full_name = f"{portfolio_user.first_name} {portfolio_user.last_name}".strip()

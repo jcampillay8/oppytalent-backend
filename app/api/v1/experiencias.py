@@ -6,8 +6,7 @@ from app.dependencies import get_current_user
 from app.models.experiencia import Experiencia
 from app.schemas.experiencia import ExperienciaCreate, ExperienciaOut, ExperienciaUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
-from app.services.json_sync import sync_all_json
-from app.services.cache import get_cached_json, set_cached_json, clear_cache_namespace
+from app.services.cache import get_cached_json, set_cached_json, clear_cache_namespace, clear_ai_context
 
 router = APIRouter(prefix="/experiencias", tags=["experiencias"])
 
@@ -73,8 +72,8 @@ async def create_experiencia(
     data = body.model_dump()
     data["usuario_id"] = current_user.id
     entity = await create(db, Experiencia, data)
-    await sync_all_json(db)
     await clear_cache_namespace("api:experiencias")
+    await clear_ai_context(current_user.id)
     return entity
 
 
@@ -89,8 +88,8 @@ async def update_experiencia(
     if not exp:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiencia not found")
     entity = await update(db, exp, body.model_dump(exclude_none=True))
-    await sync_all_json(db)
     await clear_cache_namespace("api:experiencias")
+    await clear_ai_context(exp.usuario_id)
     return entity
 
 
@@ -104,5 +103,5 @@ async def delete_experiencia(
     if not exp:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiencia not found")
     await soft_delete(db, exp)
-    await sync_all_json(db)
     await clear_cache_namespace("api:experiencias")
+    await clear_ai_context(exp.usuario_id)

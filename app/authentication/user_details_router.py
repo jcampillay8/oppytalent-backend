@@ -59,8 +59,38 @@ async def read_current_user_profile(
         "lastName": current_user.last_name,
         "userImage": getattr(current_user, 'avatar_url', None) or getattr(current_user, 'user_image', None),
         "occupation": "Talento OppyTalent", # Hardcoded temporalmente
-        "roles": [] # Se añadirá si es necesario en un futuro
+        "roles": [], # Se añadirá si es necesario en un futuro
+        "chat_welcome_message": current_user.chat_welcome_message,
+        "chat_suggested_q1": current_user.chat_suggested_q1,
+        "chat_suggested_q2": current_user.chat_suggested_q2,
+        "chat_suggested_q3": current_user.chat_suggested_q3
     }
+    
+from pydantic import BaseModel
+
+class ChatConfigUpdate(BaseModel):
+    chat_welcome_message: Optional[str] = None
+    chat_suggested_q1: Optional[str] = None
+    chat_suggested_q2: Optional[str] = None
+    chat_suggested_q3: Optional[str] = None
+
+@user_details_router.put("/chat-config")
+async def update_chat_config(
+    body: ChatConfigUpdate,
+    current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)],
+):
+    if body.chat_welcome_message is not None:
+        current_user.chat_welcome_message = body.chat_welcome_message
+    if body.chat_suggested_q1 is not None:
+        current_user.chat_suggested_q1 = body.chat_suggested_q1
+    if body.chat_suggested_q2 is not None:
+        current_user.chat_suggested_q2 = body.chat_suggested_q2
+    if body.chat_suggested_q3 is not None:
+        current_user.chat_suggested_q3 = body.chat_suggested_q3
+        
+    await db_session.commit()
+    return {"status": "success", "message": "Chat config updated"}
 
 @user_details_router.get("/{username}")
 async def get_user_by_username(
@@ -89,4 +119,8 @@ async def get_user_by_username(
         "lastName": user.last_name,
         "userImage": getattr(user, 'avatar_url', None) or getattr(user, 'user_image', None),
         "occupation": "Talento OppyTalent",
+        "chat_welcome_message": user.chat_welcome_message,
+        "chat_suggested_q1": user.chat_suggested_q1,
+        "chat_suggested_q2": user.chat_suggested_q2,
+        "chat_suggested_q3": user.chat_suggested_q3
     }

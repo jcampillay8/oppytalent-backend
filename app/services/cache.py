@@ -37,3 +37,10 @@ async def clear_cache_namespace(namespace: str):
             await redis_client.delete(*keys)
     except Exception:
         pass
+
+async def clear_ai_context(usuario_id: int):
+    """Clears the AI context cache for a specific user."""
+    try:
+        await redis_client.delete(f"ai_context:{usuario_id}")
+    except Exception:
+        pass

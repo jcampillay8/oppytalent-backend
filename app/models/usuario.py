@@ -24,6 +24,11 @@ class Usuario(BaseModel):
     is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     has_accepted_terms: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     
+    chat_welcome_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    chat_suggested_q1: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    chat_suggested_q2: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    chat_suggested_q3: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    
     last_login: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     failed_login_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

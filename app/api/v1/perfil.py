@@ -6,7 +6,7 @@ from app.dependencies import get_current_user
 from app.models.perfil import Perfil
 from app.schemas.perfil import PerfilCreate, PerfilOut, PerfilUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
-from app.services.json_sync import sync_all_json
+from app.services.cache import clear_ai_context
 
 router = APIRouter(prefix="/perfil", tags=["perfil"])
 
@@ -53,7 +53,7 @@ async def create_perfil(
     data = body.model_dump()
     data["usuario_id"] = current_user.id
     entity = await create(db, Perfil, data)
-    await sync_all_json(db)
+    await clear_ai_context(current_user.id)
     return entity
 
 
@@ -68,7 +68,7 @@ async def update_perfil(
     if not perfil:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Perfil not found")
     entity = await update(db, perfil, body.model_dump(exclude_none=True))
-    await sync_all_json(db)
+    await clear_ai_context(perfil.usuario_id)
     return entity
 
 
@@ -82,4 +82,5 @@ async def delete_perfil(
     if not perfil:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Perfil not found")
     await soft_delete(db, perfil)
-    await sync_all_json(db)
+    await clear_ai_context(perfil.usuario_id)
+

@@ -6,8 +6,7 @@ from app.dependencies import get_current_user
 from app.models.proyecto import Proyecto
 from app.schemas.proyecto import ProyectoCreate, ProyectoOut, ProyectoUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
-from app.services.json_sync import sync_all_json
-from app.services.cache import get_cached_json, set_cached_json, clear_cache_namespace
+from app.services.cache import get_cached_json, set_cached_json, clear_cache_namespace, clear_ai_context
 
 router = APIRouter(prefix="/proyectos", tags=["proyectos"])
 
@@ -73,8 +72,8 @@ async def create_proyecto(
     data = body.model_dump()
     data["usuario_id"] = current_user.id
     entity = await create(db, Proyecto, data)
-    await sync_all_json(db)
     await clear_cache_namespace("api:proyectos")
+    await clear_ai_context(current_user.id)
     return entity
 
 
@@ -89,8 +88,8 @@ async def update_proyecto(
     if not proyecto:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Proyecto not found")
     entity = await update(db, proyecto, body.model_dump(exclude_none=True))
-    await sync_all_json(db)
     await clear_cache_namespace("api:proyectos")
+    await clear_ai_context(proyecto.usuario_id)
     return entity
 
 
@@ -104,5 +103,5 @@ async def delete_proyecto(
     if not proyecto:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Proyecto not found")
     await soft_delete(db, proyecto)
-    await sync_all_json(db)
     await clear_cache_namespace("api:proyectos")
+    await clear_ai_context(proyecto.usuario_id)
