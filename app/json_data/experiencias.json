@@ -126,5 +126,53 @@
     "created_at": "2026-06-12T22:20:50.562659+00:00",
     "updated_at": "2026-06-12T22:20:50.562659+00:00",
     "is_active": true
+  },
+  {
+    "id": 9,
+    "usuario_id": 5,
+    "empresa": "Sauces",
+    "rol": "Ayudante Mecánico - Taller",
+    "periodo_inicio": "2024-05-01",
+    "periodo_fin": "2025-01-01",
+    "descripcion_logros": "Cleaning, disassembly, and assembly of parts. Performing basic services and preventive maintenance. Spare parts control and inventory.",
+    "tags_industria": [],
+    "link": null,
+    "link_demo": null,
+    "image_url": null,
+    "created_at": "2026-06-12T23:47:36.934731+00:00",
+    "updated_at": "2026-06-12T23:47:36.934731+00:00",
+    "is_active": true
+  },
+  {
+    "id": 10,
+    "usuario_id": 5,
+    "empresa": "Sauces ",
+    "rol": "Auxiliar de Secadero",
+    "periodo_inicio": "2023-07-01",
+    "periodo_fin": "2024-05-01",
+    "descripcion_logros": "Operation of forklifts and tractors. Maintenance of gas ovens and engines. Supervision of production processes.",
+    "tags_industria": [],
+    "link": null,
+    "link_demo": null,
+    "image_url": null,
+    "created_at": "2026-06-12T23:47:40.866062+00:00",
+    "updated_at": "2026-06-12T23:47:40.866062+00:00",
+    "is_active": true
+  },
+  {
+    "id": 11,
+    "usuario_id": 5,
+    "empresa": "Sauces",
+    "rol": "Asistente de Lavadero y Mantenimiento de Autos",
+    "periodo_inicio": "2021-09-01",
+    "periodo_fin": "2022-06-01",
+    "descripcion_logros": "Use of industrial cleaning tools. Basic diagnosis of mechanical failures. Operation of vehicles and work equipment.",
+    "tags_industria": [],
+    "link": null,
+    "link_demo": null,
+    "image_url": null,
+    "created_at": "2026-06-12T23:47:44.234663+00:00",
+    "updated_at": "2026-06-12T23:47:44.234663+00:00",
+    "is_active": true
   }
 ]

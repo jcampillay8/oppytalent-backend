@@ -54,6 +54,24 @@
     "is_active": true
   },
   {
+    "id": 5,
+    "username": "user01",
+    "email": "user01@gmail.com",
+    "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$5RxjTKmVEuK8935vTSnF2A$6DUkqz2Z8/U0i7H05pYCk21eqfVmbk1NL9REEx35gHQ",
+    "role": "VIEWER",
+    "first_name": "Sebastian",
+    "last_name": "Gonzales",
+    "user_image": null,
+    "is_deleted": false,
+    "has_accepted_terms": true,
+    "last_login": null,
+    "failed_login_attempts": 0,
+    "locked_until": null,
+    "created_at": "2026-06-12T23:38:27.181858+00:00",
+    "updated_at": "2026-06-12T23:38:27.181858+00:00",
+    "is_active": true
+  },
+  {
     "id": 2,
     "username": "jcampillayworks@gmail.com",
     "email": "jcampillayworks@gmail.com",
@@ -64,11 +82,11 @@
     "user_image": null,
     "is_deleted": false,
     "has_accepted_terms": false,
-    "last_login": "2026-06-12T22:23:48.963566+00:00",
+    "last_login": "2026-06-12T23:48:24.103495+00:00",
     "failed_login_attempts": 0,
     "locked_until": null,
     "created_at": "2026-06-12T16:02:13.824292+00:00",
-    "updated_at": "2026-06-12T22:23:48.962716+00:00",
+    "updated_at": "2026-06-12T23:48:24.102728+00:00",
     "is_active": true
   }
 ]

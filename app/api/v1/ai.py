@@ -5,6 +5,7 @@ import json
 import tempfile
 import os
 from markitdown import MarkItDown
+from openai import OpenAI
 
 from app.dependencies import get_admin_user, get_current_user
 from app.ai_management.services import ask_oppy_ai
@@ -70,8 +71,9 @@ async def extract_cv_data(
     db: AsyncSession = Depends(get_db),
     current_user=Depends(get_current_user) # Can be any authenticated user
 ):
-    if not file.filename.endswith(('.pdf', '.docx', '.txt', '.md')):
-        raise HTTPException(status_code=400, detail="Invalid file type. Only PDF, DOCX, TXT, or MD are allowed.")
+    allowed_extensions = ('.pdf', '.docx', '.txt', '.md', '.png', '.jpg', '.jpeg')
+    if not file.filename.lower().endswith(allowed_extensions):
+        raise HTTPException(status_code=400, detail="Formato no válido. Sube un PDF, DOCX, TXT, MD o Imagen.")
         
     try:
         # Create a temporary file to save the upload
@@ -80,8 +82,15 @@ async def extract_cv_data(
             temp_file.write(content)
             temp_path = temp_file.name
 
-        # Convert to Markdown using MarkItDown
-        md = MarkItDown()
+        # Initialize OpenAI client pointed to Gemini
+        from app.config import settings
+        client = OpenAI(
+            api_key=settings.gemini_api_key,
+            base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+        )
+
+        # Convert to Markdown using MarkItDown with Gemini as the LLM plugin for OCR
+        md = MarkItDown(llm_client=client, llm_model="gemini-2.5-flash")
         result = md.convert(temp_path)
         markdown_text = result.text_content
 

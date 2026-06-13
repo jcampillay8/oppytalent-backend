@@ -24,5 +24,31 @@
     "created_at": "2026-06-12T22:20:18.701472+00:00",
     "updated_at": "2026-06-12T22:20:18.701472+00:00",
     "is_active": true
+  },
+  {
+    "id": 3,
+    "usuario_id": 5,
+    "institucion": "Instituto Aprehender",
+    "titulo": "Certificación en Desarrollador Web",
+    "anio_obtencion": 2026,
+    "descripcion_detallada": "Estudio extraído",
+    "link": null,
+    "image_url": null,
+    "created_at": "2026-06-12T23:47:45.985498+00:00",
+    "updated_at": "2026-06-12T23:47:45.985498+00:00",
+    "is_active": true
+  },
+  {
+    "id": 4,
+    "usuario_id": 5,
+    "institucion": "Instituto Sauces",
+    "titulo": "Bachiller en Administración y Economía",
+    "anio_obtencion": 2026,
+    "descripcion_detallada": "Estudio extraído",
+    "link": null,
+    "image_url": null,
+    "created_at": "2026-06-12T23:47:56.471704+00:00",
+    "updated_at": "2026-06-12T23:47:56.471704+00:00",
+    "is_active": true
   }
 ]

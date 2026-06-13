@@ -56,12 +56,17 @@ async def _sync_with_session(db: AsyncSession, models: dict):
             json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def load_json_context() -> str:
+def load_json_context(usuario_id: int) -> str:
     sections = []
     for filename in ["perfil.json", "experiencias.json", "proyectos.json", "estudios.json"]:
         filepath = os.path.join(JSON_DIR, filename)
         if os.path.exists(filepath):
             with open(filepath, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            sections.append(f"=== {filename.replace('.json', '').upper()} ===\n{json.dumps(data, indent=2, ensure_ascii=False)}")
+            
+            # Filter data by usuario_id
+            filtered_data = [item for item in data if item.get("usuario_id") == usuario_id]
+            
+            if filtered_data:
+                sections.append(f"=== {filename.replace('.json', '').upper()} ===\n{json.dumps(filtered_data, indent=2, ensure_ascii=False)}")
     return "\n\n".join(sections)
