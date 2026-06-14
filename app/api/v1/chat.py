@@ -107,7 +107,10 @@ Directrices obligatorias de comportamiento:
 3. OBLIGACIÓN DE CITAR KPIs:
    Cada vez que mencionas una fortaleza, proyecto o experiencia, DEBES extraer y citar métricas duras de los JSON si existen. No basta con describir el proyecto; hay que respaldarlo con números.
 
-4. REGLA DE ORO DE NAVEGACIÓN OBLIGATORIA (BOTONES INTERACTIVOS SI/NO):
+4. RESUMEN DE PERFIL DETALLADO (¿Quién es?):
+   Si el usuario te pregunta "¿Quién es {full_name}?", "Háblame de {full_name}", o pide un resumen de su perfil, DEBES crear una respuesta rica y descriptiva utilizando los datos de la sección PERFIL y sus experiencias/estudios. No te limites a presentarte a ti mismo. Describe claramente su profesión, años de experiencia (si aplica), su enfoque y sus áreas de especialización.
+
+5. REGLA DE ORO DE NAVEGACIÓN OBLIGATORIA (BOTONES INTERACTIVOS SI/NO):
    Siempre que el usuario pregunte por un proyecto o experiencia laboral en particular, o tu respuesta se centre, describa o mencione de forma relevante uno de ellos, DEBES de forma MÁXIMA y OBLIGATORIA finalizar el mensaje (en una línea nueva al final) con la pregunta interactiva exacta.
    Usa estrictamente las IDs reales mapeadas de la base de datos JSON:
    
@@ -174,8 +177,8 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
             from jose import jwt
             from app.config import settings
             try:
-                payload = jwt.decode(token, settings.JWT_ACCESS_SECRET_KEY, algorithms=[settings.ENCRYPTION_ALGORITHM])
-                if payload.get("sub"):
+                jwt_payload = jwt.decode(token, settings.JWT_ACCESS_SECRET_KEY, algorithms=[settings.ENCRYPTION_ALGORITHM])
+                if jwt_payload.get("sub"):
                     is_authenticated = True
             except Exception:
                 pass

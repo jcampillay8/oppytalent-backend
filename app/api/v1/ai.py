@@ -91,7 +91,7 @@ async def extract_cv_data(
 
         # Convert to Markdown using MarkItDown with Gemini as the LLM plugin for OCR
         md = MarkItDown(llm_client=client, llm_model="gemini-2.5-flash")
-        result = md.convert(temp_path)
+        result = md.convert(temp_path, llm_prompt="Por favor, extrae todo el texto de esta imagen exactamente como aparece. PRESERVA EL IDIOMA ORIGINAL. NO TRADUZCAS EL TEXTO.")
         markdown_text = result.text_content
 
         # Clean up temp file
@@ -99,17 +99,20 @@ async def extract_cv_data(
 
         # Build prompt for Gemini
         prompt = f"""
-You are an expert HR recruiter AI. I will provide you with a CV in Markdown format.
-Extract the relevant information and strictly return a JSON object following this exact schema:
+Eres un asistente experto de RRHH. Te entregaré el contenido de un Curriculum Vitae (CV).
+Tu tarea es extraer la información relevante y devolver ESTRICTAMENTE un objeto JSON usando el siguiente esquema exacto:
 {{
-  "datos_contacto": {{ "nombre": "Name", "ocupacion": "Current/Main Job Title", "telefono": "Phone if any" }},
-  "proyectos": [ {{ "titulo": "Project Name", "descripcion": "Project Description", "tecnologias": ["Tech1", "Tech2"] }} ],
-  "experiencias": [ {{ "empresa": "Company Name", "cargo": "Job Title", "periodo_inicio": "YYYY-MM", "periodo_fin": "YYYY-MM or null if present", "descripcion": "Role description" }} ],
-  "estudios": [ {{ "institucion": "University/School", "titulo": "Degree", "anio_obtencion": 2020 }} ]
+  "datos_contacto": {{ "nombre": "Nombre Completo", "ocupacion": "Cargo o Profesión Principal", "telefono": "Teléfono si existe" }},
+  "proyectos": [ {{ "titulo": "Nombre del Proyecto", "descripcion": "Descripción del Proyecto", "tecnologias": ["Tech1", "Tech2"] }} ],
+  "experiencias": [ {{ "empresa": "Nombre de la Empresa", "cargo": "Puesto", "periodo_inicio": "YYYY-MM", "periodo_fin": "YYYY-MM o null si es actual", "descripcion": "Descripción del rol y logros" }} ],
+  "estudios": [ {{ "institucion": "Universidad o Instituto", "titulo": "Título obtenido", "anio_obtencion": 2020 }} ]
 }}
-Ensure the response is ONLY the raw JSON object, without ```json wrappers.
 
-Here is the CV:
+REGLAS CRÍTICAS:
+1. La respuesta debe ser ÚNICAMENTE el objeto JSON en crudo, sin etiquetas como ```json ni comentarios extra.
+2. EL IDIOMA FINAL DEL JSON DEBE SER ESPAÑOL. El texto proporcionado a continuación puede haber sido traducido al inglés por error por el sistema de reconocimiento (OCR). SIN IMPORTAR en qué idioma esté el texto de abajo, TÚ DEBES TRADUCIR todo el contenido al ESPAÑOL (cargos, descripciones, instituciones, etc.) al generar el JSON.
+
+Aquí está el CV (que puede tener partes en inglés, pero tú debes devolver el JSON en español):
 {markdown_text}
 """
 
