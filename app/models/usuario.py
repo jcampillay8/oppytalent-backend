@@ -28,6 +28,7 @@ class Usuario(BaseModel):
     chat_suggested_q1: Mapped[str | None] = mapped_column(String(255), nullable=True)
     chat_suggested_q2: Mapped[str | None] = mapped_column(String(255), nullable=True)
     chat_suggested_q3: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    portfolio_theme: Mapped[str | None] = mapped_column(String(50), default="dark-glass", nullable=True)
     
     last_login: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     failed_login_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)

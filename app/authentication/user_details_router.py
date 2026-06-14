@@ -63,7 +63,8 @@ async def read_current_user_profile(
         "chat_welcome_message": current_user.chat_welcome_message,
         "chat_suggested_q1": current_user.chat_suggested_q1,
         "chat_suggested_q2": current_user.chat_suggested_q2,
-        "chat_suggested_q3": current_user.chat_suggested_q3
+        "chat_suggested_q3": current_user.chat_suggested_q3,
+        "portfolio_theme": current_user.portfolio_theme or "dark-glass"
     }
     
 from pydantic import BaseModel
@@ -91,6 +92,19 @@ async def update_chat_config(
         
     await db_session.commit()
     return {"status": "success", "message": "Chat config updated"}
+
+class ThemeConfigUpdate(BaseModel):
+    portfolio_theme: str
+
+@user_details_router.put("/theme-config")
+async def update_theme_config(
+    body: ThemeConfigUpdate,
+    current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)],
+):
+    current_user.portfolio_theme = body.portfolio_theme
+    await db_session.commit()
+    return {"status": "success", "message": "Theme config updated", "portfolio_theme": body.portfolio_theme}
 
 @user_details_router.get("/{username}")
 async def get_user_by_username(
@@ -122,5 +136,6 @@ async def get_user_by_username(
         "chat_welcome_message": user.chat_welcome_message,
         "chat_suggested_q1": user.chat_suggested_q1,
         "chat_suggested_q2": user.chat_suggested_q2,
-        "chat_suggested_q3": user.chat_suggested_q3
+        "chat_suggested_q3": user.chat_suggested_q3,
+        "portfolio_theme": user.portfolio_theme or "dark-glass"
     }
