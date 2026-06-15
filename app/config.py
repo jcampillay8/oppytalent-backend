@@ -23,6 +23,18 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 1440
     PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 60
     
+    # Cloudflare R2 Integration (Premium Storage)
+    R2_ACCOUNT_ID: str = ""
+    R2_ACCESS_KEY_ID: str = ""
+    R2_SECRET_ACCESS_KEY: str = ""
+    R2_BUCKET_NAME: str = ""
+    R2_PUBLIC_URL: str = ""
+    
+    # Google OAuth (Free Tier Drive Uploads)
+    GOOGLE_CLIENT_ID: str = ""
+    GOOGLE_CLIENT_SECRET: str = ""
+    GOOGLE_REDIRECT_URI: str = "http://localhost:8000/api/v1/auth/google/callback"
+    
     # Email
     EMAIL_PROVIDER: str = "smtp"
     MAIL_USERNAME: str = "dummy_user"

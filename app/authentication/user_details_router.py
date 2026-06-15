@@ -64,7 +64,9 @@ async def read_current_user_profile(
         "chat_suggested_q1": current_user.chat_suggested_q1,
         "chat_suggested_q2": current_user.chat_suggested_q2,
         "chat_suggested_q3": current_user.chat_suggested_q3,
-        "portfolio_theme": current_user.portfolio_theme or "dark-glass"
+        "portfolio_theme": current_user.portfolio_theme or "dark-glass",
+        "google_refresh_token": bool(current_user.google_refresh_token),
+        "is_premium": getattr(current_user, 'is_premium', False)
     }
     
 from pydantic import BaseModel
