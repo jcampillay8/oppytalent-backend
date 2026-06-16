@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     JWT_REFRESH_SECRET_KEY: str = "super-secret-refresh"
     ENCRYPTION_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    # Encryption (Fernet key for API keys)
+    ENCRYPTION_KEY: str | None = None
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 1440
     PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 60
     

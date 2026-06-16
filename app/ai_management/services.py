@@ -8,10 +8,13 @@ from datetime import datetime, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from json_repair import repair_json as repair
+from fastapi import HTTPException
 
 from .client import call_gemini_api
 from .models import LLMRequestLog, AIModelConfig
 from .schemas import AIResponse
+from app.models.usuario import Usuario
+from app.services.crypto import decrypt_value
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +62,22 @@ async def ask_oppy_ai(
     user_prompts = [f"{m['role']}: {m['content']}" for m in messages if m["role"] != "system"]
     final_user_prompt = "\n".join(user_prompts)
 
-    # 3. Bucle de ejecución con reintentos
+    # 3. AI Billing Fork
+    user_api_key = None
+    if user_id:
+        user_result = await db.execute(select(Usuario).where(Usuario.id == user_id))
+        user = user_result.scalar_one_or_none()
+        if user:
+            if user.encrypted_gemini_key:
+                user_api_key = decrypt_value(user.encrypted_gemini_key)
+            else:
+                if user.ai_credits > 0:
+                    user.ai_credits -= 1
+                    await db.flush()
+                else:
+                    raise HTTPException(status_code=402, detail="Cuota agotada. Has agotado tus créditos de IA gratuitos.")
+
+    # 4. Bucle de ejecución con reintentos
     while attempt <= retries:
         try:
             ai_res: AIResponse = await call_gemini_api(
@@ -67,7 +85,8 @@ async def ask_oppy_ai(
                 user_prompt=final_user_prompt,
                 model_cfg=model_cfg,
                 temperature=temperature,
-                expect_json=expect_json
+                expect_json=expect_json,
+                user_api_key=user_api_key
             )
 
             # Reparación de JSON si es necesario

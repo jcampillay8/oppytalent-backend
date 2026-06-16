@@ -66,7 +66,9 @@ async def read_current_user_profile(
         "chat_suggested_q3": current_user.chat_suggested_q3,
         "portfolio_theme": current_user.portfolio_theme or "dark-glass",
         "google_refresh_token": bool(current_user.google_refresh_token),
-        "is_premium": getattr(current_user, 'is_premium', False)
+        "is_premium": getattr(current_user, 'is_premium', False),
+        "has_gemini_key": bool(getattr(current_user, 'encrypted_gemini_key', None)),
+        "ai_credits": getattr(current_user, 'ai_credits', 0)
     }
     
 from pydantic import BaseModel
@@ -107,6 +109,36 @@ async def update_theme_config(
     current_user.portfolio_theme = body.portfolio_theme
     await db_session.commit()
     return {"status": "success", "message": "Theme config updated", "portfolio_theme": body.portfolio_theme}
+
+class GeminiKeyUpdate(BaseModel):
+    api_key: str
+
+@user_details_router.put("/gemini-key")
+async def update_gemini_key(
+    body: GeminiKeyUpdate,
+    current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)],
+):
+    import google.generativeai as genai
+    from app.services.crypto import encrypt_value
+    
+    # 1. Validate the API Key by making a simple request
+    try:
+        genai.configure(api_key=body.api_key)
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        # Ping the API
+        model.generate_content("ping")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="La API Key ingresada no es válida o no tiene permisos.")
+        
+    # 2. Encrypt and save
+    try:
+        current_user.encrypted_gemini_key = encrypt_value(body.api_key)
+        await db_session.commit()
+        return {"status": "success", "message": "API Key guardada de forma segura"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error al encriptar la llave. Revisa la configuración del servidor.")
+
 
 @user_details_router.get("/{username}")
 async def get_user_by_username(

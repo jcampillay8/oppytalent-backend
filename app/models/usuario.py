@@ -36,6 +36,10 @@ class Usuario(BaseModel):
     google_refresh_token: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     google_token_expiry: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     
+    # AI Config
+    encrypted_gemini_key: Mapped[str | None] = mapped_column(String(2048), nullable=True)
+    ai_credits: Mapped[int] = mapped_column(Integer, default=10, server_default="10", nullable=False)
+    
     last_login: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     failed_login_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
@@ -44,3 +48,6 @@ class Usuario(BaseModel):
     password_reset_tokens: Mapped[List["PasswordResetToken"]] = relationship("PasswordResetToken", back_populates="user")
     refresh_tokens: Mapped[List["RefreshToken"]] = relationship("RefreshToken", back_populates="user")
     email_confirmation_tokens: Mapped[List["EmailConfirmationToken"]] = relationship("EmailConfirmationToken", back_populates="user")
+    
+    # Nuevas entidades
+    cover_letters: Mapped[List["CoverLetter"]] = relationship("CoverLetter", back_populates="usuario", cascade="all, delete-orphan")

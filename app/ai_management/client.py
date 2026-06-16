@@ -11,12 +11,14 @@ async def call_gemini_api(
     user_prompt: str,
     model_cfg: Any,
     temperature: float = 0.7,
-    expect_json: bool = False 
+    expect_json: bool = False,
+    user_api_key: str | None = None
 ) -> AIResponse:
     """Llamada directa a la API de Gemini con cálculo de costos dinámico."""
     
     start_time = time.monotonic()
-    client = genai.Client(api_key=settings.gemini_api_key)
+    api_key_to_use = user_api_key if user_api_key else settings.gemini_api_key
+    client = genai.Client(api_key=api_key_to_use)
     
     config = types.GenerateContentConfig(
         system_instruction=system_instruction,
@@ -56,4 +58,4 @@ async def call_gemini_api(
         total_tokens=input_tokens + output_tokens,
         estimated_cost=cost,
         duration_ms=int((time.monotonic() - start_time) * 1000)
-    )
+    )
