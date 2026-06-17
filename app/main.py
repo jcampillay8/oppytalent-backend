@@ -6,7 +6,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from app.config import settings
 from app.database import async_session, init_db, sync_database_sequences
-from app.api.v1 import proyectos, experiencias, estudios, perfil, images, chat, frases, seccion_config, ai, storage_auth, og, cover_letters
+from app.api.v1 import proyectos, experiencias, estudios, perfil, images, chat, frases, seccion_config, ai, storage_auth, og
 from app.authentication.router import auth_router
 from app.authentication.google_oauth_router import google_router
 from app.authentication.user_details_router import user_details_router
@@ -56,7 +56,7 @@ app.include_router(frases.router, prefix="/api/v1")
 app.include_router(seccion_config.router, prefix="/api/v1/seccion_config", tags=["seccion_config"])
 app.include_router(ai.router, prefix="/api/v1")
 app.include_router(storage_auth.router, prefix="/api/v1")
-app.include_router(cover_letters.router, prefix="/api/v1")
+
 app.include_router(og.router)
 
 

@@ -49,5 +49,3 @@ class Usuario(BaseModel):
     refresh_tokens: Mapped[List["RefreshToken"]] = relationship("RefreshToken", back_populates="user")
     email_confirmation_tokens: Mapped[List["EmailConfirmationToken"]] = relationship("EmailConfirmationToken", back_populates="user")
     
-    # Nuevas entidades
-    cover_letters: Mapped[List["CoverLetter"]] = relationship("CoverLetter", back_populates="usuario", cascade="all, delete-orphan")
