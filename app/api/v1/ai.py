@@ -102,7 +102,7 @@ async def extract_cv_data(
 Eres un asistente experto de RRHH. Te entregaré el contenido de un Curriculum Vitae (CV).
 Tu tarea es extraer la información relevante y devolver ESTRICTAMENTE un objeto JSON usando el siguiente esquema exacto:
 {{
-  "datos_contacto": {{ "nombre": "Nombre Completo", "ocupacion": "Cargo o Profesión Principal", "telefono": "Teléfono si existe" }},
+  "datos_contacto": {{ "nombre": "Nombre Completo", "ocupacion": "Cargo o Profesión Principal", "telefono": "Teléfono si existe", "email": "Email si existe", "ubicacion": "Ciudad/País si existe", "linkedin": "URL de LinkedIn si existe" }},
   "proyectos": [ {{ "titulo": "Nombre del Proyecto", "descripcion": "Descripción del Proyecto", "tecnologias": ["Tech1", "Tech2"] }} ],
   "experiencias": [ {{ "empresa": "Nombre de la Empresa", "cargo": "Puesto", "periodo_inicio": "YYYY-MM", "periodo_fin": "YYYY-MM o null si es actual", "descripcion": "Descripción del rol y logros" }} ],
   "estudios": [ {{ "institucion": "Universidad o Instituto", "titulo": "Título obtenido", "anio_obtencion": 2020 }} ]
