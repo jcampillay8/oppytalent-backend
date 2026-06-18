@@ -62,9 +62,9 @@ async def read_current_user_profile(
         "roles": [], # Se añadirá si es necesario en un futuro
         "chat_welcome_message": current_user.chat_welcome_message,
         "chat_suggested_q1": current_user.chat_suggested_q1,
-        "chat_suggested_q2": current_user.chat_suggested_q2,
         "chat_suggested_q3": current_user.chat_suggested_q3,
         "portfolio_theme": current_user.portfolio_theme or "dark-glass",
+        "portfolio_layout": current_user.portfolio_layout or "tabs",
         "google_refresh_token": bool(current_user.google_refresh_token),
         "is_premium": getattr(current_user, 'is_premium', False),
         "has_gemini_key": bool(getattr(current_user, 'encrypted_gemini_key', None)),
@@ -98,7 +98,8 @@ async def update_chat_config(
     return {"status": "success", "message": "Chat config updated"}
 
 class ThemeConfigUpdate(BaseModel):
-    portfolio_theme: str
+    portfolio_theme: Optional[str] = None
+    portfolio_layout: Optional[str] = None
 
 @user_details_router.put("/theme-config")
 async def update_theme_config(
@@ -106,9 +107,18 @@ async def update_theme_config(
     current_user: Annotated[Usuario, Depends(get_current_user)],
     db_session: Annotated[AsyncSession, Depends(get_db)],
 ):
-    current_user.portfolio_theme = body.portfolio_theme
+    if body.portfolio_theme is not None:
+        current_user.portfolio_theme = body.portfolio_theme
+    if body.portfolio_layout is not None:
+        current_user.portfolio_layout = body.portfolio_layout
+        
     await db_session.commit()
-    return {"status": "success", "message": "Theme config updated", "portfolio_theme": body.portfolio_theme}
+    return {
+        "status": "success", 
+        "message": "Theme config updated", 
+        "portfolio_theme": current_user.portfolio_theme,
+        "portfolio_layout": current_user.portfolio_layout
+    }
 
 class GeminiKeyUpdate(BaseModel):
     api_key: str
@@ -171,5 +181,6 @@ async def get_user_by_username(
         "chat_suggested_q1": user.chat_suggested_q1,
         "chat_suggested_q2": user.chat_suggested_q2,
         "chat_suggested_q3": user.chat_suggested_q3,
-        "portfolio_theme": user.portfolio_theme or "dark-glass"
+        "portfolio_theme": user.portfolio_theme or "dark-glass",
+        "portfolio_layout": user.portfolio_layout or "tabs"
     }

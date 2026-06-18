@@ -29,6 +29,7 @@ class Usuario(BaseModel):
     chat_suggested_q2: Mapped[str | None] = mapped_column(String(255), nullable=True)
     chat_suggested_q3: Mapped[str | None] = mapped_column(String(255), nullable=True)
     portfolio_theme: Mapped[str | None] = mapped_column(String(50), default="dark-glass", nullable=True)
+    portfolio_layout: Mapped[str | None] = mapped_column(String(20), default="tabs", server_default="tabs", nullable=True)
     
     # Premium & Integrations
     is_premium: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false", nullable=False)
