@@ -12,6 +12,8 @@ class Habilitacion(BaseModel):
     tipo: Mapped[str] = mapped_column(String(50), nullable=False) # DISPONIBILIDAD, LICENCIA
     titulo: Mapped[str] = mapped_column(String(255), nullable=False)
     descripcion: Mapped[str] = mapped_column(Text, nullable=False)
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    enlace: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     traducciones: Mapped[list["HabilitacionTraduccion"]] = relationship("HabilitacionTraduccion", back_populates="habilitacion", cascade="all, delete-orphan", lazy="selectin")
 

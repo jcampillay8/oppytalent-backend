@@ -41,6 +41,9 @@ class Usuario(BaseModel):
     encrypted_gemini_key: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     ai_credits: Mapped[int] = mapped_column(Integer, default=10, server_default="10", nullable=False)
     
+    # Storage
+    storage_used: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
+    
     last_login: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     failed_login_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

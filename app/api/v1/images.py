@@ -3,9 +3,10 @@ from urllib.parse import quote, unquote
 import httpx
 from fastapi import APIRouter, HTTPException, Query, UploadFile, File, Depends
 from fastapi.responses import Response
-from app.dependencies import get_current_user
+from app.dependencies import get_current_user, get_db
 from app.models.usuario import Usuario
-from app.services.cloud_storage import upload_to_r2, upload_to_google_drive
+from app.services.cloud_storage import upload_to_r2
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(tags=["images"])
 
@@ -40,33 +41,36 @@ async def proxy_image(url: str = Query(...)):
 @router.post("/upload")
 async def upload_image(
     file: UploadFile = File(...),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(get_current_user),
+    db_session: AsyncSession = Depends(get_db)
 ):
     """
-    Sube una imagen. Si el usuario es Premium, la sube a Cloudflare R2.
-    Si no es Premium, la sube a su Google Drive conectado.
+    Sube una imagen a Cloudflare R2 con control de cuota.
+    Free tier: 20 MB. Premium: Ilimitado.
     """
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="El archivo debe ser una imagen")
         
     content = await file.read()
+    file_size = len(content)
     
-    if current_user.is_premium:
-        # Premium: Cloudflare R2
-        try:
-            url = await upload_to_r2(content, file.filename, file.content_type)
-            return {"url": url, "source": "r2"}
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error subiendo imagen premium: {str(e)}")
-    else:
-        # Free Tier: Google Drive
-        if not current_user.google_refresh_token:
+    # Validación de Cuota (25 MB) para usuarios no premium
+    if not current_user.is_premium:
+        if current_user.storage_used + file_size > 26_214_400:
             raise HTTPException(
-                status_code=403, 
-                detail="Debes conectar tu cuenta de Google Drive para subir imágenes gratis, o hacerte Premium."
+                status_code=402, 
+                detail="Has alcanzado tu límite gratuito de 25 MB. Sube a Premium para obtener almacenamiento de 1 GB, analíticas de chat y diseños exclusivos."
             )
-        try:
-            url = await upload_to_google_drive(current_user, content, file.filename, file.content_type)
-            return {"url": url, "source": "drive"}
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error subiendo a Google Drive: {str(e)}")
+            
+    # Subir a R2 (único proveedor de almacenamiento)
+    try:
+        url = await upload_to_r2(content, file.filename, file.content_type)
+        
+        # Actualizar cuota usada en BD
+        current_user.storage_used += file_size
+        db_session.add(current_user)
+        await db_session.commit()
+        
+        return {"url": url, "source": "r2"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error subiendo imagen: {str(e)}")

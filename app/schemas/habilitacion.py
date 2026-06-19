@@ -20,6 +20,8 @@ class HabilitacionBase(BaseModel):
     tipo: str
     titulo: str
     descripcion: str
+    image_url: str | None = None
+    enlace: str | None = None
 
 class HabilitacionCreate(HabilitacionBase):
     traducciones: list[HabilitacionTraduccionCreate] = []
@@ -28,6 +30,8 @@ class HabilitacionUpdate(BaseModel):
     tipo: str | None = None
     titulo: str | None = None
     descripcion: str | None = None
+    image_url: str | None = None
+    enlace: str | None = None
     traducciones: list[HabilitacionTraduccionCreate] | None = None
 
 class HabilitacionOut(HabilitacionBase):

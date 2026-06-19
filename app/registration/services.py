@@ -22,6 +22,7 @@ from app.registration.schemas import UsuarioRegisterSchema
 from app.authentication.models import EmailConfirmationToken
 from app.email.email_service import email_service
 from app.utils import get_hashed_password
+from app.services.cloud_storage import upload_to_r2
 
 logger = logging.getLogger(__name__)
 
@@ -309,79 +310,16 @@ class ImageSaver:
 
     async def save_user_image(self, uploaded_image: UploadFile, username: str) -> str | None:
         """
-        Guarda la imagen de perfil de forma independiente, sin un objeto Usuario.
+        Guarda la imagen de perfil usando Cloudflare R2 exclusivamente.
         """
         try:
-            file_extension: str = uploaded_image.filename.split(".")[-1].lower()
-            filename: str = f"{username}.{file_extension}"
-
-            match settings.ENVIRONMENT:
-                case "development":
-                    return await self._save_image_to_static(uploaded_image, filename)
-                case "production" | "premaster":
-                    if settings.ENVIRONMENT == "premaster" and not (settings.AWS_ACCESS_KEY_ID and settings.AWS_IMAGES_BUCKET):
-                        logger.info("Entorno 'premaster' sin credenciales completas de S3. Guardando imagen en almacenamiento estático local.")
-                        return await self._save_image_to_static(uploaded_image, filename)
-                    return await self._save_image_to_aws_bucket(uploaded_image, filename)
-                case _:
-                    logger.error(f"Unsupported environment: {settings.ENVIRONMENT}")
-                    return None
+            content = await uploaded_image.read()
+            file_extension = uploaded_image.filename.split(".")[-1].lower() if uploaded_image.filename else "webp"
+            filename = f"profile_{username}.{file_extension}"
+            
+            # Subir directamente a R2
+            url = await upload_to_r2(content, filename, uploaded_image.content_type)
+            return url
         except Exception as e:
             logger.error(f"Error al guardar la imagen para el usuario {username}: {e}", exc_info=True)
             return None
-
-    async def _save_image_to_static(self, uploaded_image: UploadFile, filename: str) -> str:
-        """
-        Guarda la imagen en el sistema de archivos local y devuelve la URL.
-        """
-        folder_path = "src/static/images/profile"
-        os.makedirs(folder_path, exist_ok=True)
-        file_path = f"{folder_path}/{filename}"
-
-        # Reemplazar la imagen si ya existe
-        if os.path.exists(file_path):
-            os.remove(file_path)
-
-        async with aiofiles.open(file_path, "wb") as f:
-            while chunk := await uploaded_image.read(DEFAULT_CHUNK_SIZE):
-                await f.write(chunk)
-        
-        # Redimensionar la imagen después de guardarla en el disco
-        resized_image = self._resize_image(file_path)
-        resized_image.save(file_path, resized_image.format)
-
-        image_url = f"/static/images/profile/{filename}"
-        return image_url
-
-    async def _save_image_to_aws_bucket(self, uploaded_image: UploadFile, filename: str) -> str | None:
-        """
-        Guarda la imagen en un bucket de S3 y devuelve la URL.
-        """
-        if (
-            (aws_client := settings.get_aws_client_for_image_upload(), aws_bucket := settings.AWS_IMAGES_BUCKET)
-            and aws_client
-            and aws_bucket
-        ):
-            image_file: bytes = await uploaded_image.read()
-            with BytesIO() as in_memory_image_file:
-                resized_image = self._resize_image(BytesIO(image_file))
-                resized_image.save(in_memory_image_file, format='PNG')
-                in_memory_image_file.seek(0)
-                
-                aws_client.upload_fileobj(
-                    in_memory_image_file, aws_bucket, filename, ExtraArgs={"ContentType": "image/png"}
-                )
-            
-            image_url: str = f"https://{aws_bucket}.s3.amazonaws.com/{filename}"
-            return image_url
-        else:
-            logger.error("AWS client or bucket information is missing.")
-            return None
-
-    def _resize_image(self, file_path_or_bytes: str | BytesIO) -> Image:
-        """
-        Redimensiona una imagen a 600x600 píxeles.
-        """
-        image = Image.open(file_path_or_bytes)
-        resized_image = image.resize((600, 600), Image.LANCZOS)
-        return resized_image

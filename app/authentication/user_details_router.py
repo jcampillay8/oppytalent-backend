@@ -68,7 +68,8 @@ async def read_current_user_profile(
         "google_refresh_token": bool(current_user.google_refresh_token),
         "is_premium": getattr(current_user, 'is_premium', False),
         "has_gemini_key": bool(getattr(current_user, 'encrypted_gemini_key', None)),
-        "ai_credits": getattr(current_user, 'ai_credits', 0)
+        "ai_credits": getattr(current_user, 'ai_credits', 0),
+        "storage_used": getattr(current_user, 'storage_used', 0)
     }
     
 from pydantic import BaseModel
