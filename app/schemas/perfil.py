@@ -29,6 +29,7 @@ class PerfilBase(BaseModel):
     youtube_url: str | None = None
     certificaciones: list[dict] = []
     idiomas: list[dict] = []
+    habilidades: list[str] = []
 
 
 class PerfilCreate(PerfilBase):
@@ -49,6 +50,7 @@ class PerfilUpdate(BaseModel):
     youtube_url: str | None = None
     certificaciones: list[dict] | None = None
     idiomas: list[dict] | None = None
+    habilidades: list[str] | None = None
     traducciones: list[PerfilTraduccionCreate] | None = None
 
 

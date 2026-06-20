@@ -105,16 +105,16 @@ async def extract_cv_data(
 Eres un asistente experto de RRHH. Te entregaré el contenido extraído de un Curriculum Vitae (CV).
 Tu tarea es extraer la información relevante y devolver ESTRICTAMENTE un objeto JSON usando el siguiente esquema exacto:
 {{
-  "datos_contacto": {{ "nombre": "Nombre Real Extraído", "ocupacion": "Cargo o Profesión", "telefono": "Teléfono", "email": "Email", "ubicacion": "Ciudad/País", "linkedin": "URL" }},
+  "datos_contacto": {{ "nombre": "Nombre Real Extraído", "ocupacion": "Cargo o Profesión", "telefono": "Teléfono", "email": "Email", "ubicacion": "Ciudad/País", "linkedin": "URL", "sobre_mi": "Resumen o Perfil Personal", "habilidades": ["Habilidad 1", "Habilidad 2"] }},
   "proyectos": [ {{ "titulo": "Proyecto", "descripcion": "Descripción", "tecnologias": ["Tech1"] }} ],
   "experiencias": [ {{ "empresa": "Empresa", "cargo": "Puesto", "periodo_inicio": "YYYY-MM", "periodo_fin": "YYYY-MM o null", "descripcion": "Logros" }} ],
   "estudios": [ {{ "institucion": "Institución", "titulo": "Título", "anio_obtencion": 2020 }} ]
 }}
 
 REGLAS CRÍTICAS DE CERO ALUCINACIONES (ZERO-HALLUCINATION):
-1. BAJO NINGÚN CONTEXTO inventes información. NUNCA uses nombres de ejemplo (como "Juan Pérez") ni crees proyectos, experiencias o estudios falsos o genéricos.
+1. BAJO NINGÚN CONTEXTO inventes información. NUNCA uses nombres de ejemplo (como "Juan Pérez") ni crees experiencias o estudios falsos o genéricos.
 2. Si no encuentras el nombre real de la persona en el documento, devuelve null en el campo "nombre".
-3. Si el documento no contiene proyectos, devuelve una lista vacía [] para "proyectos". Aplica lo mismo para "experiencias" y "estudios".
+3. Si el documento no contiene proyectos, devuelve una lista vacía [] para "proyectos". Aplica lo mismo para "experiencias" y "estudios". Para los proyectos, si no hay tecnologías explícitas pero sí descripciones de las tareas realizadas (ej. "Lideré un equipo de ventas"), intuye y extrae herramientas, metodologías o habilidades que se usaron (ej. "Liderazgo", "Ventas", "CRM") y colócalas en "tecnologias".
 4. Si detectas que el documento es ilegible, es un documento completamente ajeno a un CV, o es pura basura sin sentido, devuelve ESTRICTAMENTE este JSON: {{"error": "unreadable"}}
 5. La respuesta debe ser ÚNICAMENTE el objeto JSON en crudo, sin etiquetas como ```json ni comentarios extra.
 6. EL IDIOMA FINAL DEL JSON DEBE SER ESPAÑOL. Traduce el contenido al español si está en otro idioma.

@@ -23,6 +23,7 @@ class Perfil(BaseModel):
     youtube_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     certificaciones: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
     idiomas: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
+    habilidades: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
 
     traducciones: Mapped[list["PerfilTraduccion"]] = relationship("PerfilTraduccion", back_populates="perfil", cascade="all, delete-orphan", lazy="selectin")
 
