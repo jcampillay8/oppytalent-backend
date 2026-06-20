@@ -16,6 +16,8 @@ from app.models.perfil import Perfil
 from app.models.proyecto import Proyecto
 from app.models.experiencia import Experiencia
 from app.models.estudio import Estudio
+from app.models.reconocimiento import Reconocimiento
+from app.models.habilitacion import Habilitacion
 from app.services.rate_limit import check_rate_limit
 from app.services.cache import redis_client
 
@@ -47,7 +49,9 @@ async def load_db_context(db: AsyncSession, usuario_id: int) -> str:
         "PERFIL": Perfil,
         "EXPERIENCIAS": Experiencia,
         "PROYECTOS": Proyecto,
-        "ESTUDIOS": Estudio
+        "ESTUDIOS": Estudio,
+        "RECONOCIMIENTOS": Reconocimiento,
+        "HABILITACIONES": Habilitacion
     }
     
     for section_name, model in models_mapping.items():
@@ -129,6 +133,8 @@ A continuación tienes los datos completos del portafolio en formato JSON:
 
 {context}
 
+{pitch_rules_block}
+
 Responde SOLO con información que esté en estos datos. Si te preguntan por alguien que no sea {full_name}, indica amablemente que eres el asistente exclusivo de {full_name}. Sé directo, técnico, ingenioso y profesional."""
 
 
@@ -206,7 +212,20 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
     if not full_name:
         full_name = portfolio_user.username.split("@")[0]
         
-    system_prompt = SYSTEM_PROMPT_TEMPLATE.format(context=context, full_name=full_name)
+    pitch_rules_text = ""
+    if getattr(portfolio_user, "ai_pitch_rules", None):
+        rules = portfolio_user.ai_pitch_rules
+        if isinstance(rules, list) and len(rules) > 0:
+            pitch_rules_text = "\nDIRECTRICES ESTRATÉGICAS DE VENTA (REGLAS CONDICIONALES):\n"
+            pitch_rules_text += "A continuación se te entregan directrices específicas creadas por el talento. Si la intención de la pregunta coincide con un 'TEMA', DEBES aplicar el 'ARGUMENTO DE VENTA' por sobre el comportamiento predeterminado, y terminar invitando a hacer clic en el 'ENLACE' indicado usando botones SI/NO:\n"
+            for rule in rules:
+                keyword = rule.get("keyword", "")
+                pitch = rule.get("pitch", "")
+                link = rule.get("call_to_action", "#")
+                if keyword and pitch:
+                    pitch_rules_text += f"- TEMA '{keyword}': {pitch} Al finalizar, invita preguntando exactamente: ¿Desea ir a ver esto? [SÍ]({link}) / [NO](#)\n"
+
+    system_prompt = SYSTEM_PROMPT_TEMPLATE.format(context=context, full_name=full_name, pitch_rules_block=pitch_rules_text)
 
     messages_for_ai = [{"role": "system", "content": system_prompt}]
     for m in payload.messages:

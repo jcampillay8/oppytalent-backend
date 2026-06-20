@@ -16,6 +16,8 @@ class PerfilTraduccionOut(PerfilTraduccionBase):
     model_config = {"from_attributes": True}
 
 class PerfilBase(BaseModel):
+    nombre_completo: str | None = None
+    ocupacion: str | None = None
     descripcion: str
     image_url: str | None = None
     avatar_url: str | None = None
@@ -34,6 +36,8 @@ class PerfilCreate(PerfilBase):
 
 
 class PerfilUpdate(BaseModel):
+    nombre_completo: str | None = None
+    ocupacion: str | None = None
     descripcion: str | None = None
     image_url: str | None = None
     avatar_url: str | None = None

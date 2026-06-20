@@ -16,10 +16,13 @@ async def search_users(
     current_user: Annotated[Usuario, Depends(get_current_user)],
 ):
     from sqlalchemy import or_, func
+    from sqlalchemy.orm import outerjoin
+    from app.models.perfil import Perfil
     
     search_term = f"%{q}%"
     query = (
-        sa_select(Usuario)
+        sa_select(Usuario, Perfil)
+        .outerjoin(Perfil, Usuario.id == Perfil.usuario_id)
         .where(
             or_(
                 Usuario.first_name.ilike(search_term),
@@ -31,19 +34,18 @@ async def search_users(
         .limit(20)
     )
     result = await db_session.execute(query)
-    users = result.scalars().all()
+    rows = result.all()
     
-    # Mapeo manual para evitar esquemas complejos heredados
     return [
         {
             "id": u.id,
             "username": u.username,
-            "firstName": u.first_name,
-            "lastName": u.last_name,
-            "userImage": getattr(u, 'avatar_url', None) or getattr(u, 'user_image', None),
-            "occupation": "Talento OppyTalent" # Hardcoded temporalmente
+            "firstName": p.nombre_completo if p and p.nombre_completo else u.first_name,
+            "lastName": "" if (p and p.nombre_completo) else u.last_name,
+            "userImage": p.avatar_url if p and p.avatar_url else u.user_image,
+            "occupation": p.ocupacion if p and p.ocupacion else "Talento OppyTalent"
         }
-        for u in users
+        for u, p in rows
     ]
 
 @user_details_router.get("/profile")
@@ -61,8 +63,7 @@ async def read_current_user_profile(
         "occupation": "Talento OppyTalent", # Hardcoded temporalmente
         "roles": [], # Se añadirá si es necesario en un futuro
         "chat_welcome_message": current_user.chat_welcome_message,
-        "chat_suggested_q1": current_user.chat_suggested_q1,
-        "chat_suggested_q3": current_user.chat_suggested_q3,
+        "ai_pitch_rules": getattr(current_user, 'ai_pitch_rules', []),
         "portfolio_theme": current_user.portfolio_theme or "dark-glass",
         "portfolio_layout": current_user.portfolio_layout or "tabs",
         "google_refresh_token": bool(current_user.google_refresh_token),
@@ -76,9 +77,7 @@ from pydantic import BaseModel
 
 class ChatConfigUpdate(BaseModel):
     chat_welcome_message: Optional[str] = None
-    chat_suggested_q1: Optional[str] = None
-    chat_suggested_q2: Optional[str] = None
-    chat_suggested_q3: Optional[str] = None
+    ai_pitch_rules: Optional[list] = None
 
 @user_details_router.put("/chat-config")
 async def update_chat_config(
@@ -88,12 +87,8 @@ async def update_chat_config(
 ):
     if body.chat_welcome_message is not None:
         current_user.chat_welcome_message = body.chat_welcome_message
-    if body.chat_suggested_q1 is not None:
-        current_user.chat_suggested_q1 = body.chat_suggested_q1
-    if body.chat_suggested_q2 is not None:
-        current_user.chat_suggested_q2 = body.chat_suggested_q2
-    if body.chat_suggested_q3 is not None:
-        current_user.chat_suggested_q3 = body.chat_suggested_q3
+    if body.ai_pitch_rules is not None:
+        current_user.ai_pitch_rules = body.ai_pitch_rules
         
     await db_session.commit()
     return {"status": "success", "message": "Chat config updated"}
@@ -179,9 +174,7 @@ async def get_user_by_username(
         "userImage": getattr(user, 'avatar_url', None) or getattr(user, 'user_image', None),
         "occupation": "Talento OppyTalent",
         "chat_welcome_message": user.chat_welcome_message,
-        "chat_suggested_q1": user.chat_suggested_q1,
-        "chat_suggested_q2": user.chat_suggested_q2,
-        "chat_suggested_q3": user.chat_suggested_q3,
+        "ai_pitch_rules": getattr(user, 'ai_pitch_rules', []),
         "portfolio_theme": user.portfolio_theme or "dark-glass",
         "portfolio_layout": user.portfolio_layout or "tabs"
     }

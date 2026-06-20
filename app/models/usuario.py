@@ -1,4 +1,4 @@
-from sqlalchemy import String, Text, Boolean, DateTime, Integer
+from sqlalchemy import String, Text, Boolean, DateTime, Integer, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from typing import TYPE_CHECKING, List
@@ -25,9 +25,7 @@ class Usuario(BaseModel):
     has_accepted_terms: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     
     chat_welcome_message: Mapped[str | None] = mapped_column(Text, nullable=True)
-    chat_suggested_q1: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    chat_suggested_q2: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    chat_suggested_q3: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    ai_pitch_rules: Mapped[list] = mapped_column(JSON, default=list, server_default='[]', nullable=False)
     portfolio_theme: Mapped[str | None] = mapped_column(String(50), default="dark-glass", nullable=True)
     portfolio_layout: Mapped[str | None] = mapped_column(String(20), default="tabs", server_default="tabs", nullable=True)
     

@@ -71,10 +71,9 @@ async def extract_cv_data(
     db: AsyncSession = Depends(get_db),
     current_user=Depends(get_current_user) # Can be any authenticated user
 ):
-    allowed_extensions = ('.pdf', '.docx', '.txt', '.md', '.png', '.jpg', '.jpeg')
+    allowed_extensions = ('.pdf', '.docx', '.doc', '.ppt', '.pptx', '.xls', '.xlsx', '.txt', '.md', '.csv', '.json', '.xml', '.png', '.jpg', '.jpeg', '.zip', '.html', '.epub', '.mp3', '.wav')
     if not file.filename.lower().endswith(allowed_extensions):
-        raise HTTPException(status_code=400, detail="Formato no válido. Sube un PDF, DOCX, TXT, MD o Imagen.")
-        
+        raise HTTPException(status_code=400, detail="Formato no válido. Formato no soportado por MarkItDown.")
     try:
         # Create a temporary file to save the upload
         with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as temp_file:
@@ -96,23 +95,31 @@ async def extract_cv_data(
 
         # Clean up temp file
         os.unlink(temp_path)
+        
+        # Fast-Fail Check: Si extrajo pura basura o menos de 50 caracteres (CV ilegible)
+        if not markdown_text or len(markdown_text.strip()) < 50:
+            raise HTTPException(status_code=400, detail="El curriculum cargado no cumple con la calidad minima para su lectura corecta, por favor cargue un curriculum con mejor visibildad para intentarlo nuevamente")
 
         # Build prompt for Gemini
         prompt = f"""
-Eres un asistente experto de RRHH. Te entregaré el contenido de un Curriculum Vitae (CV).
+Eres un asistente experto de RRHH. Te entregaré el contenido extraído de un Curriculum Vitae (CV).
 Tu tarea es extraer la información relevante y devolver ESTRICTAMENTE un objeto JSON usando el siguiente esquema exacto:
 {{
-  "datos_contacto": {{ "nombre": "Nombre Completo", "ocupacion": "Cargo o Profesión Principal", "telefono": "Teléfono si existe", "email": "Email si existe", "ubicacion": "Ciudad/País si existe", "linkedin": "URL de LinkedIn si existe" }},
-  "proyectos": [ {{ "titulo": "Nombre del Proyecto", "descripcion": "Descripción del Proyecto", "tecnologias": ["Tech1", "Tech2"] }} ],
-  "experiencias": [ {{ "empresa": "Nombre de la Empresa", "cargo": "Puesto", "periodo_inicio": "YYYY-MM", "periodo_fin": "YYYY-MM o null si es actual", "descripcion": "Descripción del rol y logros" }} ],
-  "estudios": [ {{ "institucion": "Universidad o Instituto", "titulo": "Título obtenido", "anio_obtencion": 2020 }} ]
+  "datos_contacto": {{ "nombre": "Nombre Real Extraído", "ocupacion": "Cargo o Profesión", "telefono": "Teléfono", "email": "Email", "ubicacion": "Ciudad/País", "linkedin": "URL" }},
+  "proyectos": [ {{ "titulo": "Proyecto", "descripcion": "Descripción", "tecnologias": ["Tech1"] }} ],
+  "experiencias": [ {{ "empresa": "Empresa", "cargo": "Puesto", "periodo_inicio": "YYYY-MM", "periodo_fin": "YYYY-MM o null", "descripcion": "Logros" }} ],
+  "estudios": [ {{ "institucion": "Institución", "titulo": "Título", "anio_obtencion": 2020 }} ]
 }}
 
-REGLAS CRÍTICAS:
-1. La respuesta debe ser ÚNICAMENTE el objeto JSON en crudo, sin etiquetas como ```json ni comentarios extra.
-2. EL IDIOMA FINAL DEL JSON DEBE SER ESPAÑOL. El texto proporcionado a continuación puede haber sido traducido al inglés por error por el sistema de reconocimiento (OCR). SIN IMPORTAR en qué idioma esté el texto de abajo, TÚ DEBES TRADUCIR todo el contenido al ESPAÑOL (cargos, descripciones, instituciones, etc.) al generar el JSON.
+REGLAS CRÍTICAS DE CERO ALUCINACIONES (ZERO-HALLUCINATION):
+1. BAJO NINGÚN CONTEXTO inventes información. NUNCA uses nombres de ejemplo (como "Juan Pérez") ni crees proyectos, experiencias o estudios falsos o genéricos.
+2. Si no encuentras el nombre real de la persona en el documento, devuelve null en el campo "nombre".
+3. Si el documento no contiene proyectos, devuelve una lista vacía [] para "proyectos". Aplica lo mismo para "experiencias" y "estudios".
+4. Si detectas que el documento es ilegible, es un documento completamente ajeno a un CV, o es pura basura sin sentido, devuelve ESTRICTAMENTE este JSON: {{"error": "unreadable"}}
+5. La respuesta debe ser ÚNICAMENTE el objeto JSON en crudo, sin etiquetas como ```json ni comentarios extra.
+6. EL IDIOMA FINAL DEL JSON DEBE SER ESPAÑOL. Traduce el contenido al español si está en otro idioma.
 
-Aquí está el CV (que puede tener partes en inglés, pero tú debes devolver el JSON en español):
+Aquí está el texto extraído del CV:
 {markdown_text}
 """
 
@@ -136,6 +143,10 @@ Aquí está el CV (que puede tener partes en inglés, pero tú debes devolver el
             result_text = result_text.replace("```", "").strip()
             
         extracted_data = json.loads(result_text)
+        
+        if extracted_data.get("error") == "unreadable":
+            raise HTTPException(status_code=400, detail="El curriculum cargado no cumple con la calidad minima para su lectura corecta, por favor cargue un curriculum con mejor visibildad para intentarlo nuevamente")
+            
         return extracted_data
 
     except Exception as e:
