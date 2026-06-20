@@ -26,7 +26,7 @@ class TranslationResponse(BaseModel):
 async def translate_content(
     request: TranslationRequest,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_admin_user)
+    current_user=Depends(get_admin_user)
 ):
     # Convert dict to string for the prompt
     content_str = json.dumps(request.content, ensure_ascii=False)
@@ -48,6 +48,7 @@ Input JSON:
             db=db,
             messages=messages,
             caller="admin_translation",
+            user_id=current_user.id,
             model_name=DEFAULT_MODEL,
             expect_json=True
         )
@@ -60,6 +61,8 @@ Input JSON:
         translated_dict = json.loads(result_text)
         
         return TranslationResponse(translated_content=translated_dict)
+    except HTTPException as he:
+        raise he
     except Exception as e:
         # Fallback in case of JSON parse error or AI failure
         print(f"Translation Error: {e}")
@@ -149,6 +152,8 @@ Aquí está el texto extraído del CV:
             
         return extracted_data
 
+    except HTTPException as he:
+        raise he
     except Exception as e:
         print(f"CV Extraction Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))

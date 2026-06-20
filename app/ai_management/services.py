@@ -75,7 +75,7 @@ async def ask_oppy_ai(
                     user.ai_credits -= 1
                     await db.flush()
                 else:
-                    raise HTTPException(status_code=402, detail="Cuota agotada. Has agotado tus créditos de IA gratuitos.")
+                    raise HTTPException(status_code=402, detail="¡Se agotó la magia! 🪄 Has usado todas tus peticiones gratuitas. Para continuar, mejora tu plan o ingresa tu propia clave en 'Plan y Consumo'.")
 
     # 4. Bucle de ejecución con reintentos
     while attempt <= retries:

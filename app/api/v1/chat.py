@@ -232,14 +232,21 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
         role = "user" if m.role == "user" else "assistant"
         messages_for_ai.append({"role": role, "content": m.content})
 
-    ai_res_content = await ask_oppy_ai(
-        db=db,
-        messages=messages_for_ai,
-        caller="portafolio_chat",
-        model_name=DEFAULT_MODEL,
-        temperature=0.7,
-        expect_json=False
-    )
+    try:
+        ai_res_content = await ask_oppy_ai(
+            db=db,
+            messages=messages_for_ai,
+            caller="portafolio_chat",
+            user_id=portfolio_user.id,
+            model_name=DEFAULT_MODEL,
+            temperature=0.7,
+            expect_json=False
+        )
+    except HTTPException as e:
+        if e.status_code == 402:
+            ai_res_content = "Mi creador está teniendo mucho éxito y he alcanzado mi límite de interacciones por hoy. ☕ Mientras me tomo un café, puedes revisar su experiencia más abajo o enviarle un correo directo. ¡Estará feliz de hablar contigo!"
+        else:
+            raise e
 
     # Extract last user message
     last_user_msg = "No message"
