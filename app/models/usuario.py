@@ -24,6 +24,10 @@ class Usuario(BaseModel):
     is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     has_accepted_terms: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     
+    # B2B Ecosystem Fields
+    is_recruiter: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false", nullable=False)
+    is_visible_b2b: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false", nullable=False)
+    
     chat_welcome_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     ai_pitch_rules: Mapped[list] = mapped_column(JSON, default=list, server_default='[]', nullable=False)
     portfolio_theme: Mapped[str | None] = mapped_column(String(50), default="dark-glass", nullable=True)

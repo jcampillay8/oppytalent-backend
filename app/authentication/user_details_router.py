@@ -70,7 +70,9 @@ async def read_current_user_profile(
         "is_premium": getattr(current_user, 'is_premium', False),
         "has_gemini_key": bool(getattr(current_user, 'encrypted_gemini_key', None)),
         "ai_credits": getattr(current_user, 'ai_credits', 0),
-        "storage_used": getattr(current_user, 'storage_used', 0)
+        "storage_used": getattr(current_user, 'storage_used', 0),
+        "is_visible_b2b": getattr(current_user, 'is_visible_b2b', False),
+        "is_recruiter": getattr(current_user, 'is_recruiter', False)
     }
     
 from pydantic import BaseModel
@@ -116,6 +118,21 @@ async def update_theme_config(
         "portfolio_layout": current_user.portfolio_layout
     }
 
+class B2BConfigUpdate(BaseModel):
+    is_visible_b2b: Optional[bool] = None
+
+@user_details_router.put("/b2b-config")
+async def update_b2b_config(
+    body: B2BConfigUpdate,
+    current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)],
+):
+    if body.is_visible_b2b is not None:
+        current_user.is_visible_b2b = body.is_visible_b2b
+        
+    await db_session.commit()
+    return {"status": "success", "message": "B2B config updated", "is_visible_b2b": current_user.is_visible_b2b}
+
 class GeminiKeyUpdate(BaseModel):
     api_key: str
 
@@ -125,15 +142,17 @@ async def update_gemini_key(
     current_user: Annotated[Usuario, Depends(get_current_user)],
     db_session: Annotated[AsyncSession, Depends(get_db)],
 ):
-    import google.generativeai as genai
+    from google import genai
     from app.services.crypto import encrypt_value
     
     # 1. Validate the API Key by making a simple request
     try:
-        genai.configure(api_key=body.api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        client = genai.Client(api_key=body.api_key)
         # Ping the API
-        model.generate_content("ping")
+        client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents='ping'
+        )
     except Exception as e:
         raise HTTPException(status_code=400, detail="La API Key ingresada no es válida o no tiene permisos.")
         
@@ -144,6 +163,35 @@ async def update_gemini_key(
         return {"status": "success", "message": "API Key guardada de forma segura"}
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error al encriptar la llave. Revisa la configuración del servidor.")
+
+class KYCVerification(BaseModel):
+    is_recruiter: bool
+
+@user_details_router.put("/kyc/verify-recruiter/{user_id}")
+async def verify_recruiter_kyc(
+    user_id: int,
+    body: KYCVerification,
+    current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)],
+):
+    """
+    Endpoint exclusivo para SUPERADMIN.
+    Permite validar (KYC) a una empresa y darle acceso de Headhunter.
+    """
+    if current_user.role != "SUPERADMIN":
+        raise HTTPException(status_code=403, detail="Acceso denegado. Solo SUPERADMIN puede verificar empresas.")
+        
+    user_result = await db_session.execute(sa_select(Usuario).where(Usuario.id == user_id))
+    target_user = user_result.scalar_one_or_none()
+    
+    if not target_user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado.")
+        
+    target_user.is_recruiter = body.is_recruiter
+    await db_session.commit()
+    
+    status_str = "Aprobada" if body.is_recruiter else "Revocada"
+    return {"status": "success", "message": f"Verificación KYC de B2B {status_str} para {target_user.username}"}
 
 @user_details_router.post("/sync-rag")
 async def sync_rag_vectors(

@@ -64,6 +64,7 @@ async def ask_oppy_ai(
 
     # 3. AI Billing Fork
     user_api_key = None
+    credit_deducted = False
     if user_id:
         user_result = await db.execute(select(Usuario).where(Usuario.id == user_id))
         user = user_result.scalar_one_or_none()
@@ -73,6 +74,7 @@ async def ask_oppy_ai(
             else:
                 if user.ai_credits > 0:
                     user.ai_credits -= 1
+                    credit_deducted = True
                     await db.flush()
                 else:
                     raise HTTPException(status_code=402, detail="¡Se agotó la magia! 🪄 Has usado todas tus peticiones gratuitas. Para continuar, mejora tu plan o ingresa tu propia clave en 'Plan y Consumo'.")
@@ -120,6 +122,10 @@ async def ask_oppy_ai(
             if attempt <= retries:
                 await asyncio.sleep(2 ** attempt)
             else:
+                # Refund logic (ACID)
+                if credit_deducted and user:
+                    user.ai_credits += 1
+                    
                 # 5. Registro de fallo final
                 log = LLMRequestLog(
                     user_id=user_id,
