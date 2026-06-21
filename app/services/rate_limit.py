@@ -37,3 +37,22 @@ async def check_rate_limit(ip_address: str, max_requests: int = 5, window_second
     except redis.RedisError:
         # Fallback if Redis is down: pass through to avoid breaking the chat
         pass
+
+async def get_moderation_strikes(ip_address: str) -> int:
+    key = f"moderation_strikes:{ip_address}"
+    try:
+        strikes = await redis_client.get(key)
+        return int(strikes) if strikes else 0
+    except redis.RedisError:
+        return 0
+
+async def add_moderation_strike(ip_address: str) -> int:
+    key = f"moderation_strikes:{ip_address}"
+    try:
+        strikes = await redis_client.incr(key)
+        if strikes == 1:
+            # Expire strikes after 24 hours (86400 seconds)
+            await redis_client.expire(key, 86400)
+        return strikes
+    except redis.RedisError:
+        return 0

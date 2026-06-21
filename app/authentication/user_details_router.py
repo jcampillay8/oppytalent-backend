@@ -145,6 +145,27 @@ async def update_gemini_key(
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error al encriptar la llave. Revisa la configuración del servidor.")
 
+@user_details_router.post("/sync-rag")
+async def sync_rag_vectors(
+    current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)],
+):
+    from app.ai_management.rag_sync import sync_user_rag_embeddings
+    from app.services.crypto import decrypt_value
+    
+    api_key = None
+    if getattr(current_user, 'encrypted_gemini_key', None):
+        try:
+            api_key = decrypt_value(current_user.encrypted_gemini_key)
+        except Exception:
+            pass
+            
+    try:
+        count = await sync_user_rag_embeddings(db_session, current_user.id, api_key=api_key)
+        return {"status": "success", "message": f"Se sincronizaron {count} documentos al Cerebro IA exitosamente."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al sincronizar vectores: {str(e)}")
+
 
 @user_details_router.get("/{username}")
 async def get_user_by_username(

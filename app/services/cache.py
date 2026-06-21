@@ -39,8 +39,16 @@ async def clear_cache_namespace(namespace: str):
         pass
 
 async def clear_ai_context(usuario_id: int):
-    """Clears the AI context cache for a specific user."""
+    """Clears the AI context cache for a specific user and triggers RAG sync in background."""
     try:
         await redis_client.delete(f"ai_context:{usuario_id}")
     except Exception:
         pass
+        
+    # Automatización: Disparar RAG sync en segundo plano
+    try:
+        import asyncio
+        from app.ai_management.rag_sync import _run_sync_in_background
+        asyncio.create_task(_run_sync_in_background(usuario_id))
+    except Exception as e:
+        print(f"Failed to dispatch RAG sync task: {e}")
