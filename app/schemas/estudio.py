@@ -34,7 +34,7 @@ class EstudioCreate(EstudioBase):
 class EstudioUpdate(BaseModel):
     institucion: str | None = None
     titulo: str | None = None
-    anio_obtencion: UUID | None = None
+    anio_obtencion: int | None = None
     descripcion_detallada: str | None = None
     link: str | None = None
     image_url: str | None = None

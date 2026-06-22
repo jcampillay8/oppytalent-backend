@@ -13,11 +13,15 @@ from app.authentication.user_details_router import user_details_router
 from app.registration.router import account_router
 from app.services.auth import seed_admin_user
 from app.scripts.seed_rbac import seed_rbac
+from app.scripts.seed_ai import seed_ai_models
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    
+    # 0. Automate AI Models seeding
+    await seed_ai_models()
     
     # 1. Automate RBAC Seeding on every startup
     await seed_rbac()
