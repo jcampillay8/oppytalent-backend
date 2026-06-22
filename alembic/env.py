@@ -6,6 +6,7 @@ from alembic import context
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from app.database import Base
+from app.config import settings
 from app.models import *  # noqa: F401, F403
 from app.ai_management.models import LLMRequestLog, AIModelConfig  # noqa: F401
 
@@ -40,6 +41,10 @@ async def run_async_migrations() -> None:
     connectable = create_async_engine(database_url)
 
     async with connectable.connect() as connection:
+        from sqlalchemy import text
+        await connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+        await connection.execute(text(f"CREATE SCHEMA IF NOT EXISTS {settings.DB_SCHEMA}"))
+        await connection.commit()
         await connection.run_sync(do_run_migrations)
 
     await connectable.dispose()

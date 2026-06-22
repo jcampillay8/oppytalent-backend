@@ -1,5 +1,5 @@
-# app/ai_management/models.py
-from sqlalchemy import String, ForeignKey, Text, Boolean, Float, Integer
+import uuid
+from sqlalchemy import String, ForeignKey, Text, Boolean, Float, Integer, Uuid
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime, timezone
 from app.database import BaseModel
@@ -8,9 +8,10 @@ from app.config import settings
 class LLMRequestLog(BaseModel): 
     __tablename__ = "llm_request_log" 
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     
-    user_id: Mapped[int | None] = mapped_column(
+    user_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid,
         ForeignKey("usuarios.id"), 
         nullable=True
     )
@@ -33,7 +34,7 @@ class AIModelConfig(BaseModel):
     """Configuración dinámica de modelos y precios."""
     __tablename__ = "ai_model_configs"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     model_name: Mapped[str] = mapped_column(String(100), unique=True)
     input_price_per_million: Mapped[float] = mapped_column(Float)
     output_price_per_million: Mapped[float] = mapped_column(Float)

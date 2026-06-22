@@ -6,8 +6,8 @@ from app.database import Base
 class ChatLog(Base):
     __tablename__ = "chat_logs"
 
-    id = Column(Integer, primary_key=True, index=True)
-    usuario_id = Column(Integer, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
+    usuario_id = Column(Uuid, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
     ip_address = Column(String(50), nullable=True, index=True)
     city = Column(String(100), nullable=True)
     region = Column(String(100), nullable=True)

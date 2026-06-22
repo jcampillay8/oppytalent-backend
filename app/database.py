@@ -41,6 +41,10 @@ async def get_db():
 
 async def init_db():
     async with engine.begin() as conn:
+        from sqlalchemy import text
+        await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+        if settings.DB_SCHEMA:
+            await conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {settings.DB_SCHEMA}"))
         await conn.run_sync(Base.metadata.create_all)
 
 

@@ -11,13 +11,13 @@ class PortfolioDocument(Base):
         Index('ix_portfolio_documents_embedding', 'embedding', postgresql_using='hnsw', postgresql_with={'m': 16, 'ef_construction': 64}, postgresql_ops={'embedding': 'vector_cosine_ops'}),
     )
 
-    id = Column(Integer, primary_key=True, index=True)
-    usuario_id = Column(Integer, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
+    usuario_id = Column(Uuid, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
     
     # PERFIL, EXPERIENCIA, PROYECTO, ESTUDIO, RECONOCIMIENTO, HABILITACION
     tipo_entidad = Column(String(50), nullable=False, index=True)
     
-    entidad_id = Column(Integer, nullable=False, index=True)
+    entidad_id = Column(Uuid, nullable=False, index=True)
     
     contenido_texto = Column(Text, nullable=False)
     
