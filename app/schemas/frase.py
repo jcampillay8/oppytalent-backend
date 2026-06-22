@@ -1,3 +1,5 @@
+from uuid import UUID
+from uuid import UUID
 from pydantic import BaseModel, ConfigDict
 
 class FraseTraduccionBase(BaseModel):
@@ -8,8 +10,8 @@ class FraseTraduccionCreate(FraseTraduccionBase):
     pass
 
 class FraseTraduccionOut(FraseTraduccionBase):
-    id: int
-    frase_id: int
+    id: UUID
+    frase_id: UUID
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -26,7 +28,7 @@ class FraseCelebreUpdate(BaseModel):
     traducciones: list[FraseTraduccionCreate] | None = None
 
 class FraseCelebreResponse(FraseCelebreBase):
-    id: int
+    id: UUID
     traducciones: list[FraseTraduccionOut] = []
 
     model_config = ConfigDict(from_attributes=True)

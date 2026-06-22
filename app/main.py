@@ -6,21 +6,28 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from app.config import settings
 from app.database import async_session, init_db, sync_database_sequences
-from app.api.v1 import proyectos, experiencias, estudios, perfil, images, chat, frases, seccion_config, ai, storage_auth, og, reconocimientos, habilitaciones, b2b
+from app.api.v1 import proyectos, experiencias, estudios, perfil, images, chat, frases, seccion_config, ai, storage_auth, og, reconocimientos, habilitaciones, b2b, admin_rbac
 from app.authentication.router import auth_router
 from app.authentication.google_oauth_router import google_router
 from app.authentication.user_details_router import user_details_router
 from app.registration.router import account_router
 from app.services.auth import seed_admin_user
+from app.scripts.seed_rbac import seed_rbac
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    
+    # 1. Automate RBAC Seeding on every startup
+    await seed_rbac()
+    
+    # 2. Ensure Admin user exists
     async with async_session() as session:
         await seed_admin_user(session)
         await session.commit()
-    # Sincronizamos secuencialmente las secuencias de base de datos en PostgreSQL
+        
+    # 3. Sincronizamos secuencialmente las secuencias de base de datos en PostgreSQL
     await sync_database_sequences()
 
     yield
@@ -59,7 +66,7 @@ app.include_router(seccion_config.router, prefix="/api/v1/seccion_config", tags=
 app.include_router(ai.router, prefix="/api/v1")
 app.include_router(storage_auth.router, prefix="/api/v1")
 app.include_router(b2b.router, prefix="/api/v1")
-
+app.include_router(admin_rbac.router, prefix="/api/v1")
 app.include_router(og.router)
 
 

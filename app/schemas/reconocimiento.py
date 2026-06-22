@@ -1,3 +1,5 @@
+from uuid import UUID
+from uuid import UUID
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -11,8 +13,8 @@ class ReconocimientoTraduccionCreate(ReconocimientoTraduccionBase):
     pass
 
 class ReconocimientoTraduccionOut(ReconocimientoTraduccionBase):
-    id: int
-    reconocimiento_id: int
+    id: UUID
+    reconocimiento_id: UUID
 
     model_config = {"from_attributes": True}
 
@@ -41,8 +43,8 @@ class ReconocimientoUpdate(BaseModel):
     traducciones: list[ReconocimientoTraduccionCreate] | None = None
 
 class ReconocimientoOut(ReconocimientoBase):
-    id: int
-    usuario_id: int
+    id: UUID
+    usuario_id: UUID
     is_active: bool
     created_at: datetime
     updated_at: datetime

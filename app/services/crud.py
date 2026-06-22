@@ -1,3 +1,4 @@
+from uuid import UUID
 from typing import Any, Sequence
 
 from sqlalchemy import select, func
@@ -36,7 +37,7 @@ async def get_all(
     return result.scalars().all()
 
 
-async def get_by_id(db: AsyncSession, model: type[BaseModel], entity_id: int) -> BaseModel | None:
+async def get_by_id(db: AsyncSession, model: type[BaseModel], entity_id: UUID) -> BaseModel | None:
     result = await db.execute(
         select(model).where(model.id == entity_id, model.is_active == True)
     )

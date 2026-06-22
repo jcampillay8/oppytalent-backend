@@ -1,3 +1,4 @@
+from uuid import UUID
 import json
 import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,7 +19,7 @@ def _model_to_dict(entity):
         data[column.name] = str(val) if val is not None else None
     return data
 
-async def sync_user_rag_embeddings(db: AsyncSession, usuario_id: int, api_key: str = None):
+async def sync_user_rag_embeddings(db: AsyncSession, usuario_id: UUID, api_key: str = None):
     """
     Sincroniza la base de datos de un usuario hacia la tabla PortfolioDocument (RAG Vectorial).
     Optimizado: Compara el texto de cada registro con el de la base de datos. Si el texto no cambió, 
@@ -101,7 +102,7 @@ async def sync_user_rag_embeddings(db: AsyncSession, usuario_id: int, api_key: s
     return upserted_count
 
 
-async def _run_sync_in_background(usuario_id: int):
+async def _run_sync_in_background(usuario_id: UUID):
     async with async_session() as session:
         try:
             from app.models.usuario import Usuario
@@ -120,7 +121,7 @@ async def _run_sync_in_background(usuario_id: int):
         except Exception as e:
             print(f"Error en sync background RAG: {e}")
 
-def trigger_rag_sync_background(background_tasks, usuario_id: int):
+def trigger_rag_sync_background(background_tasks, usuario_id: UUID):
     """
     Dispara la sincronización RAG en segundo plano sin bloquear la respuesta de la API.
     """

@@ -49,7 +49,7 @@ async def list_proyectos(
 
 
 @router.get("/{proyecto_id}", response_model=ProyectoOut)
-async def get_proyecto(proyecto_id: int, db: AsyncSession = Depends(get_db)):
+async def get_proyecto(proyecto_id: UUID, db: AsyncSession = Depends(get_db)):
     cache_key = f"api:proyectos:{proyecto_id}"
     cached_data = await get_cached_json(cache_key)
     if cached_data is not None:
@@ -79,7 +79,7 @@ async def create_proyecto(
 
 @router.put("/{proyecto_id}", response_model=ProyectoOut)
 async def update_proyecto(
-    proyecto_id: int,
+    proyecto_id: UUID,
     body: ProyectoUpdate,
     db: AsyncSession = Depends(get_db),
     _=Depends(get_current_user),
@@ -95,7 +95,7 @@ async def update_proyecto(
 
 @router.delete("/{proyecto_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_proyecto(
-    proyecto_id: int,
+    proyecto_id: UUID,
     db: AsyncSession = Depends(get_db),
     _=Depends(get_current_user),
 ):

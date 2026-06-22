@@ -1,3 +1,4 @@
+from uuid import UUID
 # src/authentication/services.py
 import asyncio
 import secrets
@@ -62,7 +63,7 @@ async def authenticate_user(db_session: AsyncSession, login_identifier: str, pas
     await db_session.flush()
     return user
 
-async def create_user_session_history(db_session: AsyncSession, user_id: int, request: Request) -> None:
+async def create_user_session_history(db_session: AsyncSession, user_id: UUID, request: Request) -> None:
     """Registra los metadatos de la sesión actual."""
     session_entry = UsuarioSessionHistory(
         user_id=user_id,
@@ -72,7 +73,7 @@ async def create_user_session_history(db_session: AsyncSession, user_id: int, re
     )
     db_session.add(session_entry)
 
-async def update_user_session_logout_time(db_session: AsyncSession, user_id: int, request: Request) -> None:
+async def update_user_session_logout_time(db_session: AsyncSession, user_id: UUID, request: Request) -> None:
     """Marca el fin de la sesión para una IP específica."""
     ip_address = request.client.host if request.client else None
     stmt = (
@@ -162,7 +163,7 @@ async def verify_password_reset_token(db_session: AsyncSession, token: str) -> U
         
     return user
 
-async def reset_user_password(db_session: AsyncSession, user_id: int, token: str, new_password: str) -> None:
+async def reset_user_password(db_session: AsyncSession, user_id: UUID, token: str, new_password: str) -> None:
     """Actualiza la contraseña y quema el token."""
     user = await db_session.get(Usuario, user_id)
     if not user:
@@ -181,7 +182,7 @@ async def reset_user_password(db_session: AsyncSession, user_id: int, token: str
 
 async def create_refresh_token_db_entry(
     db_session: AsyncSession,
-    user_id: int,
+    user_id: UUID,
     token: str,
     expires_at: datetime,
     request: Request
@@ -208,7 +209,7 @@ async def revoke_refresh_token(db_session: AsyncSession, token: str) -> bool:
     await db_session.commit()
     return result.rowcount > 0
 
-async def revoke_all_user_sessions(db_session: AsyncSession, user_id: int) -> int:
+async def revoke_all_user_sessions(db_session: AsyncSession, user_id: UUID) -> int:
     """Revoca todos los tokens activos (Cierre de sesión global)."""
     stmt = (
         update(RefreshToken)

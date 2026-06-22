@@ -1,9 +1,11 @@
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Annotated, Optional, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select as sa_select
 
 from app.models import Usuario
+from app.models.rbac import Role
 from app.dependencies import get_current_user
 from app.database import get_db
 
@@ -51,28 +53,48 @@ async def search_users(
 @user_details_router.get("/profile")
 async def read_current_user_profile(
     current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)]
 ):
-    # Ya que dependemos de get_current_user, el usuario ya ha sido extraído y validado por token
+    from sqlalchemy.orm import selectinload
+    
+    # Reload user with rbac_role and permissions
+    stmt = sa_select(Usuario).options(
+        selectinload(Usuario.rbac_role).selectinload(Role.permissions)
+    ).where(Usuario.id == current_user.id)
+    result = await db_session.execute(stmt)
+    full_user = result.scalar_one()
+    
+    # Check if impersonating from dependency
+    is_impersonating = getattr(current_user, 'is_impersonating', False)
+    
+    perms = []
+    if full_user.rbac_role and full_user.rbac_role.permissions:
+        perms = [p.codename for p in full_user.rbac_role.permissions]
+
     return {
-        "id": current_user.id,
-        "username": current_user.username.split('@')[0],
-        "email": current_user.email,
-        "firstName": current_user.first_name,
-        "lastName": current_user.last_name,
-        "userImage": getattr(current_user, 'avatar_url', None) or getattr(current_user, 'user_image', None),
+        "id": full_user.id,
+        "username": full_user.username.split('@')[0],
+        "email": full_user.email,
+        "firstName": full_user.first_name,
+        "lastName": full_user.last_name,
+        "userImage": getattr(full_user, 'avatar_url', None) or getattr(full_user, 'user_image', None),
         "occupation": "Talento OppyTalent", # Hardcoded temporalmente
-        "roles": [], # Se añadirá si es necesario en un futuro
-        "chat_welcome_message": current_user.chat_welcome_message,
-        "ai_pitch_rules": getattr(current_user, 'ai_pitch_rules', []),
-        "portfolio_theme": current_user.portfolio_theme or "dark-glass",
-        "portfolio_layout": current_user.portfolio_layout or "tabs",
-        "google_refresh_token": bool(current_user.google_refresh_token),
-        "is_premium": getattr(current_user, 'is_premium', False),
-        "has_gemini_key": bool(getattr(current_user, 'encrypted_gemini_key', None)),
-        "ai_credits": getattr(current_user, 'ai_credits', 0),
-        "storage_used": getattr(current_user, 'storage_used', 0),
-        "is_visible_b2b": getattr(current_user, 'is_visible_b2b', False),
-        "is_recruiter": getattr(current_user, 'is_recruiter', False)
+        "role": full_user.role, # Legacy role
+        "role_id": full_user.role_id,
+        "role_name": full_user.rbac_role.name if full_user.rbac_role else None,
+        "permissions": perms,
+        "isImpersonating": is_impersonating,
+        "chat_welcome_message": full_user.chat_welcome_message,
+        "ai_pitch_rules": getattr(full_user, 'ai_pitch_rules', []),
+        "portfolio_theme": full_user.portfolio_theme or "dark-glass",
+        "portfolio_layout": full_user.portfolio_layout or "tabs",
+        "google_refresh_token": bool(full_user.google_refresh_token),
+        "is_premium": getattr(full_user, 'is_premium', False),
+        "has_gemini_key": bool(getattr(full_user, 'encrypted_gemini_key', None)),
+        "ai_credits": getattr(full_user, 'ai_credits', 0),
+        "storage_used": getattr(full_user, 'storage_used', 0),
+        "is_visible_b2b": getattr(full_user, 'is_visible_b2b', False),
+        "is_recruiter": getattr(full_user, 'is_recruiter', False)
     }
     
 from pydantic import BaseModel
@@ -133,6 +155,40 @@ async def update_b2b_config(
     await db_session.commit()
     return {"status": "success", "message": "B2B config updated", "is_visible_b2b": current_user.is_visible_b2b}
 
+class SelectRoleUpdate(BaseModel):
+    role_name: str
+
+@user_details_router.post("/select-role")
+async def select_user_role(
+    body: SelectRoleUpdate,
+    current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)],
+):
+    """Permite al usuario elegir su rol inicial (Hunter o Talent) si aún no tiene uno."""
+    if current_user.role_id is not None:
+        raise HTTPException(status_code=400, detail="El usuario ya tiene un rol asignado.")
+        
+    if body.role_name.upper() not in ["HUNTER", "TALENT"]:
+        raise HTTPException(status_code=400, detail="Rol inválido. Debe ser HUNTER o TALENT.")
+        
+    # Buscar el ID del rol (insensible a mayúsculas)
+    stmt = sa_select(Role).where(Role.name.ilike(body.role_name))
+    result = await db_session.execute(stmt)
+    role = result.scalar_one_or_none()
+    
+    if not role:
+        raise HTTPException(status_code=500, detail=f"No se encontró el rol {body.role_name} en la BD.")
+        
+    current_user.role_id = role.id
+    
+    # Configuraciones automáticas basadas en el rol
+    if body.role_name == "HUNTER":
+        current_user.is_recruiter = True
+        
+    await db_session.commit()
+    return {"status": "success", "message": f"Rol {body.role_name} asignado exitosamente.", "role_id": role.id}
+
+
 class GeminiKeyUpdate(BaseModel):
     api_key: str
 
@@ -169,7 +225,7 @@ class KYCVerification(BaseModel):
 
 @user_details_router.put("/kyc/verify-recruiter/{user_id}")
 async def verify_recruiter_kyc(
-    user_id: int,
+    user_id: UUID,
     body: KYCVerification,
     current_user: Annotated[Usuario, Depends(get_current_user)],
     db_session: Annotated[AsyncSession, Depends(get_db)],

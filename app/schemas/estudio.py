@@ -1,3 +1,5 @@
+from uuid import UUID
+from uuid import UUID
 from datetime import datetime
 from pydantic import BaseModel
 
@@ -11,8 +13,8 @@ class EstudioTraduccionCreate(EstudioTraduccionBase):
     pass
 
 class EstudioTraduccionOut(EstudioTraduccionBase):
-    id: int
-    estudio_id: int
+    id: UUID
+    estudio_id: UUID
 
     model_config = {"from_attributes": True}
 
@@ -32,7 +34,7 @@ class EstudioCreate(EstudioBase):
 class EstudioUpdate(BaseModel):
     institucion: str | None = None
     titulo: str | None = None
-    anio_obtencion: int | None = None
+    anio_obtencion: UUID | None = None
     descripcion_detallada: str | None = None
     link: str | None = None
     image_url: str | None = None
@@ -40,7 +42,7 @@ class EstudioUpdate(BaseModel):
 
 
 class EstudioOut(EstudioBase):
-    id: int
+    id: UUID
     is_active: bool
     created_at: datetime
     updated_at: datetime

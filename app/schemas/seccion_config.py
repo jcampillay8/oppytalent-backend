@@ -1,3 +1,4 @@
+from uuid import UUID
 from pydantic import BaseModel
 
 class SeccionConfigBase(BaseModel):
@@ -11,7 +12,7 @@ class SeccionConfigUpdate(BaseModel):
     is_expanded: bool
 
 class SeccionConfigResponse(SeccionConfigBase):
-    id: int
+    id: UUID
 
     class Config:
         from_attributes = True

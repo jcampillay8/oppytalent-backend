@@ -32,7 +32,7 @@ async def list_reconocimientos(username: str | None = None, db: AsyncSession = D
     return await get_all(db, Reconocimiento, filters=filters)
 
 @router.get("/{item_id}", response_model=ReconocimientoOut)
-async def get_reconocimiento(item_id: int, db: AsyncSession = Depends(get_db)):
+async def get_reconocimiento(item_id: UUID, db: AsyncSession = Depends(get_db)):
     item = await get_by_id(db, Reconocimiento, item_id)
     if not item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reconocimiento not found")
@@ -52,7 +52,7 @@ async def create_reconocimiento(
 
 @router.put("/{item_id}", response_model=ReconocimientoOut)
 async def update_reconocimiento(
-    item_id: int,
+    item_id: UUID,
     body: ReconocimientoUpdate,
     db: AsyncSession = Depends(get_db),
     current_user=Depends(get_current_user),
@@ -70,7 +70,7 @@ async def update_reconocimiento(
 
 @router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_reconocimiento(
-    item_id: int,
+    item_id: UUID,
     db: AsyncSession = Depends(get_db),
     current_user=Depends(get_current_user),
 ):

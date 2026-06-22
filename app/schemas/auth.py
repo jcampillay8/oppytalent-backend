@@ -1,3 +1,4 @@
+from uuid import UUID
 from datetime import datetime
 from pydantic import BaseModel
 
@@ -17,7 +18,7 @@ class LoginRequest(BaseModel):
 
 
 class UserOut(BaseModel):
-    id: int
+    id: UUID
     username: str
     email: str
     role: str

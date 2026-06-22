@@ -32,7 +32,7 @@ async def list_habilitaciones(username: str | None = None, db: AsyncSession = De
     return await get_all(db, Habilitacion, filters=filters)
 
 @router.get("/{item_id}", response_model=HabilitacionOut)
-async def get_habilitacion(item_id: int, db: AsyncSession = Depends(get_db)):
+async def get_habilitacion(item_id: UUID, db: AsyncSession = Depends(get_db)):
     item = await get_by_id(db, Habilitacion, item_id)
     if not item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Habilitacion not found")
@@ -52,7 +52,7 @@ async def create_habilitacion(
 
 @router.put("/{item_id}", response_model=HabilitacionOut)
 async def update_habilitacion(
-    item_id: int,
+    item_id: UUID,
     body: HabilitacionUpdate,
     db: AsyncSession = Depends(get_db),
     current_user=Depends(get_current_user),
@@ -70,7 +70,7 @@ async def update_habilitacion(
 
 @router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_habilitacion(
-    item_id: int,
+    item_id: UUID,
     db: AsyncSession = Depends(get_db),
     current_user=Depends(get_current_user),
 ):

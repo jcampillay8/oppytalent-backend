@@ -1,3 +1,5 @@
+from uuid import UUID
+from uuid import UUID
 from datetime import date, datetime
 from pydantic import BaseModel
 
@@ -12,8 +14,8 @@ class ExperienciaTraduccionCreate(ExperienciaTraduccionBase):
     pass
 
 class ExperienciaTraduccionOut(ExperienciaTraduccionBase):
-    id: int
-    experiencia_id: int
+    id: UUID
+    experiencia_id: UUID
 
     model_config = {"from_attributes": True}
 
@@ -47,7 +49,7 @@ class ExperienciaUpdate(BaseModel):
 
 
 class ExperienciaOut(ExperienciaBase):
-    id: int
+    id: UUID
     is_active: bool
     created_at: datetime
     updated_at: datetime

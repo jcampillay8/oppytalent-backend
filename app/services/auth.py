@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.models.usuario import Usuario
+from app.models.rbac import Role
 
 from app.utils import get_hashed_password, verify_password
 
@@ -29,16 +30,25 @@ async def authenticate_user(db: AsyncSession, username: str, password: str) -> U
 
 
 async def seed_admin_user(db: AsyncSession):
+    # Buscar el rol Owner (que debió ser creado por seed_rbac)
+    role_result = await db.execute(select(Role).where(Role.name == "Owner"))
+    owner_role = role_result.scalar_one_or_none()
+    role_id = owner_role.id if owner_role else None
+
+    target_username = "jcampillayworks@gmail.com"
+    
     result = await db.execute(
-        select(Usuario).where(Usuario.username == settings.admin_username)
+        select(Usuario).where(Usuario.username == target_username)
     )
     user = result.scalar_one_or_none()
+    
     if not user:
         admin = Usuario(
-            username=settings.admin_username,
-            email=f"{settings.admin_username}@portafolio.local",
+            username=target_username,
+            email=target_username,
             hashed_password=await get_hashed_password(settings.admin_password),
-            role="ADMIN",
+            role="SUPERADMIN",
+            role_id=role_id
         )
         db.add(admin)
         await db.flush()

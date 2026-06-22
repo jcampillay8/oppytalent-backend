@@ -4,7 +4,7 @@ from sqlalchemy.future import select
 from sqlalchemy import func
 from sqlalchemy.orm import selectinload
 from app.database import get_db, async_session
-from app.dependencies import get_current_user
+from app.dependencies import get_current_user, RequirePermission
 from app.models.usuario import Usuario
 from app.models.portfolio_document import PortfolioDocument
 from app.models.b2b_tribunal import TribunalLog, TribunalParticipant
@@ -21,7 +21,7 @@ class SearchQuery(BaseModel):
     limit: int = 5
 
 class SearchResult(BaseModel):
-    usuario_id: int
+    usuario_id: UUID
     first_name: Optional[str]
     last_name: Optional[str]
     username: str
@@ -32,12 +32,8 @@ class SearchResult(BaseModel):
 async def search_talent(
     body: SearchQuery,
     db: AsyncSession = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(RequirePermission("can_use_b2b_search"))
 ):
-    # Verify user is a recruiter or superadmin (KYC Validation)
-    if not current_user.is_recruiter and current_user.role != "SUPERADMIN":
-        raise HTTPException(status_code=403, detail="Acceso denegado. Requiere verificación KYC de Empresa/Headhunter.")
-        
     # Billing / Freemium Control for B2B Search (Check Only)
     if current_user.role != "SUPERADMIN" and not current_user.encrypted_gemini_key:
         if current_user.ai_credits < 1:
@@ -107,7 +103,7 @@ class TribunalQuery(BaseModel):
     candidate_ids: List[int]
 
 class CandidateResponse(BaseModel):
-    usuario_id: int
+    usuario_id: UUID
     username: str
     first_name: Optional[str]
     last_name: Optional[str]
@@ -119,17 +115,15 @@ class TribunalResult(BaseModel):
 
 class TribunalCandidateQuery(BaseModel):
     question: str
-    candidate_id: int
+    candidate_id: UUID
 
 @router.post("/tribunal/candidate", response_model=CandidateResponse)
 async def tribunal_candidate(
     body: TribunalCandidateQuery,
     db: AsyncSession = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(RequirePermission("can_execute_tribunal"))
 ):
     """Generates the response for a single candidate."""
-    if not current_user.is_recruiter and current_user.role != "SUPERADMIN":
-        raise HTTPException(status_code=403, detail="Acceso denegado.")
 
     if current_user.role != "SUPERADMIN" and not current_user.encrypted_gemini_key:
         if current_user.ai_credits < 1:
@@ -215,7 +209,7 @@ class ModeratorQuery(BaseModel):
 class ModeratorResponse(BaseModel):
     moderator_summary: str
 
-async def generate_talent_feedback(log_id: int):
+async def generate_talent_feedback(log_id: UUID):
     """Background task to generate personalized feedback for each candidate in a Tribunal."""
     from app.ai_management.services import ask_oppy_ai
     from app.ai_management.config import DEFAULT_MODEL
@@ -258,10 +252,8 @@ async def tribunal_moderator(
     body: ModeratorQuery,
     background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(RequirePermission("can_execute_tribunal"))
 ):
-    if not current_user.is_recruiter and current_user.role != "SUPERADMIN":
-        raise HTTPException(status_code=403, detail="Acceso denegado.")
 
     if current_user.role != "SUPERADMIN" and not current_user.encrypted_gemini_key:
         if current_user.ai_credits < 1:
@@ -334,7 +326,7 @@ Mantén un tono analítico, profesional y directo al punto.
     return ModeratorResponse(moderator_summary=mod_answer)
 
 class TribunalHistoryResponse(BaseModel):
-    id: int
+    id: UUID
     question: str
     moderator_summary: str
     created_at: str
@@ -342,12 +334,9 @@ class TribunalHistoryResponse(BaseModel):
 @router.get("/tribunals/history", response_model=List[TribunalHistoryResponse])
 async def get_tribunal_history(
     db: AsyncSession = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(RequirePermission("can_execute_tribunal"))
 ):
     """Returns the history of tribunals for a recruiter."""
-    if not current_user.is_recruiter and current_user.role != "SUPERADMIN":
-        raise HTTPException(status_code=403, detail="Acceso denegado.")
-        
     stmt = select(TribunalLog).where(TribunalLog.recruiter_id == current_user.id).order_by(TribunalLog.created_at.desc())
     res = await db.execute(stmt)
     logs = res.scalars().all()
@@ -363,7 +352,7 @@ async def get_tribunal_history(
     ]
 
 class TalentFeedbackResponse(BaseModel):
-    id: int
+    id: UUID
     question: str
     clone_answer: str
     talent_feedback: Optional[str]
@@ -372,7 +361,7 @@ class TalentFeedbackResponse(BaseModel):
 @router.get("/tribunals/talent-feedback", response_model=List[TalentFeedbackResponse])
 async def get_talent_feedback(
     db: AsyncSession = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(RequirePermission("can_view_own_feedback"))
 ):
     """Returns the feedback logs for a talent's clone."""
     stmt = select(TribunalParticipant).options(selectinload(TribunalParticipant.tribunal_log)).where(
@@ -407,7 +396,7 @@ class DemandResponse(BaseModel):
 @router.get("/insights/demand", response_model=DemandResponse)
 async def get_demand_insights(
     db: AsyncSession = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(RequirePermission("can_view_demand"))
 ):
     """
     Retorna analítica sobre lo que están buscando los reclutadores.
@@ -446,3 +435,20 @@ async def get_demand_insights(
         ],
         suggestion="La tendencia marca un fuerte crecimiento en Cloud y SSR. Te sugerimos subir un proyecto demostrando despliegues Serverless o en contenedores."
     )
+
+@router.post("/qa/reset-credits")
+async def qa_reset_credits(
+    db: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user)
+):
+    """
+    Ruta exclusiva para el Owner (Testing/QA).
+    Permite recargar créditos instantáneamente mientras hace pruebas de impersonación.
+    """
+    if current_user.role != "SUPERADMIN":
+        raise HTTPException(status_code=403, detail="Esta ruta es exclusiva para el equipo de QA/Owner.")
+        
+    current_user.ai_credits += 10
+    await db.commit()
+    
+    return {"message": f"Se han recargado 10 créditos. Total actual: {current_user.ai_credits}"}

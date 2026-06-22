@@ -37,7 +37,7 @@ async def list_frases(
 
 
 @router.get("/{frase_id}", response_model=FraseCelebreResponse)
-async def get_frase(frase_id: int, db: AsyncSession = Depends(get_db)):
+async def get_frase(frase_id: UUID, db: AsyncSession = Depends(get_db)):
     frase = await get_by_id(db, FraseCelebre, frase_id)
     if not frase:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Frase not found")
@@ -58,7 +58,7 @@ async def create_frase(
 
 @router.put("/{frase_id}", response_model=FraseCelebreResponse)
 async def update_frase(
-    frase_id: int,
+    frase_id: UUID,
     body: FraseCelebreUpdate,
     db: AsyncSession = Depends(get_db),
     _=Depends(get_current_user),
@@ -72,7 +72,7 @@ async def update_frase(
 
 @router.delete("/{frase_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_frase(
-    frase_id: int,
+    frase_id: UUID,
     db: AsyncSession = Depends(get_db),
     _=Depends(get_current_user),
 ):

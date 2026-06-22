@@ -1,5 +1,6 @@
+import uuid
 from datetime import date
-from sqlalchemy import String, Text, Date, ForeignKey
+from sqlalchemy import Uuid, String, Text, Date, ForeignKey
 from sqlalchemy.types import JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -9,8 +10,8 @@ from app.database import BaseModel
 class Experiencia(BaseModel):
     __tablename__ = "experiencias"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
+    usuario_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
     empresa: Mapped[str] = mapped_column(String(255), nullable=False)
     rol: Mapped[str] = mapped_column(String(255), nullable=False)
     periodo_inicio: Mapped[date] = mapped_column(Date, nullable=False)
@@ -27,8 +28,8 @@ class Experiencia(BaseModel):
 class ExperienciaTraduccion(BaseModel):
     __tablename__ = "experiencia_traducciones"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    experiencia_id: Mapped[int] = mapped_column(ForeignKey("experiencias.id", ondelete="CASCADE"), nullable=False, index=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
+    experiencia_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("experiencias.id", ondelete="CASCADE"), nullable=False, index=True)
     idioma: Mapped[str] = mapped_column(String(5), nullable=False, index=True)
     
     # Campos traducibles

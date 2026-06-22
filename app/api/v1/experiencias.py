@@ -49,7 +49,7 @@ async def list_experiencias(
 
 
 @router.get("/{experiencia_id}", response_model=ExperienciaOut)
-async def get_experiencia(experiencia_id: int, db: AsyncSession = Depends(get_db)):
+async def get_experiencia(experiencia_id: UUID, db: AsyncSession = Depends(get_db)):
     cache_key = f"api:experiencias:{experiencia_id}"
     cached_data = await get_cached_json(cache_key)
     if cached_data is not None:
@@ -79,7 +79,7 @@ async def create_experiencia(
 
 @router.put("/{experiencia_id}", response_model=ExperienciaOut)
 async def update_experiencia(
-    experiencia_id: int,
+    experiencia_id: UUID,
     body: ExperienciaUpdate,
     db: AsyncSession = Depends(get_db),
     _=Depends(get_current_user),
@@ -95,7 +95,7 @@ async def update_experiencia(
 
 @router.delete("/{experiencia_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_experiencia(
-    experiencia_id: int,
+    experiencia_id: UUID,
     db: AsyncSession = Depends(get_db),
     _=Depends(get_current_user),
 ):

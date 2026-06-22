@@ -37,7 +37,7 @@ async def list_perfiles(
 
 
 @router.get("/{perfil_id}", response_model=PerfilOut)
-async def get_perfil(perfil_id: int, db: AsyncSession = Depends(get_db)):
+async def get_perfil(perfil_id: UUID, db: AsyncSession = Depends(get_db)):
     perfil = await get_by_id(db, Perfil, perfil_id)
     if not perfil:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Perfil not found")
@@ -59,7 +59,7 @@ async def create_perfil(
 
 @router.put("/{perfil_id}", response_model=PerfilOut)
 async def update_perfil(
-    perfil_id: int,
+    perfil_id: UUID,
     body: PerfilUpdate,
     db: AsyncSession = Depends(get_db),
     _=Depends(get_current_user),
@@ -74,7 +74,7 @@ async def update_perfil(
 
 @router.delete("/{perfil_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_perfil(
-    perfil_id: int,
+    perfil_id: UUID,
     db: AsyncSession = Depends(get_db),
     _=Depends(get_current_user),
 ):

@@ -35,7 +35,7 @@ def _model_to_dict(entity):
         data[column.name] = _serialize(val)
     return data
 
-async def load_db_context(db: AsyncSession, usuario_id: int) -> str:
+async def load_db_context(db: AsyncSession, usuario_id: UUID) -> str:
     cache_key = f"ai_context:{usuario_id}"
     try:
         cached = await redis_client.get(cache_key)
@@ -71,7 +71,7 @@ async def load_db_context(db: AsyncSession, usuario_id: int) -> str:
         
     return context_str
 
-async def load_rag_context(db: AsyncSession, usuario_id: int, query: str, api_key: str = None) -> str:
+async def load_rag_context(db: AsyncSession, usuario_id: UUID, query: str, api_key: str = None) -> str:
     """
     Intenta usar la búsqueda semántica vectorial (pgvector) para extraer solo 
     el contexto relevante. Si falla (ej. vectores no generados), cae en el contexto completo.
@@ -130,11 +130,11 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     content: str
-    log_id: int
+    log_id: UUID
 
 
 class ChatLogResponse(BaseModel):
-    id: int
+    id: UUID
     ip_address: str | None
     city: str | None = None
     region: str | None = None
@@ -388,7 +388,7 @@ class ChatClickRequest(BaseModel):
     clicked_link: str
 
 @router.patch("/{log_id}/click")
-async def register_click(log_id: int, payload: ChatClickRequest, db: AsyncSession = Depends(get_db)):
+async def register_click(log_id: UUID, payload: ChatClickRequest, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(ChatLog).where(ChatLog.id == log_id))
     chat_log = result.scalar_one_or_none()
     if not chat_log:

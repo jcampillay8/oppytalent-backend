@@ -1,3 +1,5 @@
+from uuid import UUID
+from uuid import UUID
 from datetime import date, datetime
 from pydantic import BaseModel
 
@@ -15,8 +17,8 @@ class ProyectoTraduccionCreate(ProyectoTraduccionBase):
     pass
 
 class ProyectoTraduccionOut(ProyectoTraduccionBase):
-    id: int
-    proyecto_id: int
+    id: UUID
+    proyecto_id: UUID
 
     model_config = {"from_attributes": True}
 
@@ -54,7 +56,7 @@ class ProyectoUpdate(BaseModel):
 
 
 class ProyectoOut(ProyectoBase):
-    id: int
+    id: UUID
     is_active: bool
     created_at: datetime
     updated_at: datetime

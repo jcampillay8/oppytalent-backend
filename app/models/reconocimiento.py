@@ -1,4 +1,5 @@
-from sqlalchemy import String, Integer, Text, ForeignKey
+import uuid
+from sqlalchemy import Uuid, String, Integer, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import BaseModel
@@ -7,8 +8,8 @@ from app.database import BaseModel
 class Reconocimiento(BaseModel):
     __tablename__ = "reconocimientos"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
+    usuario_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
     tipo: Mapped[str] = mapped_column(String(50), nullable=False) # PREMIO, PUBLICACION, MEDIO
     titulo: Mapped[str] = mapped_column(String(255), nullable=False)
     institucion: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -24,8 +25,8 @@ class Reconocimiento(BaseModel):
 class ReconocimientoTraduccion(BaseModel):
     __tablename__ = "reconocimiento_traducciones"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    reconocimiento_id: Mapped[int] = mapped_column(ForeignKey("reconocimientos.id", ondelete="CASCADE"), nullable=False, index=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
+    reconocimiento_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("reconocimientos.id", ondelete="CASCADE"), nullable=False, index=True)
     idioma: Mapped[str] = mapped_column(String(5), nullable=False, index=True)
     
     titulo: Mapped[str] = mapped_column(String(255), nullable=False)

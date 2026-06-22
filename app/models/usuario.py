@@ -1,4 +1,5 @@
-from sqlalchemy import String, Text, Boolean, DateTime, Integer, JSON
+import uuid
+from sqlalchemy import Uuid, String, Text, Boolean, DateTime, Integer, JSON, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from typing import TYPE_CHECKING, List
@@ -12,11 +13,15 @@ from app.database import BaseModel
 class Usuario(BaseModel):
     __tablename__ = "usuarios"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
     username: Mapped[str] = mapped_column(String(100), unique=True, nullable=False, index=True)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(Text, nullable=False)
-    role: Mapped[str] = mapped_column(String(20), default="VIEWER", nullable=False)
+    role: Mapped[str] = mapped_column(String(20), default="VIEWER", nullable=False) # Legacy role
+    
+    # RBAC Support
+    role_id: Mapped[uuid.UUID | None] = mapped_column(Uuid, ForeignKey("roles.id"), nullable=True)
+    rbac_role = relationship("Role")
     
     first_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
     last_name: Mapped[str | None] = mapped_column(String(100), nullable=True)

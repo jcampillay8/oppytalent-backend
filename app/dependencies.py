@@ -39,6 +39,14 @@ async def get_current_user(
     if getattr(user, 'is_deleted', False):
         print(f"User is deleted: {username}")
         raise credentials_exception
+        
+    impersonated_role_id = payload.get("impersonated_role_id")
+    if impersonated_role_id:
+        user.is_impersonating = True
+        user.role_id = impersonated_role_id
+    else:
+        user.is_impersonating = False
+        
     return user
 
 
@@ -49,3 +57,39 @@ async def get_admin_user(current_user: Usuario = Depends(get_current_user)) -> U
             detail="Not enough permissions. ADMIN role required.",
         )
     return current_user
+
+class RequirePermission:
+    def __init__(self, codename: str):
+        self.codename = codename
+
+    async def __call__(
+        self, 
+        current_user: Usuario = Depends(get_current_user),
+        db: AsyncSession = Depends(get_db)
+    ) -> Usuario:
+        if not current_user.role_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="User has no assigned role"
+            )
+            
+        from sqlalchemy import text
+        from sqlalchemy.future import select
+        from app.models.rbac import Permission, RolePermission
+        
+        # Check if the role has the requested permission
+        query = select(RolePermission).join(
+            Permission, RolePermission.permission_id == Permission.id
+        ).where(
+            RolePermission.role_id == current_user.role_id,
+            Permission.codename == self.codename
+        )
+        
+        result = await db.execute(query)
+        if not result.first():
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Missing permission: {self.codename}"
+            )
+            
+        return current_user

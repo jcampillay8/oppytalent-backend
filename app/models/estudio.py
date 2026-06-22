@@ -1,4 +1,5 @@
-from sqlalchemy import String, Integer, Text, ForeignKey
+import uuid
+from sqlalchemy import Uuid, String, Integer, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import BaseModel
@@ -7,8 +8,8 @@ from app.database import BaseModel
 class Estudio(BaseModel):
     __tablename__ = "estudios"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
+    usuario_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
     institucion: Mapped[str] = mapped_column(String(255), nullable=False)
     titulo: Mapped[str] = mapped_column(String(255), nullable=False)
     anio_obtencion: Mapped[int] = mapped_column(Integer, nullable=False)
@@ -22,8 +23,8 @@ class Estudio(BaseModel):
 class EstudioTraduccion(BaseModel):
     __tablename__ = "estudio_traducciones"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    estudio_id: Mapped[int] = mapped_column(ForeignKey("estudios.id", ondelete="CASCADE"), nullable=False, index=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
+    estudio_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("estudios.id", ondelete="CASCADE"), nullable=False, index=True)
     idioma: Mapped[str] = mapped_column(String(5), nullable=False, index=True)
     
     # Campos traducibles

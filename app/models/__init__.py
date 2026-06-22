@@ -1,3 +1,5 @@
+from sqlalchemy import Uuid
+import uuid
 from app.models.usuario import Usuario
 from app.models.proyecto import Proyecto
 from app.models.experiencia import Experiencia
@@ -10,6 +12,12 @@ from app.models.reconocimiento import Reconocimiento
 from app.models.habilitacion import Habilitacion
 from app.models.portfolio_document import PortfolioDocument
 from app.models.b2b_tribunal import TribunalLog, TribunalParticipant
+from app.models.rbac import Role, Permission
 from app.authentication.models import UsuarioSessionHistory, PasswordResetToken, RefreshToken, EmailConfirmationToken
 
-__all__ = ["Usuario", "Proyecto", "Experiencia", "Estudio", "Perfil", "FraseCelebre", "SeccionConfig", "ChatLog", "Reconocimiento", "Habilitacion", "PortfolioDocument", "TribunalLog", "TribunalParticipant", "UsuarioSessionHistory", "PasswordResetToken", "RefreshToken", "EmailConfirmationToken"]
+__all__ = [
+    "Usuario", "Proyecto", "Experiencia", "Estudio", "Perfil", "FraseCelebre", 
+    "SeccionConfig", "ChatLog", "Reconocimiento", "Habilitacion", "PortfolioDocument", 
+    "TribunalLog", "TribunalParticipant", "Role", "Permission",
+    "UsuarioSessionHistory", "PasswordResetToken", "RefreshToken", "EmailConfirmationToken"
+]

@@ -1,3 +1,4 @@
+from uuid import UUID
 import json
 from datetime import date, datetime
 from app.services.rate_limit import redis_client
@@ -38,7 +39,7 @@ async def clear_cache_namespace(namespace: str):
     except Exception:
         pass
 
-async def clear_ai_context(usuario_id: int):
+async def clear_ai_context(usuario_id: UUID):
     """Clears the AI context cache for a specific user and triggers RAG sync in background."""
     try:
         await redis_client.delete(f"ai_context:{usuario_id}")

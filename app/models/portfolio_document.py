@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Index
+import uuid
+from sqlalchemy import Column, Uuid, Integer, String, Text, ForeignKey, Index
 from sqlalchemy.orm import mapped_column
 from pgvector.sqlalchemy import Vector
 from app.database import Base

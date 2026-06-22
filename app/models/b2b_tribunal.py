@@ -1,13 +1,14 @@
+import uuid
 from typing import Optional, List
-from sqlalchemy import String, Text, ForeignKey
+from sqlalchemy import Uuid, String, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import BaseModel
 
 class TribunalLog(BaseModel):
     __tablename__ = "b2b_tribunal_logs"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    recruiter_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", ondelete="CASCADE"), index=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
+    recruiter_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("usuarios.id", ondelete="CASCADE"), index=True)
     question: Mapped[str] = mapped_column(Text, nullable=False)
     moderator_summary: Mapped[str] = mapped_column(Text, nullable=False)
 
@@ -18,9 +19,9 @@ class TribunalLog(BaseModel):
 class TribunalParticipant(BaseModel):
     __tablename__ = "b2b_tribunal_participants"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    tribunal_log_id: Mapped[int] = mapped_column(ForeignKey("b2b_tribunal_logs.id", ondelete="CASCADE"), index=True)
-    candidate_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", ondelete="CASCADE"), index=True)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4, index=True)
+    tribunal_log_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("b2b_tribunal_logs.id", ondelete="CASCADE"), index=True)
+    candidate_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("usuarios.id", ondelete="CASCADE"), index=True)
     clone_answer: Mapped[str] = mapped_column(Text, nullable=False)
     
     # Optional AI-generated feedback specifically for the talent

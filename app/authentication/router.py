@@ -24,7 +24,7 @@ from app.authentication.utils import create_access_token, create_refresh_token
 from app.config import settings
 from app.database import get_db
 from app.models import Usuario
-from app.dependencies import get_current_user
+from app.dependencies import get_current_user, RequirePermission
 from app.authentication.services import get_user_by_refresh_token
 
 logger = logging.getLogger(__name__)
@@ -165,3 +165,77 @@ async def reset_password(
         return {"message": "Contraseña restablecida con éxito."}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@auth_router.post("/impersonate")
+async def impersonate_role(
+    body: ImpersonateRequestSchema,
+    request: Request,
+    response: Response,
+    db_session: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(RequirePermission("can_impersonate"))
+):
+    from app.models.rbac import Role
+    
+    # 1. Check if the target role exists
+    target_role = await db_session.get(Role, body.role_id)
+    if not target_role:
+        raise HTTPException(status_code=404, detail="El rol no existe.")
+        
+    # 2. Create new JWTs with impersonated_role_id
+    new_access_token = create_access_token(current_user.email, impersonated_role_id=target_role.id)
+    new_refresh_token = create_refresh_token(current_user.email, impersonated_role_id=target_role.id)
+    
+    # Update refresh token in DB
+    refresh_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+    await create_refresh_token_db_entry(
+        db_session=db_session,
+        user_id=current_user.id,
+        token=new_refresh_token,
+        expires_at=refresh_expires,
+        request=request
+    )
+    
+    # 3. Set cookies
+    cookie_conf = get_cookie_settings(request)
+    response.set_cookie(key="access_token", value=new_access_token, httponly=True, path="/", **cookie_conf)
+    response.set_cookie(key="refresh_token", value=new_refresh_token, httponly=True, path="/", **cookie_conf)
+    
+    # Return simulated user state
+    current_user.role_id = target_role.id
+    current_user.token_expires_at = int((datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)).timestamp())
+    current_user.access_token = new_access_token
+    
+    # Do not save to DB!
+    db_session.expunge(current_user)
+    
+    return current_user
+
+
+@auth_router.post("/restore")
+async def restore_role(
+    request: Request,
+    response: Response,
+    db_session: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user)
+):
+    # Returns normal tokens using real role_id
+    new_access_token = create_access_token(current_user.email)
+    new_refresh_token = create_refresh_token(current_user.email)
+    
+    refresh_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+    await create_refresh_token_db_entry(
+        db_session=db_session,
+        user_id=current_user.id,
+        token=new_refresh_token,
+        expires_at=refresh_expires,
+        request=request
+    )
+    
+    cookie_conf = get_cookie_settings(request)
+    response.set_cookie(key="access_token", value=new_access_token, httponly=True, path="/", **cookie_conf)
+    response.set_cookie(key="refresh_token", value=new_refresh_token, httponly=True, path="/", **cookie_conf)
+    
+    current_user.token_expires_at = int((datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)).timestamp())
+    current_user.access_token = new_access_token
+    
+    return current_user

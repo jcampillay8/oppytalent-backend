@@ -1,3 +1,4 @@
+from uuid import UUID
 # src/authentication/utils.py
 
 from datetime import datetime, timedelta, timezone
@@ -6,7 +7,7 @@ from jose import jwt
 from app.config import settings
 
 
-def create_access_token(subject: str | Any, expires_delta: timedelta = None, impersonated_role_id: int | None = None, schema_name: str | None = None) -> str:
+def create_access_token(subject: str | Any, expires_delta: timedelta = None, impersonated_role_id: UUID | None = None, schema_name: str | None = None) -> str:
     # Usar datetime aware (con zona horaria)
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -22,7 +23,7 @@ def create_access_token(subject: str | Any, expires_delta: timedelta = None, imp
     return jwt.encode(to_encode, settings.JWT_ACCESS_SECRET_KEY, settings.ENCRYPTION_ALGORITHM)
 
 
-def create_refresh_token(subject: str | Any, expires_delta: timedelta = None, impersonated_role_id: int | None = None, schema_name: str | None = None) -> str:
+def create_refresh_token(subject: str | Any, expires_delta: timedelta = None, impersonated_role_id: UUID | None = None, schema_name: str | None = None) -> str:
     # Cambiar int por timedelta en el type hint y usar timezone.utc
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES))
     

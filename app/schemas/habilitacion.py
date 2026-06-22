@@ -1,3 +1,5 @@
+from uuid import UUID
+from uuid import UUID
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -11,8 +13,8 @@ class HabilitacionTraduccionCreate(HabilitacionTraduccionBase):
     pass
 
 class HabilitacionTraduccionOut(HabilitacionTraduccionBase):
-    id: int
-    habilitacion_id: int
+    id: UUID
+    habilitacion_id: UUID
 
     model_config = {"from_attributes": True}
 
@@ -35,8 +37,8 @@ class HabilitacionUpdate(BaseModel):
     traducciones: list[HabilitacionTraduccionCreate] | None = None
 
 class HabilitacionOut(HabilitacionBase):
-    id: int
-    usuario_id: int
+    id: UUID
+    usuario_id: UUID
     is_active: bool
     created_at: datetime
     updated_at: datetime

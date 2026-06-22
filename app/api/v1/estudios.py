@@ -39,7 +39,7 @@ async def list_estudios(
 
 
 @router.get("/{estudio_id}", response_model=EstudioOut)
-async def get_estudio(estudio_id: int, db: AsyncSession = Depends(get_db)):
+async def get_estudio(estudio_id: UUID, db: AsyncSession = Depends(get_db)):
     estudio = await get_by_id(db, Estudio, estudio_id)
     if not estudio:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Estudio not found")
@@ -61,7 +61,7 @@ async def create_estudio(
 
 @router.put("/{estudio_id}", response_model=EstudioOut)
 async def update_estudio(
-    estudio_id: int,
+    estudio_id: UUID,
     body: EstudioUpdate,
     db: AsyncSession = Depends(get_db),
     _=Depends(get_current_user),
@@ -76,7 +76,7 @@ async def update_estudio(
 
 @router.delete("/{estudio_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_estudio(
-    estudio_id: int,
+    estudio_id: UUID,
     db: AsyncSession = Depends(get_db),
     _=Depends(get_current_user),
 ):

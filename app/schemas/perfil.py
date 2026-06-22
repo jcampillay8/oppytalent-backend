@@ -1,3 +1,5 @@
+from uuid import UUID
+from uuid import UUID
 from datetime import datetime
 from pydantic import BaseModel
 
@@ -10,8 +12,8 @@ class PerfilTraduccionCreate(PerfilTraduccionBase):
     pass
 
 class PerfilTraduccionOut(PerfilTraduccionBase):
-    id: int
-    perfil_id: int
+    id: UUID
+    perfil_id: UUID
 
     model_config = {"from_attributes": True}
 
@@ -55,7 +57,7 @@ class PerfilUpdate(BaseModel):
 
 
 class PerfilOut(PerfilBase):
-    id: int
+    id: UUID
     is_active: bool
     created_at: datetime
     updated_at: datetime

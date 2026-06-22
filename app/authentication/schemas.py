@@ -1,3 +1,4 @@
+from uuid import UUID
 # src/authentication/schemas.py
 from pydantic import (
     UUID4, 
@@ -27,7 +28,7 @@ class UsuarioPublicSchema(BaseModel):
         populate_by_name=True
     )
 
-    id: int
+    id: UUID
     user_guid: Optional[UUID4] = Field(None, alias="guid") 
     username: str
     email: str
@@ -122,4 +123,4 @@ class LoginResponseSchema(UsuarioPublicSchema):
     token_type: str = Field("bearer", alias="tokenType")
 
 class ImpersonateRequestSchema(BaseModel):
-    role_id: int = Field(..., description="ID del rol a suplantar")
+    role_id: UUID = Field(..., description="ID del rol a suplantar")
