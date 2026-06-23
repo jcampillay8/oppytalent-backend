@@ -41,11 +41,8 @@ async def call_gemini_api(
         output_tokens = usage.candidates_token_count if usage else 0
         
     except Exception as e:
-        content = f"Error: {str(e)}"
-        if expect_json:
-            content = "{}"
-        input_tokens = 0
-        output_tokens = 0
+        # Re-raise the exception so the orchestrator can catch it and perform retries
+        raise e
     
     # CÁLCULO DE COSTO usando los precios de la DB (model_cfg)
     cost = (input_tokens * (model_cfg.input_price_per_million / 1_000_000)) + \

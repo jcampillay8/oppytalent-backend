@@ -11,6 +11,7 @@ class ProyectoTraduccionBase(BaseModel):
     descripcion_detallada: str
     stack_tecnologico: list[str] = []
     kpis: dict | None = None
+    galeria: list[dict] | None = None
     tags: list[str] = []
 
 class ProyectoTraduccionCreate(ProyectoTraduccionBase):
@@ -31,6 +32,7 @@ class ProyectoBase(BaseModel):
     link_github: str | None = None
     link_demo: str | None = None
     kpis: dict | None = None
+    galeria: list[dict] | None = None
     tags: list[str] = []
     image_url: str | None = None
     youtube_url: str | None = None
@@ -49,6 +51,7 @@ class ProyectoUpdate(BaseModel):
     link_github: str | None = None
     link_demo: str | None = None
     kpis: dict | None = None
+    galeria: list[dict] | None = None
     tags: list[str] | None = None
     image_url: str | None = None
     youtube_url: str | None = None

@@ -82,6 +82,18 @@ async def ask_oppy_ai(
     # 4. Bucle de ejecución con reintentos
     while attempt <= retries:
         try:
+            # 4.1. Lógica de Fallback: Si estamos en el último intento, usamos un modelo alternativo
+            if attempt == retries and retries > 0:
+                fallback_query = select(AIModelConfig).where(
+                    AIModelConfig.is_active == True,
+                    AIModelConfig.id != model_cfg.id
+                )
+                fallback_res = await db.execute(fallback_query)
+                fallback_model_cfg = fallback_res.scalars().first()
+                if fallback_model_cfg:
+                    logger.warning(f"Cambiando a modelo de respaldo (Fallback): {fallback_model_cfg.model_name}")
+                    model_cfg = fallback_model_cfg
+
             ai_res: AIResponse = await call_gemini_api(
                 system_instruction=system_instruction,
                 user_prompt=final_user_prompt,

@@ -15,13 +15,23 @@ async def get_seccion_configs(
     username: str | None = None,
     db: AsyncSession = Depends(get_db)
 ):
-    user_id = 1 # Default fallback
+    user_id = None
     if username:
         from app.models.usuario import Usuario
-        result = await db.execute(select(Usuario).where(Usuario.username == username))
+        from sqlalchemy import or_
+        result = await db.execute(select(Usuario).where(
+            or_(
+                Usuario.username == username,
+                Usuario.email == username,
+                Usuario.username.ilike(f"{username}@%")
+            )
+        ))
         user = result.scalar_one_or_none()
         if user:
             user_id = user.id
+
+    if not user_id:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
     result = await db.execute(select(SeccionConfig).where(SeccionConfig.usuario_id == user_id))
     configs = result.scalars().all()

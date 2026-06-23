@@ -20,6 +20,7 @@ class Proyecto(BaseModel):
     link_github: Mapped[str | None] = mapped_column(String(500), nullable=True)
     link_demo: Mapped[str | None] = mapped_column(String(500), nullable=True)
     kpis: Mapped[dict | None] = mapped_column(JSON, nullable=True, default=dict)
+    galeria: Mapped[list | None] = mapped_column(JSON, nullable=True, default=list)
     tags: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
     image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     youtube_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
@@ -40,6 +41,7 @@ class ProyectoTraduccion(BaseModel):
     descripcion_detallada: Mapped[str] = mapped_column(Text, nullable=False)
     stack_tecnologico: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
     kpis: Mapped[dict | None] = mapped_column(JSON, nullable=True, default=dict)
+    galeria: Mapped[list | None] = mapped_column(JSON, nullable=True, default=list)
     tags: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
 
     proyecto: Mapped["Proyecto"] = relationship("Proyecto", back_populates="traducciones")
