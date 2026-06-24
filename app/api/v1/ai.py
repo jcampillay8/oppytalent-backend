@@ -111,16 +111,21 @@ Tu tarea es extraer la información relevante y devolver ESTRICTAMENTE un objeto
   "datos_contacto": {{ "nombre": "Nombre Real Extraído", "ocupacion": "Cargo o Profesión", "telefono": "Teléfono", "email": "Email", "ubicacion": "Ciudad/País", "linkedin": "URL", "sobre_mi": "Resumen o Perfil Personal", "habilidades": ["Habilidad 1", "Habilidad 2"] }},
   "proyectos": [ {{ "titulo": "Proyecto", "descripcion": "Descripción", "tecnologias": ["Tech1"] }} ],
   "experiencias": [ {{ "empresa": "Empresa", "cargo": "Puesto", "periodo_inicio": "YYYY-MM", "periodo_fin": "YYYY-MM o null", "descripcion": "Logros" }} ],
-  "estudios": [ {{ "institucion": "Institución", "titulo": "Título", "anio_obtencion": 2020 }} ]
+  "estudios": [ {{ "institucion": "Institución", "titulo": "Título", "anio_obtencion": 2020 }} ],
+  "reconocimientos": [ {{ "institucion": "Institución", "titulo": "Premio o Publicación", "tipo": "Premio", "descripcion": "Descripción del reconocimiento", "fecha": "YYYY-MM" }} ],
+  "habilitaciones": [ {{ "tipo": "Licencia", "titulo": "Licencia de Conducir Clase B", "descripcion": "Descripción si aplica" }} ]
 }}
 
 REGLAS CRÍTICAS DE CERO ALUCINACIONES (ZERO-HALLUCINATION):
 1. BAJO NINGÚN CONTEXTO inventes información. NUNCA uses nombres de ejemplo (como "Juan Pérez") ni crees experiencias o estudios falsos o genéricos.
 2. Si no encuentras el nombre real de la persona en el documento, devuelve null en el campo "nombre".
-3. Si el documento no contiene proyectos, devuelve una lista vacía [] para "proyectos". Aplica lo mismo para "experiencias" y "estudios". Para los proyectos, si no hay tecnologías explícitas pero sí descripciones de las tareas realizadas (ej. "Lideré un equipo de ventas"), intuye y extrae herramientas, metodologías o habilidades que se usaron (ej. "Liderazgo", "Ventas", "CRM") y colócalas en "tecnologias".
+3. Si el documento no contiene proyectos, devuelve una lista vacía [] para "proyectos". Aplica lo mismo para "experiencias", "estudios", "reconocimientos" y "habilitaciones". Para los proyectos, si no hay tecnologías explícitas pero sí descripciones de las tareas realizadas (ej. "Lideré un equipo de ventas"), intuye y extrae herramientas, metodologías o habilidades que se usaron (ej. "Liderazgo", "Ventas", "CRM") y colócalas en "tecnologias".
 4. Si detectas que el documento es ilegible, es un documento completamente ajeno a un CV, o es pura basura sin sentido, devuelve ESTRICTAMENTE este JSON: {{"error": "unreadable"}}
 5. La respuesta debe ser ÚNICAMENTE el objeto JSON en crudo, sin etiquetas como ```json ni comentarios extra.
 6. EL IDIOMA FINAL DEL JSON DEBE SER ESPAÑOL. Traduce el contenido al español si está en otro idioma.
+7. INSTRUCCIÓN CRÍTICA: La "Formación Complementaria", cursos o seminarios DEBEN ir en la sección "estudios".
+8. INSTRUCCIÓN CRÍTICA: Si el candidato tiene "Reconocimientos", "Premios", "Publicaciones", colócalos en la sección "reconocimientos". Si tiene "Disponibilidad Inmediata", licencias de conducir, "Disponibilidad de Turnos" (Full-Time, Part-Time, Rotativos), o disponibilidad para "radicarse en otro lugar" o "viajar", colócalos en "habilitaciones".
+9. INSTRUCCIÓN CRÍTICA: En las descripciones de las "experiencias" y "proyectos", si el currículum original presenta las funciones o logros como una lista con viñetas (bullets) o guiones, DEBES preservar ese formato de lista utilizando sintaxis Markdown válida (guiones -).
 
 Aquí está el texto extraído del CV:
 {markdown_text}
