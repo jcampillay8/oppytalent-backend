@@ -13,11 +13,12 @@ from app.models.habilitacion import Habilitacion
 from app.models.portfolio_document import PortfolioDocument
 from app.models.b2b_tribunal import TribunalLog, TribunalParticipant
 from app.models.rbac import Role, Permission
+from app.models.conversation import Conversation, Message
 from app.authentication.models import UsuarioSessionHistory, PasswordResetToken, RefreshToken, EmailConfirmationToken
 
 __all__ = [
     "Usuario", "Proyecto", "Experiencia", "Estudio", "Perfil", "FraseCelebre", 
     "SeccionConfig", "ChatLog", "Reconocimiento", "Habilitacion", "PortfolioDocument", 
-    "TribunalLog", "TribunalParticipant", "Role", "Permission",
+    "TribunalLog", "TribunalParticipant", "Role", "Permission", "Conversation", "Message",
     "UsuarioSessionHistory", "PasswordResetToken", "RefreshToken", "EmailConfirmationToken"
 ]

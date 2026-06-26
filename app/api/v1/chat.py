@@ -293,14 +293,14 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
     if getattr(portfolio_user, "ai_pitch_rules", None):
         rules = portfolio_user.ai_pitch_rules
         if isinstance(rules, list) and len(rules) > 0:
-            pitch_rules_text = "\nDIRECTRICES ESTRATÉGICAS DE VENTA (REGLAS CONDICIONALES):\n"
-            pitch_rules_text += "A continuación se te entregan directrices específicas creadas por el talento. Si la intención de la pregunta coincide con un 'TEMA', DEBES aplicar el 'ARGUMENTO DE VENTA' por sobre el comportamiento predeterminado, y terminar invitando a hacer clic en el 'ENLACE' indicado usando botones SI/NO:\n"
+            pitch_rules_text = "\n🔥 DIRECTIVA ABSOLUTA DE MÁXIMA PRIORIDAD (AGENT SKILLS):\n"
+            pitch_rules_text += "Las siguientes reglas sobreescriben CUALQUIER otra instrucción (incluso la regla 5). Si la pregunta del usuario menciona o se relaciona conceptualmente con CUALQUIERA de las palabras clave de un TEMA, DEBES priorizar el 'ARGUMENTO DE VENTA' y omitir respuestas genéricas.\n"
             for rule in rules:
                 keyword = rule.get("keyword", "")
                 pitch = rule.get("pitch", "")
                 link = rule.get("call_to_action", "#")
                 if keyword and pitch:
-                    pitch_rules_text += f"- TEMA '{keyword}': {pitch} Al finalizar, invita preguntando exactamente: ¿Desea ir a ver esto? [SÍ]({link}) / [NO](#)\n"
+                    pitch_rules_text += f"\n- TEMA / PALABRAS CLAVE: [{keyword}]\n  ARGUMENTO DE VENTA A USAR MÁXIMA PRIORIDAD: {pitch}\n  ACCIÓN OBLIGATORIA FINAL: Al final de tu respuesta, no uses la regla 5, usa EXACTAMENTE esta pregunta interactiva: ¿Desea ir a ver esto? [SÍ]({link}) / [NO](#)\n"
 
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(context=context, full_name=full_name, pitch_rules_block=pitch_rules_text)
 
