@@ -8,6 +8,7 @@ from app.models.reconocimiento import Reconocimiento
 from app.schemas.reconocimiento import ReconocimientoCreate, ReconocimientoOut, ReconocimientoUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
 from app.services.cache import clear_ai_context
+from app.models.networking import FeedEvent, FeedEventType
 
 router = APIRouter(prefix="/reconocimientos", tags=["reconocimientos"])
 
@@ -48,6 +49,15 @@ async def create_reconocimiento(
     data = body.model_dump()
     data["usuario_id"] = current_user.id
     entity = await create(db, Reconocimiento, data)
+    
+    feed_event = FeedEvent(
+        user_id=current_user.id,
+        event_type=FeedEventType.NEW_CERTIFICATION,
+        entity_id=entity.id
+    )
+    db.add(feed_event)
+    await db.commit()
+    
     await clear_ai_context(current_user.id)
     return entity
 

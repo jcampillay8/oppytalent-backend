@@ -8,6 +8,7 @@ from app.models.experiencia import Experiencia
 from app.schemas.experiencia import ExperienciaCreate, ExperienciaOut, ExperienciaUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
 from app.services.cache import get_cached_json, set_cached_json, clear_cache_namespace, clear_ai_context
+from app.models.networking import FeedEvent, FeedEventType
 
 router = APIRouter(prefix="/experiencias", tags=["experiencias"])
 
@@ -73,6 +74,15 @@ async def create_experiencia(
     data = body.model_dump()
     data["usuario_id"] = current_user.id
     entity = await create(db, Experiencia, data)
+    
+    feed_event = FeedEvent(
+        user_id=current_user.id,
+        event_type=FeedEventType.NEW_EXPERIENCE,
+        entity_id=entity.id
+    )
+    db.add(feed_event)
+    await db.commit()
+    
     await clear_cache_namespace("api:experiencias")
     await clear_ai_context(current_user.id)
     return entity

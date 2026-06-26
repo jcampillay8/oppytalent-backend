@@ -8,6 +8,7 @@ from app.models.proyecto import Proyecto
 from app.schemas.proyecto import ProyectoCreate, ProyectoOut, ProyectoUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
 from app.services.cache import get_cached_json, set_cached_json, clear_cache_namespace, clear_ai_context
+from app.models.networking import FeedEvent, FeedEventType
 
 router = APIRouter(prefix="/proyectos", tags=["proyectos"])
 
@@ -73,6 +74,16 @@ async def create_proyecto(
     data = body.model_dump()
     data["usuario_id"] = current_user.id
     entity = await create(db, Proyecto, data)
+    
+    # Generate Feed Event
+    feed_event = FeedEvent(
+        user_id=current_user.id,
+        event_type=FeedEventType.NEW_PROJECT,
+        entity_id=entity.id
+    )
+    db.add(feed_event)
+    await db.commit()
+    
     await clear_cache_namespace("api:proyectos")
     await clear_ai_context(current_user.id)
     return entity

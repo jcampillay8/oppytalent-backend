@@ -8,6 +8,7 @@ from app.models.estudio import Estudio
 from app.schemas.estudio import EstudioCreate, EstudioOut, EstudioUpdate
 from app.services.crud import get_all, get_by_id, create, update, soft_delete
 from app.services.cache import clear_ai_context
+from app.models.networking import FeedEvent, FeedEventType
 
 router = APIRouter(prefix="/estudios", tags=["estudios"])
 
@@ -56,6 +57,15 @@ async def create_estudio(
     data = body.model_dump()
     data["usuario_id"] = current_user.id
     entity = await create(db, Estudio, data)
+    
+    feed_event = FeedEvent(
+        user_id=current_user.id,
+        event_type=FeedEventType.NEW_STUDY,
+        entity_id=entity.id
+    )
+    db.add(feed_event)
+    await db.commit()
+    
     await clear_ai_context(current_user.id)
     return entity
 
