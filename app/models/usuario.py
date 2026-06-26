@@ -26,6 +26,7 @@ class Usuario(BaseModel):
     first_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
     last_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
     user_image: Mapped[str | None] = mapped_column(String(1048), nullable=True)
+    custom_slug: Mapped[str | None] = mapped_column(String(100), unique=True, nullable=True, index=True)
     is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     has_accepted_terms: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     

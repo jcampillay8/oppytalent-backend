@@ -31,7 +31,8 @@ async def get_current_user(
         raise credentials_exception
 
     from sqlalchemy import or_
-    result = await db.execute(select(Usuario).where(or_(Usuario.username == username, Usuario.email == username)))
+    result = await db.execute(select(Usuario).where(or_(Usuario.custom_slug == username,
+                Usuario.username == username, Usuario.email == username)))
     user = result.scalar_one_or_none()
     if user is None:
         print(f"User not found for username/email: {username}")

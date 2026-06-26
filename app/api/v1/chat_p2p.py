@@ -194,7 +194,8 @@ async def websocket_endpoint(
             await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
             return
             
-        result = await session.execute(select(Usuario).where(or_(Usuario.username == username, Usuario.email == username)))
+        result = await session.execute(select(Usuario).where(or_(Usuario.custom_slug == username,
+                Usuario.username == username, Usuario.email == username)))
         user = result.scalar_one_or_none()
         
         if not user or getattr(user, 'is_deleted', False):

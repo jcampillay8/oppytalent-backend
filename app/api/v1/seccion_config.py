@@ -21,6 +21,7 @@ async def get_seccion_configs(
         from sqlalchemy import or_
         result = await db.execute(select(Usuario).where(
             or_(
+                Usuario.custom_slug == username,
                 Usuario.username == username,
                 Usuario.email == username,
                 Usuario.username.ilike(f"{username}@%")

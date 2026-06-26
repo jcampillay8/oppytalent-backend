@@ -26,6 +26,7 @@ async def list_estudios(
         from app.models.usuario import Usuario
         result = await db.execute(sa_select(Usuario).where(
             or_(
+                Usuario.custom_slug == username,
                 Usuario.username == username,
                 Usuario.email == username,
                 Usuario.username.ilike(f"{username}@%")

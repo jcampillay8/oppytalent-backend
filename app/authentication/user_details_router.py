@@ -74,6 +74,7 @@ async def read_current_user_profile(
     return {
         "id": full_user.id,
         "username": full_user.username.split('@')[0],
+        "custom_slug": full_user.custom_slug,
         "email": full_user.email,
         "firstName": full_user.first_name,
         "lastName": full_user.last_name,
@@ -270,6 +271,49 @@ async def sync_rag_vectors(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al sincronizar vectores: {str(e)}")
 
+class CustomSlugUpdate(BaseModel):
+    slug: str
+
+@user_details_router.put("/slug")
+async def update_custom_slug(
+    body: CustomSlugUpdate,
+    current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)],
+):
+    import re
+    # 1. Check permissions / premium status
+    if current_user.role != "SUPERADMIN" and not getattr(current_user, 'is_premium', False) and not (current_user.rbac_role and current_user.rbac_role.name.upper() == 'OWNER'):
+        # Just simple validation for now, adjust based on actual Premium logic
+        pass
+
+    slug = body.slug.strip().lower()
+    
+    # 2. Validate format (alphanumeric and dashes only)
+    if not re.match(r'^[a-z0-9\-]+$', slug):
+        raise HTTPException(status_code=400, detail="El slug solo puede contener letras minúsculas, números y guiones.")
+        
+    if len(slug) < 3 or len(slug) > 50:
+        raise HTTPException(status_code=400, detail="El slug debe tener entre 3 y 50 caracteres.")
+        
+    # 3. Ensure uniqueness
+    # Check if slug is used by someone else
+    from sqlalchemy import or_
+    existing_query = sa_select(Usuario).where(
+        Usuario.id != current_user.id,
+        or_(
+            Usuario.custom_slug == slug,
+            Usuario.username.ilike(f"{slug}@%")
+        )
+    )
+    existing_result = await db_session.execute(existing_query)
+    if existing_result.scalar_one_or_none():
+        raise HTTPException(status_code=409, detail="Este enlace ya está en uso por otro talento.")
+        
+    current_user.custom_slug = slug
+    await db_session.commit()
+    
+    return {"status": "success", "message": "Enlace personalizado actualizado exitosamente.", "custom_slug": slug}
+
 
 @user_details_router.get("/{username}")
 async def get_user_by_username(
@@ -278,8 +322,10 @@ async def get_user_by_username(
 ):
     from sqlalchemy import or_
     # Look up by the prefix or full email since usernames are emails right now
+    # Look up by the prefix, full email, or custom_slug
     query = sa_select(Usuario).where(
         or_(
+            Usuario.custom_slug == username,
             Usuario.username == username,
             Usuario.email == username,
             Usuario.username.ilike(f"{username}@%")
@@ -293,7 +339,8 @@ async def get_user_by_username(
         
     return {
         "id": user.id,
-        "username": user.username.split('@')[0],
+        "username": user.custom_slug or user.username.split('@')[0],
+        "custom_slug": user.custom_slug,
         "firstName": user.first_name,
         "lastName": user.last_name,
         "userImage": getattr(user, 'avatar_url', None) or getattr(user, 'user_image', None),
