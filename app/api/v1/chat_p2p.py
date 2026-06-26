@@ -1,15 +1,18 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, WebSocket, WebSocketDisconnect
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, and_, update, func
 from typing import List
 from uuid import UUID
+from jose import JWTError, jwt
 
+from app.config import settings
 from app.database import get_db
 from app.dependencies import get_current_user
 from app.models.usuario import Usuario
 from app.models.perfil import Perfil
 from app.models.conversation import Conversation, Message
 from app.schemas.chat_p2p import ConversationOut, MessageCreate, MessageOut, ChatStartRequest
+from app.services.websocket_manager import manager
 
 router = APIRouter(tags=["chat_p2p"])
 
@@ -116,6 +119,14 @@ async def send_message(
     
     await session.commit()
     await session.refresh(new_message)
+    
+    # Notify the other user
+    other_user_id = conversation.participant2_id if conversation.participant1_id == current_user.id else conversation.participant1_id
+    await manager.send_personal_message(
+        {"type": "new_message", "conversation_id": str(conversation_id)},
+        str(other_user_id)
+    )
+    
     return new_message
 
 
@@ -168,6 +179,40 @@ async def get_unread_count(
     )
     count = result.scalar() or 0
     return {"unread_count": count}
+
+
+@router.websocket("/ws")
+async def websocket_endpoint(
+    websocket: WebSocket,
+    token: str,
+    session: AsyncSession = Depends(get_db)
+):
+    try:
+        payload = jwt.decode(token, settings.JWT_ACCESS_SECRET_KEY, algorithms=[settings.ENCRYPTION_ALGORITHM])
+        username: str = payload.get("sub")
+        if not username:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            return
+            
+        result = await session.execute(select(Usuario).where(or_(Usuario.username == username, Usuario.email == username)))
+        user = result.scalar_one_or_none()
+        
+        if not user or getattr(user, 'is_deleted', False):
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            return
+            
+        user_id_str = str(user.id)
+        
+    except JWTError:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        return
+
+    await manager.connect(websocket, user_id_str)
+    try:
+        while True:
+            data = await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect(websocket, user_id_str)
 
 
 # --- Helper functions ---
