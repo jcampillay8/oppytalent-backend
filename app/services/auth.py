@@ -38,7 +38,7 @@ async def seed_admin_user(db: AsyncSession):
     target_username = "jcampillayworks@gmail.com"
     
     result = await db.execute(
-        select(Usuario).where(Usuario.username == target_username)
+        select(Usuario).where(Usuario.email == target_username)
     )
     user = result.scalar_one_or_none()
     
