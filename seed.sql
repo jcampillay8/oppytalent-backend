@@ -996,20 +996,25 @@ CREATE TABLE IF NOT EXISTS oppy.demo_chat_scripts (
     usuario_id UUID PRIMARY KEY REFERENCES oppy.usuarios(id) ON DELETE CASCADE,
     step_1 TEXT NOT NULL,
     step_2 TEXT NOT NULL,
-    step_3 TEXT NOT NULL
+    step_3 TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    is_active BOOLEAN DEFAULT true NOT NULL
 );
 
-INSERT INTO oppy.demo_chat_scripts (usuario_id, step_1, step_2, step_3)
+INSERT INTO oppy.demo_chat_scripts (usuario_id, step_1, step_2, step_3, is_active)
 SELECT 
     u.id, 
     '👋 ¡Hola! Soy el clon digital de prueba de un(a) **' || COALESCE(p.ocupacion, 'Profesional') || '**. Mi objetivo es mostrarte cómo OppyTalent puede extraer tu experiencia, certificaciones y habilidades directamente de tu currículum para representarte profesionalmente las 24 horas del día ante reclutadores o clientes. ¿Qué te parece?',
     '🤖 Normalmente, si yo fuera un usuario real, estaría analizando tus preguntas mediante Inteligencia Artificial y respondiendo de forma estratégica basándome **estrictamente en los datos de mi portafolio** (mi experiencia, proyectos, KPIs, etc.). Por motivos de seguridad y para evitar un mal uso en esta vitrina pública, en este perfil de prueba solo respondo con estos mensajes automáticos... ¡pero imagina el potencial que esta tecnología tiene para potenciar tu propia carrera!',
-    '🔒 **Límite de demostración alcanzado.**\n\nSi quieres ver el verdadero poder de la IA conversacional trabajando a tu favor respondiendo preguntas reales, te invito a crear tu propia cuenta. Puedes cargar tu CV, personalizar tu diseño y probar tu Clon Digital en vivo.\n\n¡Es gratis y solo toma un par de minutos!\n\n¿Deseas ir al registro? [SÍ](/register) / [NO](#)'
+    '🔒 **Límite de demostración alcanzado.**\n\nSi quieres ver el verdadero poder de la IA conversacional trabajando a tu favor respondiendo preguntas reales, te invito a crear tu propia cuenta. Puedes cargar tu CV, personalizar tu diseño y probar tu Clon Digital en vivo.\n\n¡Es gratis y solo toma un par de minutos!\n\n¿Deseas ir al registro? [SÍ](/register) / [NO](#)',
+    true
 FROM oppy.usuarios u 
 JOIN oppy.perfiles p ON u.id = p.usuario_id 
 WHERE u.email LIKE '%@demo.oppytalent.com'
 ON CONFLICT (usuario_id) DO UPDATE SET
     step_1 = EXCLUDED.step_1,
     step_2 = EXCLUDED.step_2,
-    step_3 = EXCLUDED.step_3;
+    step_3 = EXCLUDED.step_3,
+    is_active = EXCLUDED.is_active;
 

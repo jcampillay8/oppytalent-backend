@@ -47,7 +47,7 @@ class Usuario(BaseModel):
     
     # AI Config
     encrypted_gemini_key: Mapped[str | None] = mapped_column(String(2048), nullable=True)
-    ai_credits: Mapped[int] = mapped_column(Integer, default=10, server_default="10", nullable=False)
+    ai_credits: Mapped[int] = mapped_column(Integer, default=50, server_default="50", nullable=False)
     
     # Storage
     storage_used: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)

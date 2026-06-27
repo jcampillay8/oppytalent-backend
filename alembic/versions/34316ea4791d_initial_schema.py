@@ -1,8 +1,8 @@
-"""initial_schema_uuid
+"""Initial Schema
 
-Revision ID: 34a182dc639a
+Revision ID: 34316ea4791d
 Revises: 
-Create Date: 2026-06-22 16:55:27.999054
+Create Date: 2026-06-27 20:54:26.782421
 """
 from typing import Sequence, Union
 
@@ -10,7 +10,7 @@ from alembic import op
 import sqlalchemy as sa
 
 
-revision: str = '34a182dc639a'
+revision: str = '34316ea4791d'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

@@ -37,16 +37,36 @@ async def lifespan(app: FastAPI):
     yield
 
 
+current_env = settings.ENVIRONMENT.lower()
+
+is_production = current_env == "production"
+is_test = current_env == "test"
+is_development = current_env == "development"
+
+# Solo ocultamos la documentación si estamos en producción.
+show_docs = not is_production
+
 app = FastAPI(
-    title="Portafolio API - Jaime Campillay",
-    description="API asíncrona para la gestión de trayectoria profesional",
+    title="Portafolio API - OppyTalent",
+    description="API asíncrona para la gestión de talento y reclutamiento B2B",
     version="1.0.0",
     lifespan=lifespan,
+    docs_url="/docs" if show_docs else None,
+    redoc_url="/redoc" if show_docs else None,
+    openapi_url="/openapi.json" if show_docs else None
 )
+
+# Reglas de Seguridad CORS por ambiente
+if is_production:
+    cors_origins = [settings.WEBSITE_URL] # Muy estricto
+elif is_test:
+    cors_origins = ["http://localhost:5173", settings.WEBSITE_URL] # Híbrido para QA
+else:
+    cors_origins = ["*"] # Totalmente abierto para Desarrollo local
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

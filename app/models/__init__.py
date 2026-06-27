@@ -16,11 +16,12 @@ from app.models.rbac import Role, Permission
 from app.models.conversation import Conversation, Message
 from app.authentication.models import UsuarioSessionHistory, PasswordResetToken, RefreshToken, EmailConfirmationToken
 from app.models.networking import NetworkConnection, NetworkFollow, FeedEvent, NetworkSuggestion
+from app.models.demo_chat_script import DemoChatScript
 
 __all__ = [
     "Usuario", "Proyecto", "Experiencia", "Estudio", "Perfil", "FraseCelebre", 
     "SeccionConfig", "ChatLog", "Reconocimiento", "Habilitacion", "PortfolioDocument", 
     "TribunalLog", "TribunalParticipant", "Role", "Permission", "Conversation", "Message",
     "UsuarioSessionHistory", "PasswordResetToken", "RefreshToken", "EmailConfirmationToken",
-    "NetworkConnection", "NetworkFollow", "FeedEvent", "NetworkSuggestion"
+    "NetworkConnection", "NetworkFollow", "FeedEvent", "NetworkSuggestion", "DemoChatScript"
 ]
