@@ -254,7 +254,62 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
                     is_authenticated = True
             except Exception:
                 pass
+
+    # Extract last user message early for logging
+    last_user_msg = "No message"
+    for msg in reversed(payload.messages):
+        if msg.role == "user":
+            last_user_msg = msg.content
+            break
+
+    # -------------------------------------------------------------
+    # DEMO PROFILE INTERCEPTION
+    # -------------------------------------------------------------
+    if portfolio_user.email and portfolio_user.email.endswith("@demo.oppytalent.com"):
+        demo_step = 1
+        if ip_address and ip_address != "unknown":
+            demo_key = f"demo_chat_step:{ip_address}:{portfolio_user.id}"
+            try:
+                demo_step = await redis_client.incr(demo_key)
+                if demo_step == 1:
+                    await redis_client.expire(demo_key, 86400) # 24 hours
+            except Exception:
+                pass
                 
+        # Fetch scripts from DB
+        stmt = select(func.current_setting('server_version')).where(False) # dummy
+        # We need to use text for raw queries or create a quick model. 
+        # Better yet, execute raw sql.
+        from sqlalchemy import text
+        script_res = await db.execute(
+            text("SELECT step_1, step_2, step_3 FROM oppy.demo_chat_scripts WHERE usuario_id = :uid"),
+            {"uid": portfolio_user.id}
+        )
+        script_row = script_res.fetchone()
+        
+        if not script_row:
+            ai_res_content = "Hola, soy un perfil de demostración."
+        else:
+            if demo_step == 1:
+                ai_res_content = script_row.step_1
+            elif demo_step == 2:
+                ai_res_content = script_row.step_2
+            else:
+                ai_res_content = script_row.step_3
+                
+        # Save chat log and return immediately
+        chat_log = ChatLog(
+            usuario_id=portfolio_user.id,
+            ip_address=ip_address,
+            user_message=last_user_msg,
+            ai_response=ai_res_content
+        )
+        db.add(chat_log)
+        await db.commit()
+        await db.refresh(chat_log)
+        return ChatResponse(content=ai_res_content, log_id=chat_log.id)
+    # -------------------------------------------------------------
+
     # Enforce Daily Quota for Unauthenticated Users (e.g., 10 messages per IP per Portfolio)
     if not is_authenticated and ip_address and ip_address != "unknown":
         quota_key = f"chat_quota:{ip_address}:{portfolio_user.id}"
@@ -345,12 +400,7 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
         else:
             ai_res_content = "Disculpa, he tenido un pequeño percance técnico interno. ¿Podrías intentar formular tu pregunta nuevamente?"
 
-    # Extract last user message
-    last_user_msg = "No message"
-    for msg in reversed(payload.messages):
-        if msg.role == "user":
-            last_user_msg = msg.content
-            break
+    # Extract last user message logic was moved up. Use last_user_msg.
 
     # Fetch location info from ipinfo.io
     city, region, country = None, None, None
