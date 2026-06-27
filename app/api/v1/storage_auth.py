@@ -18,7 +18,7 @@ def get_google_drive_flow():
             "client_secret": settings.GOOGLE_CLIENT_SECRET,
             "auth_uri": "https://accounts.google.com/o/oauth2/auth",
             "token_uri": "https://oauth2.googleapis.com/token",
-            "redirect_uris": ["http://localhost:8000/api/v1/storage/google/callback"]
+            "redirect_uris": [f"{settings.API_URL}/v1/storage/google/callback"]
         }
     }
     return Flow.from_client_config(
@@ -29,7 +29,7 @@ def get_google_drive_flow():
             "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/drive.file"
         ],
-        redirect_uri="http://localhost:8000/api/v1/storage/google/callback"
+        redirect_uri=f"{settings.API_URL}/v1/storage/google/callback"
     )
 
 @router.get("/google/login")
@@ -43,7 +43,7 @@ async def google_drive_login(current_user=Depends(get_current_user)):
     # Generar la URL de autorización manualmente para evitar problemas de estado PKCE
     params = {
         "client_id": settings.GOOGLE_CLIENT_ID,
-        "redirect_uri": "http://localhost:8000/api/v1/storage/google/callback",
+        "redirect_uri": f"{settings.API_URL}/v1/storage/google/callback",
         "response_type": "code",
         "scope": "openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive.file",
         "access_type": "offline",
@@ -66,7 +66,7 @@ async def google_drive_callback(code: str, state: str, db: AsyncSession = Depend
             "code": code,
             "client_id": settings.GOOGLE_CLIENT_ID,
             "client_secret": settings.GOOGLE_CLIENT_SECRET,
-            "redirect_uri": "http://localhost:8000/api/v1/storage/google/callback",
+            "redirect_uri": f"{settings.API_URL}/v1/storage/google/callback",
             "grant_type": "authorization_code",
         }
         async with httpx.AsyncClient() as client:

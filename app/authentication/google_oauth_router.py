@@ -90,7 +90,7 @@ async def google_mobile_signin(
 @google_router.get("/login", summary="Initiate Google OAuth login flow")
 async def google_login(request: Request):
     """Redirige al usuario a la página de inicio de sesión de Google."""
-    redirect_uri = request.url_for('google_auth_callback')
+    redirect_uri = settings.GOOGLE_REDIRECT_URI or str(request.url_for('google_auth_callback'))
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 @google_router.get("/callback", name="google_auth_callback", summary="Handle Google OAuth callback")
