@@ -987,6 +987,887 @@ INSERT INTO oppy.reconocimientos
                     (id, usuario_id, tipo, titulo, institucion, fecha, descripcion, referencia, is_active)
                     VALUES ('599f1836-e9ab-431a-8d09-fd4162cc71ca', 'ce2979fe-b849-4153-be41-8e042002d2d9', 'Logro', 'Capacitación en Evaluación de Laboratorio',
                     'Lab', NULL, 'Capacité a 50 docentes en evaluaciones prácticas de laboratorio, mejorando la infraestructura educativa y la calidad de la enseñanza.', NULL, true);
+DELETE FROM oppy.usuarios WHERE email = 'jcampillayworks@gmail.com';
+
+INSERT INTO oppy.usuarios 
+    (id, username, email, hashed_password, role, is_active, is_deleted, has_accepted_terms, 
+    is_recruiter, is_visible_b2b, is_premium, ai_credits, storage_used, failed_login_attempts, ai_pitch_rules, first_name, last_name)
+    VALUES ('00000000-0000-4000-8000-000000000000', 'jcampillay', 'jcampillayworks@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$vBdiLGUspXSulRKidC7l/A$vwkpc1phF7VpnDavco7Zl79BrdydfIo8LdZ5dXZUpxA', 'ADMIN', true, false, true, false, true, true, 1000, 0, 0, '[]'::json, 'Jaime', 'Campillay');
+
+
+INSERT INTO oppy.perfiles 
+    (id, usuario_id, email, nombre_completo, ocupacion, descripcion, avatar_url, 
+    telefono, linkedin, github, youtube_url, ciudad, certificaciones, idiomas, habilidades, is_active)
+    VALUES ('e99d5dd7-c9af-4aba-b419-0837048cdcb5', '00000000-0000-4000-8000-000000000000', 'jcampillayworks@gmail.com',
+    'Jaime Gabriel Campillay Rojas', 'INGENIERO CIVIL INDUSTRIAL | SENIOR SOFTWARE & DATA ENGINEER', '¡Hola! Soy **Jaime Campillay**, un profesional apasionado por el punto de encuentro entre la **Ingeniería, los Datos y la Tecnología con propósito**. Mi viaje profesional está impulsado por una curiosidad inagotable, la auto-superación constante y la convicción de que la mejor tecnología es aquella que resuelve problemas reales, mejora la experiencia humana y abre nuevas oportunidades en armonía con nuestro entorno.
+
+---
+
+### 💼 Mi Trayectoria: El Puente entre Estrategia y Ejecución
+
+Poseo una formación como **Ingeniero Civil Industrial** y un **Magíster en Ingeniería Industrial y de Sistemas**. A diferencia del desarrollo de software tradicional, mi enfoque nativo proviene del pensamiento sistémico, la optimización de procesos y la visión de negocios. Sin embargo, mi profundo amor por la programación me llevó a convertirme en **Lead Full-Stack Software Engineer** y **Especialista en Ingeniería de Datos**.
+
+A lo largo de mi carrera, he tenido el privilegio de diseñar e implementar soluciones de alta complejidad en sectores sumamente exigentes:
+* **Gran Industria y Minería:** Optimizando la reportabilidad y el control operacional en terreno bajo condiciones extremas (Mina Los Bronces).
+* **Banca y Finanzas Corporativas:** Diseñando robustos robots transaccionales (RPA en UiPath REFramework), pipelines ETL de migración cloud (GCP/Talend) e integraciones analíticas complejas para la mitigación de riesgos cambiarios en mesas de dinero.
+* **Consultoría Tecnológica de Vanguardia:** Modelando hojas de ruta de infraestructura crítica y arquitecturas híbridas (Docker y Kubernetes) para el procesamiento interbancario del país.
+
+---
+
+### 🚀 Emprendimiento e Innovación Humana
+
+Hoy en día, canalizo toda esta experiencia acumulada como **Fundador de OppyChat**, una plataforma EdTech impulsada por Inteligencia Artificial y arquitecturas asíncronas en tiempo real. Este proyecto nació de mi propio camino y aspiración por dominar el idioma inglés, y representa fielmente mi visión de la tecnología: utilizar modelos avanzados de IA no como herramientas frías, sino como puentes interactivos y personalizados para ayudar a las personas a romper barreras comunicativas y conectar con una audiencia global.
+
+---
+
+### 🌿 Filosofía de Vida: Equilibrio, Lógica y Gratitud
+
+Más allá de las líneas de código, las bases de datos y la nube, creo firmemente en un enfoque de vida equilibrado e íntegro. Encuentro mi balance ideal combinando la rigurosidad analítica con la expresión creativa a través de la **música y la guitarra**, una práctica que me permite entrelazar la lógica y la intuición de una forma profundamente satisfactoria.
+
+Mi conexión con la Tierra es profunda y espiritual. Considero que cada rincón de nuestra naturaleza y cada ser vivo albergan un valor incalculable que merece nuestro respeto, cuidado y gratitud. Para mí, el **trekking y el senderismo** en la alta montaña no son solo pasatiempos para mantenerme físicamente activo; son espacios sagrados de desconexión y reflexión que me inspiran, me devuelven la perspectiva y me recuerdan nuestro deber colectivo de proteger y preservar la belleza y diversidad de la Tierra para las generaciones futuras.
+
+Afronto cada proyecto, cada célula de trabajo en equipo y cada línea de código con alegría, resiliencia y el compromiso de generar un impacto que sea técnicamente excelente, económicamente viable y ambientalmente consciente. 
+
+*¿Construimos algo significativo juntos?*',
+    'https://pub-693986afee154b369b5ca2b96d341053.r2.dev/a49b10ecb3cc4b3e857f183c5b3e29c4_Foto_Personal.webp', '+569-81394911', 'https://www.linkedin.com/in/jaime-campillay/',
+    'https://github.com/jcampillay8', NULL, 'SANTIAGO, CHILE',
+    '[]'::json, '[]'::json, '["Modelos de Lenguaje Grandes (LLM", "GenAI)", "Python (Polars", "Pandas", "Flask", "FastAPI)", "SQL Avanzado", "PostgreSQL", "MySQL", "SQL Server", "Pipelines de Datos (ETL)", "Google Cloud Platform (GCP)", "Microsoft Azure Data", "Docker", "Control de Versiones (Git)", "Linux", "Dashboards de Visualizaci\u00f3n (Dash", "Plotly", "Power BI", "D3.js)", "An\u00e1lisis de Confiabilidad de Activos (MTBF", "MTTR)", "Control de Gesti\u00f3n Operativa", "Metodolog\u00edas \u00c1giles"]'::json, true);
+
+
+INSERT INTO oppy.experiencias 
+    (id, usuario_id, empresa, rol, periodo_inicio, periodo_fin, descripcion_logros, tags_industria, is_active)
+    VALUES ('85b24b66-3dbf-4694-ade1-e2e004d7f84a', '00000000-0000-4000-8000-000000000000', 'TECHINT - Ingeniería & Construcción', 'Ingeniero Analista en Programación y Control de Gestión',
+    '2019-04-01', '2020-10-01', '## Analista Programador y Control de Gestión — Techint  
+**Proyecto Mina Los Bronces | Servicios para Anglo American**  
+*2019 – 2020*
+
+- **Analítica de Avance y Reportabilidad (HH Ganadas vs. Gastadas):** Responsable del monitoreo y análisis de avances físicos para el proyecto de reemplazo de tuberías en Mina Los Bronces. Desarrollé reportes ejecutivos y métricas comparativas entre avance real y planificación (*schedule*), con especial foco en el control y balance de **Horas Hombre (HH) ganadas versus HH gastadas**, facilitando la toma de decisiones basada en datos para la gerencia de obra.
+
+- **Liderazgo y Coordinación de Equipos Operacionales:** Supervisé y coordiné un equipo de entre **9 y 15 apuntadores distribuidos en múltiples frentes de trabajo**, asignando tareas, monitoreando el cumplimiento de actividades diarias y asegurando la correcta captura y entrega de reportes operacionales. Actué como punto central de coordinación entre terreno y oficina, garantizando la calidad, oportunidad y consistencia de la información utilizada para la gestión del proyecto.
+
+- **Digitalización y Automatización de Procesos (Excel y Macros):** Diseñé y desarrollé **ReportWorks**, una aplicación móvil orientada a la captura de datos en terreno. En paralelo, implementé automatizaciones avanzadas en **Excel mediante Macros (VBA)** y **Google Apps Script** para la consolidación de información operacional, reduciendo tareas manuales y optimizando significativamente la generación de reportes diarios consolidados.
+
+- **Gestión de Datos y Automatización de Estados de Pago:** Lideré la consolidación y validación de información asociada al proceso de **Estado de Pago**. Desarrollé herramientas basadas en Excel y macros para automatizar el cruce de datos provenientes de múltiples fuentes, asegurando consistencia, trazabilidad y confiabilidad entre documentación técnica, registros de terreno y antecedentes financieros del proyecto.
+
+- **Estandarización de Operaciones en Terreno:** Trabajé directamente con equipos operativos y personal de terreno (“Apuntadores”) para estructurar y normalizar la captura de datos de obra, mejorando la calidad de la información utilizada en reportabilidad mensual y control de avance contractual.
+
+- **Optimización del Flujo de Información y Control Contractual:** Implementé mejoras en la comunicación entre terreno y oficina mediante tableros de control automatizados y seguimiento digital de desviaciones operacionales, permitiendo una gestión más eficiente de contratos, notas de cambio y control documental.
+
+- **Integración entre Ingeniería y Tecnología:** Combiné conocimientos de control de gestión, análisis operacional y desarrollo de soluciones digitales (**Excel, VBA y Google Apps Script**) para impulsar iniciativas de automatización y analítica de datos en un entorno minero de alta exigencia operacional.', '["Miner\u00eda", "Ingenier\u00eda", "Ingenier\u00eda Civil Industrial", "Control de Gesti\u00f3n", "Transformaci\u00f3n Digital", "Automatizaci\u00f3n", "Anal\u00edtica de Datos", "Data Analytics", "Software Development", "Desarrollo de Software", "Gesti\u00f3n de Proyectos", "Reportabilidad", "Business Intelligence", "Optimizaci\u00f3n de Procesos", "Google Apps Script", "Gesti\u00f3n Operacional", "Digitalizaci\u00f3n", "Control de Avance", "Ingenier\u00eda de Datos", "Operaciones Mineras", "Excel", "Macros"]'::json, true);
+
+
+INSERT INTO oppy.experiencias 
+    (id, usuario_id, empresa, rol, periodo_inicio, periodo_fin, descripcion_logros, tags_industria, is_active)
+    VALUES ('631cdc21-6112-46b2-9a5c-c2deb31a7664', '00000000-0000-4000-8000-000000000000', 'EY - Building a Better Working World', 'Desarrollador RPA',
+    '2021-08-01', '2022-12-30', '## Desarrollador RPA — EY  
+*2021 – 2022*
+
+- **Automatización de Ingestión y Procesamiento de Datos:** Diseñé e implementé flujos automatizados para la extracción, transformación y carga de datos provenientes de múltiples fuentes, incluyendo Bases de Datos, APIs, archivos Excel y documentos PDF. Estas soluciones permitieron optimizar procesos críticos de integración de información y reducir significativamente la intervención manual en tareas operativas.
+
+- **Ingeniería de Datos y Procesos ETL:** Desarrollé soluciones de extracción y limpieza de datos no estructurados asociados a documentación legal y notarial, transformando información compleja en registros normalizados y listos para su integración en plataformas bancarias y sistemas corporativos.
+
+- **Integración de Sistemas y Automatización con APIs:** Implementé integraciones mediante APIs y soluciones desarrolladas en Python para validación de identidad, actualización masiva de registros y sincronización de información en tiempo real, asegurando trazabilidad, consistencia y confiabilidad de los datos procesados.
+
+- **Desarrollo de Lógica de Negocio y Validación de Datos:** Programé reglas avanzadas de validación para el procesamiento automatizado de grandes volúmenes de ventas y transacciones diarias, garantizando el cumplimiento de estándares de calidad de datos y requisitos funcionales definidos por el negocio.
+
+- **Optimización de Procesos con RPA:** Implementé soluciones utilizando UiPath (REFramework) y SQL para automatizar procesos de alta carga operativa, logrando mejoras significativas en tiempos de ejecución, eficiencia operacional y disponibilidad de información para análisis y toma de decisiones.
+
+- **Transformación Digital y Automatización Empresarial:** Participé en iniciativas de automatización orientadas a mejorar la eficiencia organizacional mediante la combinación de RPA, integración de sistemas, analítica de datos y desarrollo de soluciones escalables para entornos corporativos de alta demanda.', '["RPA", "UiPath", "Python", "SQL", "ETL", "Data Engineering", "API Integration", "Process Automation", "Backend Development", "Data Processing", "Digital Transformation", "Business Intelligence", "Workflow Automation", "REST APIs", "Software Engineering", "Data Validation", "Enterprise Automation"]'::json, true);
+
+
+INSERT INTO oppy.experiencias 
+    (id, usuario_id, empresa, rol, periodo_inicio, periodo_fin, descripcion_logros, tags_industria, is_active)
+    VALUES ('c681131b-0148-4977-8e9b-59b1973f4805', '00000000-0000-4000-8000-000000000000', 'Inexoos', 'Ingeniero Software Semi-Senior',
+    '2024-08-01', '2025-03-01', '## Ingeniero de Software Semi-Senior — Inexoos  
+*2024 – 2025*
+
+- **Modelado y Arquitectura de Datos:** Diseñé y normalicé modelos de bases de datos relacionales orientados a la gestión masiva de trámites digitales, asegurando integridad referencial, escalabilidad y optimización de consultas en entornos de alta disponibilidad y procesamiento intensivo de información.
+
+- **Desarrollo de Lógica de Negocio y Validación de Procesos:** Implementé lógica de negocio avanzada para la validación y control de flujos de datos críticos, integrando Firma Electrónica Avanzada (FEA) y servicios de georreferenciación para garantizar trazabilidad, consistencia y confiabilidad de la información procesada.
+
+- **Desarrollo Backend e Integración de Sistemas:** Construí y mantuve APIs RESTful utilizando Flask, actuando como núcleo de integración entre servicios backend y aplicaciones frontend. Automaticé flujos de intercambio de información y optimicé tiempos de respuesta en el procesamiento de documentos y operaciones transaccionales.
+
+- **Desarrollo Frontend y Experiencia de Usuario:** Diseñé interfaces dinámicas e interactivas con Vue.js 3, incorporando filtros avanzados, autocompletado inteligente y herramientas de búsqueda optimizadas para facilitar la exploración y análisis eficiente de grandes volúmenes de registros digitales.
+
+- **Optimización de Seguridad y Disponibilidad:** Resolví desafíos técnicos asociados a autenticación, configuración de políticas de seguridad (CORS) y estabilidad de servicios, asegurando la protección de datos sensibles y la continuidad operacional bajo estándares corporativos.
+
+- **Ingeniería de Software y Transformación Digital:** Participé activamente en el desarrollo de soluciones tecnológicas orientadas a la digitalización de procesos documentales, combinando arquitectura de software, automatización e integración de datos para mejorar la eficiencia operacional y la experiencia de usuario.
+
+- **Colaboración Técnica y Resolución de Problemas:** Trabajé en coordinación con equipos multidisciplinarios para analizar requerimientos funcionales, proponer soluciones escalables y resolver incidencias críticas en entornos de desarrollo y producción.', '["Full Stack Developer", "Backend Engineer", "Flask", "Vue.js", "Vue 3", "Python", "REST APIs", "PostgreSQL", "SQL", "API Development", "Database Design", "Authentication", "CORS", "Software Architecture", "Data Processing", "Web Development", "System Integration", "High Availability Systems", "Scalable Applications"]'::json, true);
+
+
+INSERT INTO oppy.experiencias 
+    (id, usuario_id, empresa, rol, periodo_inicio, periodo_fin, descripcion_logros, tags_industria, is_active)
+    VALUES ('0719f154-b872-4ecf-8ff4-e807134d3899', '00000000-0000-4000-8000-000000000000', 'OppyChat SpA', 'Founder & Lead Architect (Ingeniería de IA y Datos)',
+    '2025-06-01', '2025-04-01', '## Founder & Lead Full-Stack Software Engineer — OppyChat  
+*2025 – Actualidad*
+
+- **Arquitectura de Software y Plataforma Escalable:** Diseñé y lideré el desarrollo de una plataforma EdTech impulsada por Inteligencia Artificial enfocada en aprendizaje inmersivo de inglés mediante Role Play conversacional. Construí una arquitectura moderna basada en Python (FastAPI), PostgreSQL, Redis y WebSockets, permitiendo procesamiento en tiempo real, alta disponibilidad y escalabilidad de servicios.
+
+- **Ingeniería de Datos y Automatización de Flujos:** Implementé pipelines de datos y flujos ETL para la ingestión, procesamiento y almacenamiento de conversaciones generadas por usuarios y modelos de IA. Automaticé el intercambio de información mediante APIs RESTful y comunicación en tiempo real utilizando WebSockets.
+
+- **Desarrollo de Inteligencia Artificial y NLP:** Integré Large Language Models (LLMs) como GPT y Gemini para construir motores conversacionales inteligentes orientados al aprendizaje adaptativo. Desarrollé lógica de procesamiento de lenguaje natural (NLP) para clasificación automática de errores lingüísticos en múltiples categorías, transformando conversaciones no estructuradas en métricas analíticas accionables.
+
+- **Sistemas Inteligentes Basados en Datos:** Diseñé un motor de “Práctica Just-in-Time” impulsado por analítica de comportamiento y detección de patrones de error recurrentes, generando ejercicios personalizados de manera automática para optimizar la retención, comprensión y progreso de los usuarios.
+
+- **Persistencia de Contexto y Gestión de Memoria Conversacional:** Implementé soluciones híbridas de almacenamiento utilizando PostgreSQL y Redis para gestionar estados conversacionales complejos, memoria persistente y recuperación eficiente de contexto, mejorando la continuidad y calidad de interacción de los agentes de IA.
+
+- **Visualización de Datos y Product Analytics:** Construí dashboards y herramientas de monitoreo para análisis de comportamiento de usuarios, métricas de uso y seguimiento de rendimiento del sistema, facilitando la toma de decisiones basada en datos para evolución del producto y experiencia de usuario.
+
+- **Seguridad, Infraestructura y DevOps:** Implementé mecanismos de autenticación y autorización mediante OAuth 2.0 y JWT, asegurando protección de datos y control de acceso seguro. Gestioné despliegues e infraestructura utilizando Docker y flujos CI/CD para automatizar procesos de integración y entrega continua.
+
+- **Liderazgo Técnico y Desarrollo Full-Stack:** Lideré de manera integral el diseño de producto, arquitectura backend, desarrollo frontend, integración de IA y estrategia tecnológica del proyecto, combinando ingeniería de software, analítica de datos y experiencia de usuario en una solución SaaS moderna orientada a educación y productividad.', '["Artificial Intelligence", "EdTech", "Product Engineering", "Data Engineering", "Analytics", "Software Architecture", "Full Stack Development", "Generative AI", "Conversational AI", "FastAPI", "PostgreSQL", "Redis", "Automation", "Digital Transformation", "Product Analytics", "Startup Founder", "SaaS Development", "Intelligent Systems"]'::json, true);
+
+
+INSERT INTO oppy.experiencias 
+    (id, usuario_id, empresa, rol, periodo_inicio, periodo_fin, descripcion_logros, tags_industria, is_active)
+    VALUES ('71c49042-9828-4525-98e9-87ed86046a27', '00000000-0000-4000-8000-000000000000', 'EY - Building a Better Working World', 'Ingeniero Datos',
+    '2023-01-02', '2024-03-22', '## Ingeniero de Datos — EY  
+*2023 – 2024*
+
+- **Ingeniería de Datos y Procesos ETL:** Diseñé, desarrollé y optimicé pipelines de datos para proyectos del sector bancario, incluyendo iniciativas para Banco BICE Inversiones. Automaticé procesos de extracción, transformación y carga (ETL) utilizando SQL, Stored Procedures y Talend, asegurando la integridad, calidad y disponibilidad de grandes volúmenes de información crítica en entornos corporativos de alta exigencia.
+
+- **Migración y Consolidación de Datos Estratégicos:** Participé en procesos complejos de migración y normalización de datos financieros hacia plataformas centralizadas, garantizando consistencia entre múltiples fuentes de información y mejorando la confiabilidad de los datos utilizados en análisis operacionales y regulatorios.
+
+- **Modelado Analítico y Gestión de Riesgos Financieros:** Desarrollé soluciones analíticas orientadas a la mitigación de riesgos cambiarios para Banco Internacional, aplicando técnicas de procesamiento y análisis de datos para transformar variables financieras en información accionable para estrategias de cobertura y toma de decisiones basada en evidencia.
+
+- **Desarrollo de Herramientas de Visualización y Monitoreo:** Construí aplicaciones y dashboards interactivos utilizando Python, Pandas y Dash para el monitoreo de KPIs, métricas de riesgo e indicadores financieros, facilitando el acceso centralizado a información crítica para equipos técnicos y áreas de negocio.
+
+- **Optimización de Data Warehouse y Rendimiento de Consultas:** Colaboré en la integración y consolidación de múltiples fuentes de datos hacia entornos PostgreSQL, optimizando estructuras de almacenamiento, consultas SQL y procesos de acceso a información estratégica para mejorar la eficiencia operativa y analítica.
+
+- **Integración entre Negocio y Tecnología:** Actué como nexo entre equipos de negocio y áreas técnicas, traduciendo requerimientos financieros complejos en soluciones de ingeniería de datos, automatización y análisis, alineadas con objetivos estratégicos y estándares corporativos.
+
+- **Transformación Digital Basada en Datos:** Participé en iniciativas orientadas a fortalecer capacidades analíticas y de inteligencia de negocio mediante automatización, visualización de datos y modernización de procesos de gestión de información financiera.', '["Data Engineering", "Python", "SQL", "PostgreSQL", "ETL Pipelines", "Talend", "Data Warehousing", "Backend Data Processing", "Data Analytics", "Business Intelligence", "Dashboard Development", "Pandas", "Dash", "API Integration", "Data Modeling", "Big Data", "Financial Data", "Data Transformation", "Data Migration", "Analytics Engineering"]'::json, true);
+
+
+INSERT INTO oppy.experiencias 
+    (id, usuario_id, empresa, rol, periodo_inicio, periodo_fin, descripcion_logros, tags_industria, is_active)
+    VALUES ('ce67e917-91b3-4cec-aa50-b8aa2d78dbb7', '00000000-0000-4000-8000-000000000000', 'ClearPix', 'Co-Founder & Director de Operaciones y Tecnología',
+    '2016-11-01', '2018-01-31', '* **Co-Fundación y Gestión Integral en Equipo:** Co-fundé y lideré junto a mi socio un emprendimiento en Valparaíso dedicado al diseño, confección y personalización de indumentaria textil corporativa y particular. Formamos un equipo multidisciplinario y colaborativo donde apoyé tanto en las labores operativas de producción como en la estrategia comercial, logrando duplicar las ventas entre los periodos de 2015 y 2016.
+
+* **Transformación Digital e Implementación de Odoo ERP:** Diseñé, parametricé e implementé el sistema Odoo ERP como el núcleo tecnológico de la empresa. Centralicé los flujos de ventas, compras y contabilidad en una única plataforma, eliminando el trabajo manual y garantizando un control riguroso sobre las transacciones diarias y los costos del negocio.
+
+* **Optimización de Supply Chain e Inventarios:** Configuré y automaticé las reglas de reabastecimiento y control de existencias dentro del módulo de Inventario de Odoo. Esto permitió realizar un seguimiento en tiempo real del stock de prendas de vestir personalizadas, optimizar la cadena de suministro de materias primas y reducir drásticamente los quiebres de inventario.
+
+* **Pivot de Modelo de Negocio y Resiliencia:** Ante la necesidad de cerrar la tienda física en 2017, lideré la reestructuración operativa para mudar el taller de vuelta al garaje y migrar toda la operación hacia canales de comercio digital (E-commerce). La estrategia fue tan exitosa que la demanda digital llegó a superar nuestra capacidad de producción inicial.
+
+* **Vinculación Institucional e Impacto Social:** Participé en el diseño de una alianza estratégica con la Fundación Universidad de Playa Ancha para presentar nuestro modelo de trabajo. Esto nos permitió adjudicarnos y ejecutar un proyecto de reinserción social del Gobierno de Chile, dictando clases de serigrafía y equipación gráfica en el Centro Penitenciario de Valparaíso.', '["\"Emprendimiento\"", "\"Co-Founder\"", "\"Odoo\"", "\"ERP\"", "\"Implementaci\u00f3n de Sistemas\"", "\"Gesti\u00f3n de Operaciones\"", "\"Optimizaci\u00f3n de Procesos\"", "\"Transformaci\u00f3n Digital\"", "\"E-commerce\"", "\"Gesti\u00f3n de Inventarios\"", "\"Supply Chain\"", "\"Proyectos de Impacto Social\""]'::json, true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('eee38da3-2bec-4471-a29e-8f31f0f268c7', '00000000-0000-4000-8000-000000000000', 'Universidad Andrés Bello', 'Ingeniero Civil Industrial',
+    2017, '### Perfil de Egreso
+
+El **Ingeniero(a) Civil Industrial** de la Universidad Andrés Bello es un profesional **autónomo, analítico y flexible**, con un marcado **pensamiento sistémico** y la capacidad de liderar y colaborar en **equipos multidisciplinarios** dentro de un contexto globalizado. Su sello profesional se sustenta en los valores de excelencia, integridad y responsabilidad social, abordando sus desafíos con una visión pluralista y respetuosa.
+
+Posee competencias avanzadas de comunicación efectiva (oral y escrita) y está capacitado para desenvolverse fluidamente en entornos cotidianos, laborales y académicos en el idioma **inglés**.
+
+#### Competencias Clave y Áreas de Dominio:
+
+* **Gestión Estratégica y Operaciones:** Capacidad para gestionar estratégicamente organizaciones, diseñando estrategias y soluciones óptimas tanto en la **producción de bienes** como en la **prestación de servicios**.
+* **Inteligencia de Negocios y Transformación Digital:** Especialista en dirigir procesos bajo un enfoque de **Business Intelligence (BI)** y herramientas tecnológicas modernas, respondiendo con agilidad a los desafíos de la **transformación digital** en ámbitos industriales, empresariales e institucionales.
+* **Ciencia de Datos (Data Science):** Sólidos conocimientos para aplicar la analítica de datos en la identificación de patrones e información crítica que sirva de apoyo fundamental para la **toma de decisiones** en beneficio de la organización.
+* **Ingeniería de Proyectos:** Facultad para administrar proyectos, dirigir grupos de trabajo y analizar el desempeño de sistemas productivos bajo un estricto enfoque de **sostenibilidad**.
+
+---
+
+### Licenciatura en Ciencias de la Ingeniería
+
+Como **Licenciado(a) en Ciencias de la Ingeniería**, el graduado está facultado para:
+* Aplicar principios científicos y metodologías de ingeniería en la resolución de problemas complejos.
+* **Formular y evaluar proyectos** respaldados por herramientas de decisión técnicas y económicas.
+* Presentar **soluciones innovadoras** a problemáticas actuales de las organizaciones y la sociedad.', 'https://facultades.unab.cl/ingenieria/carrera/ingenieria-civil-industrial/#:~:text=El%20Ingeniero%20Civil%20Industrial%20de,entregando%20soluciones%20integrales%20e%20innovadoras.', true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('22867b69-0940-4698-bab2-37aa60a986e1', '00000000-0000-4000-8000-000000000000', 'Universidad del Desarrollo', 'Magíster en Ingeniería Industrial y de Sistemas',
+    2019, '### Objetivos del Programa
+
+El propósito central del programa es formar profesionales altamente competentes en la **ideación, diseño, evaluación y gestión de soluciones innovadoras y sostenibles** aplicadas a:
+* Procesos y operaciones industriales.
+* Sistemas organizacionales.
+* Tecnologías emergentes.
+
+El magíster está diseñado para potenciar la **toma de decisiones estratégicas basadas en datos** (Data-Driven Decision Making) y la gestión integral de proyectos reales en vinculación con la industria. Todo esto con el fin de transformar las prácticas de gestión en entornos globales, competitivos y dinámicos, aportando un valor significativo tanto al sector productivo como a la sociedad.
+
+---
+
+### Perfil del Graduado
+
+El graduado es un líder con **visión sistémica** y sólidas competencias interpersonales, plenamente capacitado para diseñar, optimizar y gestionar sistemas complejos mediante la innovación tecnológica y el análisis avanzado de datos.
+
+#### Competencias Core:
+
+* **Optimización de Operaciones:** Especialista en mejorar la eficiencia y competitividad empresarial a través de la gestión de la **cadena de suministro (Supply Chain)**, logística avanzada y metodologías de **mejora continua**.
+* **Gestión Organizacional Estratégica:** Capacidad para integrar estrategias corporativas clave, abarcando las finanzas, el desarrollo del capital humano y el liderazgo efectivo.
+* **Transformación Digital e IA:** Preparado para liderar la adopción tecnológica en las empresas, incorporando **Inteligencia Artificial** y nuevas herramientas bajo enfoques éticos y globales.
+* **Analítica y Decisiones Basadas en Datos:** Habilidad para realizar análisis estratégicos complejos y traducir grandes volúmenes de datos en decisiones de negocio de alto impacto.
+* **Formulación y Evaluación de Proyectos:** Aptitud para estructurar, evaluar y dirigir proyectos de ingeniería aplicando metodologías rigurosas y sustentadas en la viabilidad técnica y económica.
+
+---
+
+### 💡 Información Complementaria para el Portafolio
+
+#### Enfoque Técnico y Metodológico
+* **Enfoque Data-Driven & Business Analytics:** Capacidad para transformar datos brutos en insights estratégicos, desarrollando modelos descriptivos y predictivos para optimizar la toma de decisiones.
+* **Metodologías de Mejora Continua:** Aplicación de enfoques como Lean, Six Sigma y gestión de restricciones para la optimización de flujos de valor y eficiencia en procesos.
+* **Gestión de Proyectos Operacionales:** Formulación, evaluación técnica-económica y dirección de proyectos bajo metodologías ágiles y tradicionales.
+
+#### Tech Stack & Herramientas de Ingeniería
+* **Análisis y Modelamiento de Datos:** Python (Pandas, NumPy, Polars, PySpark), SQL (PostgreSQL), modelamiento de bases de datos relacionales y optimización de consultas.
+* **Inteligencia de Negocios y Dashboards:** Diseño y automatización de tableros de control predictivos y KPIs estratégicos para el monitoreo de Supply Chain y mantenimiento.
+* **Automatización y Despliegue:** Construcción de MVPs y APIs modernas (FastAPI), control de versiones (Git), y despliegue ágil en entornos en la nube (Cloud/Railway).
+
+#### Enfoque Técnico y Metodológico
+El perfil combina la rigurosidad científica de la ingeniería tradicional con las demandas de la industria 4.0:
+* **Mentalidad Lean & Agile:** Orientación hacia la reducción de desperdicios, optimización de flujos de valor y adaptabilidad ante el cambio.
+* **Business Analytics:** Capacidad no solo de recopilar datos, sino de generar modelos descriptivos y predictivos para la planificación empresarial.
+
+#### Áreas de Impacto Profesional
+* Reingeniería y Automatización de Procesos.
+* Dirección de Proyectos Tecnológicos y de Innovación.
+* Consultoría Estratégica y de Operaciones.
+* Gerencia de Logística y Supply Chain.', 'https://postgrados.udd.cl/programas/miis-magister-en-ingenieria-industrial-y-de-sistemas-192133/', true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('b4549195-aeeb-4a3b-813d-36b4f9f40e84', '00000000-0000-4000-8000-000000000000', 'Eclass', 'Inglés Profesional — Nivel CEFR B1+ / B2 (Eclass)',
+    2022, '# Competencias Lingüísticas
+
+Este nivel certifica una competencia de **Usuario Independiente Avanzado**, lo que me permite interactuar en entornos profesionales, técnicos y multiculturales con fluidez y autonomía, sin requerir supervisión constante.
+
+### Capacidades y Competencias Clave:
+
+* **Comunicación en Entornos Laborales:** Capacidad para participar activamente en reuniones técnicas, presentar informes de gestión, debatir ideas y defender puntos de vista profesionales con claridad.
+* **Comprensión de Textos Complejos:** Facultad para comprender las ideas principales de textos abstractos o de carácter técnico, incluyendo manuales, documentación de ingeniería, artículos especializados y especificaciones de proyectos.
+* **Fluidez y Espontaneidad:** Habilidad para mantener conversaciones fluidas con hablantes nativos y profesionales de distintas áreas, garantizando que la comunicación sea natural y eficiente en el día a día.
+* **Producción de Contenido Escrito:** Capacidad para redactar correspondencia formal, correos corporativos y reportes técnicos detallados, explicando problemas y proponiendo soluciones de forma estructurada.
+
+---
+
+### 🚀 Enfoque Práctico (Ámbito de Aplicación)
+
+*(Nota: Esta sección demuestra cómo aplicas activamente el idioma en tu perfil tecnológico e industrial)*
+
+* **Documentación y Stack Tecnológico:** Lectura e interpretación fluida de documentación técnica oficial, APIs, arquitecturas de software y repositorios de código.
+* **Contexto Global de Negocios:** Preparación para interactuar en cadenas de suministro globales, comprender dinámicas de mercados internacionales y colaborar en proyectos o células de trabajo multidisciplinarias con alcance internacional.', '', true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('d8c28f62-ee78-4394-8e61-b1aed73b5266', '00000000-0000-4000-8000-000000000000', ' Bootcamp Coding Dojo', 'Full Stack Developer Python — (Black Belt)',
+    2021, '# Formación Tecnológica Avanzada
+
+Certificación de **Cinturón Negro (Black Belt)**, la máxima distinción técnica otorgada por Coding Dojo. Este logro acredita un dominio avanzado en el desarrollo de aplicaciones web de extremo a extremo (Full Stack), validado mediante exámenes prácticos de alto rendimiento bajo restricciones de tiempo críticas (desarrollo, pruebas y despliegue de una app funcional en menos de 4 horas).
+
+El programa enfoca su metodología en la autonomía, la resolución de problemas complejos y la adopción de buenas prácticas de ingeniería de software.
+
+### Stack Tecnológico y Competencias Clave:
+
+* **Arquitectura del Backend (Python):** Diseño y construcción de lógicas de servidor robustas, desarrollo de APIs RESTful y gestión de aplicaciones modulares utilizando frameworks líderes como **Django** y **Flask**.
+* **Modelamiento de Bases de Datos (SQL):** Diseño de esquemas relacionales eficientes, manipulación avanzada de datos (CRUD), optimización de consultas y uso de ORMs para una integración segura entre la data y el servidor.
+* **Desarrollo del Frontend:** Creación de interfaces de usuario dinámicas, interactivas y responsivas utilizando **JavaScript (ES6+)**, manipulación del DOM, integración con APIs del backend, y maquetación moderna con HTML5 y CSS3 (Bootstrap/Tailwind).
+* **Ciclo de Vida del Desarrollo (SDLC):** Dominio en el control de versiones con **Git/GitHub**, depuración rigurosa de errores (debugging) y estrategias de despliegue en entornos de producción en la nube.
+
+---
+
+### 🚀 Capacidades Profesionales Demostradas
+
+*(Nota: Esto traduce el "Black Belt" al lenguaje que buscan las células de desarrollo ágil y startups)*
+
+* **Desarrollo Ágil Bajo Presión:** Capacidad probada para priorizar requerimientos, estructurar arquitecturas limpias y entregar productos mínimos viables (MVPs) funcionales en tiempos extremadamente reducidos.
+* **Pensamiento Algorítmico y Escalabilidad:** Enfoque en la escritura de código limpio, mantenible y estructurado, facilitando el trabajo en células ágiles de desarrollo y la integración con tecnologías emergentes.', '', true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('6148554e-9842-4541-a5b8-c90ba20656ad', '00000000-0000-4000-8000-000000000000', 'Microsoft Certified', 'Certificación PL-900: Fundamentos de Microsoft Power Platform',
+    2021, '# Certificaciones Oficiales
+
+Certificación oficial emitida por **Microsoft** que valida el conocimiento fundamental y las capacidades técnicas para transformar procesos de negocio utilizando el ecosistema de **Power Platform**. Acredita la competencia para diseñar soluciones de bajo código (Low-Code), automatizar flujos de trabajo operativos, analizar datos para la toma de decisiones y construir aplicaciones empresariales ágiles.
+
+Esta credencial demuestra la habilidad para acelerar la transformación digital dentro de las organizaciones, reduciendo los tiempos de desarrollo y mejorando la eficiencia operativa.
+
+### Componentes Clave y Capacidades Validadas:
+
+* **Análisis de Datos con Power BI:** Capacidad para conectar diversas fuentes de datos, modelar la información y crear tableros de control (Dashboards) interactivos e intuitivos que faciliten el monitoreo de KPIs y la toma de decisiones estratégicas.
+* **Automatización de Procesos con Power Automate:** Habilidad para diseñar y desplegar flujos de trabajo automatizados (automatización de tareas repetitivas, aprobaciones y alertas), integrando de forma nativa aplicaciones y servicios en la nube.
+* **Desarrollo de Aplicaciones con Power Apps:** Competencia para crear aplicaciones empresariales personalizadas (Canvas y Model-Driven Apps) orientadas a resolver necesidades operativas específicas y mejorar la productividad de los equipos de trabajo.
+* **Gestión de Datos con Microsoft Dataverse:** Comprensión de la arquitectura de datos segura y escalable de Microsoft, permitiendo almacenar y gestionar de manera eficiente los datos utilizados por las aplicaciones de la organización.
+* **Eficiencia Organizacional con Copilot Studio:** Entendimiento de las capacidades básicas de IA para la creación de agentes y chatbots que optimicen la interacción y el soporte interno o externo.
+
+---
+
+### 🚀 Valor Agregado para el Perfil
+
+*(Nota: Esto resalta el impacto estratégico de la certificación ante directores de tecnología u operaciones)*
+
+* **Agilidad en la Transformación Digital:** Capacidad para actuar como un "Citizen Developer" o integrador técnico, implementando soluciones rápidas y eficientes que complementan el desarrollo de software tradicional.
+* **Sinergia Corporativa:** Preparación para diseñar soluciones que se integran de forma nativa con el entorno Microsoft 365, Azure y bases de datos relacionales, garantizando la escalabilidad y seguridad de la información corporativa.', 'https://www.credly.com/badges/e99c1f84-c665-4d45-afe8-5998c9783fd2/linked_in', true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('c485f6e1-53e6-44fe-b746-6a4bc2aaf9d5', '00000000-0000-4000-8000-000000000000', 'Google Cloud Certified', 'Prepare Data for ML APIs on Google Cloud Skill Badge',
+    2025, '# Certificaciones y Skill Badges
+
+Insignia técnica (*Skill Badge*) emitida por **Google Cloud** que demuestra la capacidad práctica y validada para ejecutar laboratorios de rendimiento avanzado en ingeniería de datos aplicada a la Inteligencia Artificial. Acredita el dominio técnico en la limpieza, transformación, análisis y preparación de grandes volúmenes de datos (*Data Preparation*) utilizando la infraestructura de **Google Cloud Platform (GCP)** para alimentar de forma óptima modelos de Machine Learning (ML).
+
+Esta credencial certifica que el profesional cuenta con las competencias necesarias para estructurar flujos de datos (*data pipelines*) eficientes, garantizando el rendimiento de las soluciones analíticas modernas.
+
+### Tecnologías Clave y Capacidades Validadas:
+
+* **Análisis de Datos a Gran Escala con BigQuery:** Dominio en el uso del almacén de datos empresarial de Google para realizar consultas SQL analíticas avanzadas, explorar conjuntos de datos masivos y estructurar la data antes de su procesamiento.
+* **Preparación Visual de Datos con Dataprep:** Habilidad para explorar, limpiar y transformar visualmente datos estructurados y no estructurados de manera ágil, identificando anomalías o valores nulos antes de su integración.
+* **Integración y Consumo de APIs de Machine Learning:** Comprensión práctica de cómo conectar la data preparada con las APIs nativas de GCP (como *Cloud Vision*, *Natural Language*, *Speech-to-Text* y *Translation*) para extraer insights automatizados de alto valor.
+* **Orquestación de Pipelines en la Nube:** Capacidad para mover datos de forma segura entre el almacenamiento en la nube (**Cloud Storage**) y los motores de procesamiento, asegurando flujos continuos y limpios.
+
+---
+
+### 🚀 Valor Agregado para el Perfil
+
+*(Nota: Esto resalta cómo este logro técnico potencia tus habilidades como Ingeniero y Desarrollador)*
+
+* **Fundación para MLOps:** Respaldo técnico que demuestra habilidades esenciales en la fase más crítica de cualquier proyecto de Inteligencia Artificial: la calidad y el preprocesamiento de los datos raw.
+* **Versatilidad Cloud (Multicloud):** Evidencia una capacidad sólida para operar e integrar soluciones de datos tanto en arquitecturas de Microsoft Azure como en flujos analíticos de Google Cloud, adaptándose con agilidad a las necesidades de infraestructura de cualquier organización.', 'https://www.credly.com/earner/earned/badge/352c631b-71ca-4415-9785-e0b68e6fe62d', true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('e53c0d07-6985-44d2-8fd3-69fdcefe06d2', '00000000-0000-4000-8000-000000000000', 'Cisco Networking Academy', 'Python Essentials 1',
+    2025, '# Formación y Fundamentos Tecnológicos
+
+Certificación oficial emitida por **Cisco** que valida el conocimiento fundamental de la programación de computadoras utilizando el lenguaje **Python**. Esta credencial acredita una base sólida en el diseño algorítmico, la lógica de programación y la resolución de problemas, asegurando que el código escrito siga los estándares de la industria en cuanto a legibilidad, estructura y eficiencia.
+
+El programa establece los pilares lógicos necesarios para avanzar con éxito hacia el desarrollo de software complejo, la ingeniería de datos y la automatización.
+
+### Competencias Clave y Capacidades Validadas:
+
+* **Estructuras de Control y Lógica:** Dominio en el diseño de algoritmos utilizando ejecución condicional (`if-else`), bucles (`while`, `for`) y control de flujos de datos.
+* **Tipos de Datos y Operaciones:** Comprensión profunda del sistema de tipos de Python (enteros, flotantes, strings, booleanos) y operadores lógicos, aritméticos y de asignación.
+* **Colecciones y Estructuras de Datos Nativas:** Manipulación fluida y eficiente de colecciones de datos esenciales como **listas, tuplas, diccionarios y sets**, comprendiendo sus casos de uso específicos y optimización.
+* **Modularización mediante Funciones:** Capacidad para descomponer problemas complejos en componentes más pequeños y reutilizables mediante la definición de funciones, manejo de parámetros, argumentos y ámbitos de variables (*scopes*).
+* **Entornos de Desarrollo y Buenas Prácticas:** Familiaridad con el proceso de compilación/interpretación, ejecución de scripts en consola, depuración básica de errores sintácticos y semánticos, y adherencia a las convenciones de estilo de Python (PEP 8).
+
+---
+
+### 🚀 Sinergia con el Stack Profesional
+
+*(Nota: Esto conecta los fundamentos de Cisco con tus capacidades avanzadas en datos y desarrollo)*
+
+* **Código Limpio y Mantenible:** Garantía de que el desarrollo posterior con frameworks avanzados (como FastAPI, Django o Flask) o librerías de analítica de datos (Pandas, Polars, PySpark) se construye sobre una base lógica limpia, estructurada y sin vicios de programación.
+* **Pensamiento Analítico de Ingeniería:** Respaldo de una de las academias tecnológicas más prestigiosas del mundo (Cisco), demostrando un enfoque metódico para traducir procesos lógicos de negocio en código de computadora eficiente.', 'https://www.credly.com/earner/earned/badge/72487490-d99c-451d-8805-3a509473bcc4', true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('15cd0c88-24ac-4d17-bb50-c1c4ecc57dc1', '00000000-0000-4000-8000-000000000000', 'EY Certification', 'EY Artificial Intelligence - AI Engineering - Bronze Learning (2023)',
+    2023, '# Certificaciones Corporativas Internacionales
+
+Credencial internacional emitida por **Ernst & Young (EY)** que valida competencias técnicas y metodológicas esenciales en la **Ingeniería de Inteligencia Artificial (AI Engineering)**. Este distintivo certifica la adquisición y comprensión profunda de arquitecturas de IA, flujos de desarrollo de modelos y las mejores prácticas de la industria para integrar capacidades cognitivas y de automatización avanzada en entornos empresariales globales.
+
+Representa la base técnica necesaria para conectar los datos organizacionales con sistemas inteligentes que optimicen los procesos y la toma de decisiones.
+
+### Competencias Clave y Capacidades Validadas:
+
+* **Fundamentos de Ingeniería de IA:** Comprensión del ciclo de vida de un sistema de Inteligencia Artificial, abarcando desde la concepción del problema y la preparación del pipeline de datos, hasta el entrenamiento, evaluación y monitoreo de modelos.
+* **Aprendizaje Automático y Redes Neuronales:** Conocimiento en la selección y aplicación de algoritmos de Machine Learning (supervisado y no supervisado) y conceptos esenciales de Deep Learning para resolver problemas complejos de predicción, clasificación y optimización.
+* **Procesamiento de Datos para Inteligencia Artificial:** Capacidad para estructurar flujos de datos limpios, consistentes y de alta calidad, reconociendo que la preparación de los datos (*Data Preparation*) es el pilar del éxito en cualquier modelo de ingeniería de IA.
+* **IA Responsable y Ética Tecnológica:** Comprensión de los marcos normativos, mitigación de sesgos en los datos, explicabilidad de los modelos y gobernanza, garantizando un despliegue ético y seguro de las soluciones tecnológicas a escala corporativa.
+
+---
+
+### 🚀 Impacto Estratégico en el Perfil de Ingeniería
+
+*(Nota: Esto conecta el badge con tus capacidades como desarrollador e ingeniero industrial y de sistemas)*
+
+* **Visión de Vanguardia Tecnológica (Iniciada en 2023):** Demuestra un compromiso temprano y sostenido con la adopción de las olas tecnológicas más disruptivas, permitiéndote liderar iniciativas de transformación digital orientadas a la automatización inteligente.
+* **Sinergia con el Stack de Desarrollo:** Respalda de forma corporativa tu capacidad para construir el software que sirve de infraestructura a estas herramientas (como APIs eficientes en FastAPI), asegurando que la IA se traduzca en una solución productiva, estable y de alto valor para el negocio.', 'https://www.credly.com/badges/8108f28e-33aa-4437-b397-72bb95269a90', true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('f94f3c83-4d6f-4048-9baf-7d21901b9cf1', '00000000-0000-4000-8000-000000000000', 'Microsoft Certified', 'Certificación DP-900: Fundamentos de Datos en Microsoft Azure',
+    2023, '# Certificaciones Oficiales
+
+Certificación oficial emitida por **Microsoft** que valida el conocimiento técnico fundamental en conceptos de datos y su implementación utilizando los servicios de computación en la nube de **Microsoft Azure**. Esta credencial acredita la comprensión profunda de cómo se procesan, almacenan, aseguran y analizan los datos en entornos *Cloud* e híbridos.
+
+Demuestra una base sólida para colaborar con equipos de Ingeniería de Datos, Ciencia de Datos y Business Intelligence, garantizando que las soluciones se diseñen bajo estándares modernos de la industria.
+
+### Componentes Clave y Capacidades Validadas:
+
+* **Conceptos de Datos e Infraestructura Nube:** Comprensión clara de los pilares de datos modernos: datos estructurados, semiestructurados (JSON/XML) y no estructurados, además de los conceptos clave de procesamiento analítico (OLAP) y transaccional (OLTP).
+* **Bases de Datos Relacionales en Azure:** Conocimiento en el aprovisionamiento, configuración y consulta de servicios de datos relacionales en la nube (como Azure SQL Database o Azure Database for PostgreSQL), asegurando la integridad y disponibilidad de la data.
+* **Soluciones de Datos No Relacionales:** Entendimiento de los casos de uso y la estructura de repositorios no relacionales (NoSQL), almacenamiento de archivos y tablas a gran escala (Azure Blob Storage, Azure Cosmos DB).
+* **Arquitecturas de Analítica Avanzada y Big Data:** Comprensión de los componentes esenciales de un almacén de datos moderno (Data Warehouse) y lagos de datos (Data Lakes), utilizando servicios como Azure Synapse Analytics, Azure Databricks y Azure Data Factory para flujos de ingesta (ETL/ELT).
+
+---
+
+### 🚀 Valor Agregado para el Perfil
+
+*(Nota: Esto conecta la certificación en la nube con tus capacidades en ingeniería industrial y de sistemas)*
+
+* **Arquitectura de Datos Escalable:** Capacidad para evaluar y proponer la infraestructura de datos más eficiente para proyectos empresariales, optimizando costos operativos de cómputo y almacenamiento en la nube.
+* **Sinergia con el Stack Técnico:** Respaldo oficial para el diseño y conexión de bases de datos relacionales robustas, garantizando que el backend de las aplicaciones y los tableros analíticos se alimenten de fuentes de datos estables, seguras y de alto rendimiento.', 'https://learn.microsoft.com/en-us/users/jaimecampillay-2360/credentials/b072890bc8305406?ref=https%3A%2F%2Fwww.linkedin.com%2F', true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('eb32e5d6-e7a0-4da6-8f5c-d1279343997a', '00000000-0000-4000-8000-000000000000', 'EY Certification', 'EY Artificial Intelligence - AI Engineering - Bronze Learning (2023)',
+    2023, '# Certificaciones Corporativas Internacionales
+
+Credencial internacional emitida por **Ernst & Young (EY)** que valida competencias técnicas y metodológicas esenciales en la **Ingeniería de Inteligencia Artificial (AI Engineering)**. Este distintivo certifica la adquisición y comprensión profunda de arquitecturas de IA, flujos de desarrollo de modelos y las mejores prácticas de la industria para integrar capacidades cognitivas y de automatización avanzada en entornos empresariales globales.
+
+Representa la base técnica necesaria para conectar los datos organizacionales con sistemas inteligentes que optimicen los procesos y la toma de decisiones.
+
+### Competencias Clave y Capacidades Validadas:
+
+* **Fundamentos de Ingeniería de IA:** Comprensión del ciclo de vida de un sistema de Inteligencia Artificial, abarcando desde la concepción del problema y la preparación del pipeline de datos, hasta el entrenamiento, evaluación y monitoreo de modelos.
+* **Aprendizaje Automático y Redes Neuronales:** Conocimiento en la selección y aplicación de algoritmos de Machine Learning (supervisado y no supervisado) y conceptos esenciales de Deep Learning para resolver problemas complejos de predicción, clasificación y optimización.
+* **Procesamiento de Datos para Inteligencia Artificial:** Capacidad para estructurar flujos de datos limpios, consistentes y de alta calidad, reconociendo que la preparación de los datos (*Data Preparation*) es el pilar del éxito en cualquier modelo de ingeniería de IA.
+* **IA Responsable y Ética Tecnológica:** Comprensión de los marcos normativos, mitigación de sesgos en los datos, explicabilidad de los modelos y gobernanza, garantizando un despliegue ético y seguro de las soluciones tecnológicas a escala corporativa.
+
+---
+
+### 🚀 Impacto Estratégico en el Perfil de Ingeniería
+
+*(Nota: Esto conecta el badge con tus capacidades como desarrollador e ingeniero industrial y de sistemas)*
+
+* **Visión de Vanguardia Tecnológica (Iniciada en 2023):** Demuestra un compromiso temprano y sostenido con la adopción de las olas tecnológicas más disruptivas, permitiéndote liderar iniciativas de transformación digital orientadas a la automatización inteligente.
+* **Sinergia con el Stack de Desarrollo:** Respalda de forma corporativa tu capacidad para construir el software que sirve de infraestructura a estas herramientas (como APIs eficientes en FastAPI), asegurando que la IA se traduzca en una solución productiva, estable y de alto valor para el negocio.', 'https://www.credly.com/badges/8108f28e-33aa-4437-b397-72bb95269a90', true);
+
+
+INSERT INTO oppy.estudios 
+    (id, usuario_id, institucion, titulo, anio_obtencion, descripcion_detallada, link, is_active)
+    VALUES ('8501900c-d10d-447a-9145-56ec4105cd4f', '00000000-0000-4000-8000-000000000000', 'Cisco Networking Academy', 'Python Essentials 2',
+    2025, '# Formación y Fundamentos Tecnológicos
+
+Certificación avanzada emitida por **Cisco** que valida el dominio de conceptos complejos y técnicas profesionales de desarrollo en **Python**. Esta credencial acredita la capacidad para diseñar y construir aplicaciones bajo el paradigma de la **Programación Orientada a Objetos (POO)**, gestionar paquetes y módulos a nivel de sistema, procesar archivos y flujos de datos, y aplicar estrategias avanzadas de manejo de excepciones.
+
+Demuestra un nivel de preparación óptimo para abordar el desarrollo de software escalable, automatizaciones avanzadas e ingeniería de datos con estándares profesionales de la industria.
+
+### Competencias Clave y Capacidades Validadas:
+
+* **Programación Orientada a Objetos (POO):** Comprensión profunda e implementación de clases, objetos, propiedades, métodos, encapsulamiento, herencia (simple y múltiple) y polimorfismo para estructurar código modular y altamente reutilizable.
+* **Módulos y Paquetes a Gran Escala:** Capacidad para utilizar, configurar y crear módulos y paquetes personalizados de Python, además del dominio en la gestión de librerías externas utilizando el ecosistema `pip`.
+* **Procesamiento Avanzado de Strings y Archivos:** Manipulación experta de flujos de texto (Strings), métodos de formateo y operaciones de lectura/escritura de archivos en el sistema de almacenamiento local, garantizando la persistencia y el procesamiento eficiente de datos.
+* **Gestión Profesional de Excepciones:** Diseño de bloques robustos de control de errores (`try-except-else-finally`) y creación de excepciones personalizadas para asegurar la estabilidad, resiliencia y correcto *debugging* de las aplicaciones ante fallos en tiempo de ejecución.
+* **Uso de Generadores, Iteradores y Closures:** Comprensión de herramientas avanzadas de Python que permiten optimizar el uso de memoria y el rendimiento del código al procesar flujos continuos de datos.
+
+---
+
+### 🚀 Impacto en el Stack de Ingeniería
+
+*(Nota: Esto conecta el nivel avanzado de Cisco con tus habilidades en ciencia de datos y desarrollo Full Stack)*
+
+* **Arquitecturas Limpias y Escalables:** Garantiza la base técnica necesaria para entender las entrañas de los frameworks modernos de Python (como los modelos y esquemas de *Pydantic* en FastAPI o los ORM en bases de datos), permitiéndote personalizarlos y extenderlos eficientemente.
+* **Código de Calidad Corporativa:** Evidencia que tu software está diseñado para fallar con elegancia y mantenerse fácilmente en el tiempo, cumpliendo con los requisitos rigurosos que exigen los equipos de desarrollo y las células ágiles de ingeniería.', 'https://www.credly.com/earner/earned/badge/9dfbcca0-0dfb-4f86-8f41-bcd07de6f385', true);
+
+
+INSERT INTO oppy.reconocimientos 
+    (id, usuario_id, tipo, titulo, institucion, fecha, descripcion, referencia, is_active)
+    VALUES ('096e2647-02c6-4a46-bf89-e37b393448a4', '00000000-0000-4000-8000-000000000000', 'PREMIO', 'Ovación EY', 'EY',
+    '2021', 'Galardonado con la distinción interna "Ovación", un reconocimiento otorgado por la plana directiva de EY a profesionales que demuestran un desempeño excepcional, liderazgo y un compromiso que supera los estándares habituales del cargo. Este hito destaca mi capacidad para entregar soluciones de alta calidad en entornos de alta exigencia, colaborar efectivamente en equipos multidisciplinarios e impulsar la innovación en los proyectos asignados.', '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('62aa8a4a-71e0-4e2f-b8df-19504a56a9f3', '00000000-0000-4000-8000-000000000000', 'Plataforma de Analítica Industrial y Confiabilidad Predictiva', 'Plataforma Cloud-Native orientada a Centros de Control Remoto que automatiza procesos ETL masivos de telemetría, combinando visualización de datos interactiva e Inteligencia Artificial para el soporte en la toma de decisiones estratégicas.',
+    'Este proyecto aborda los desafíos analíticos de flotas y maquinaria industrial pesada (orientado a industrias como la minería o manufactura). Su propósito es encontrar soluciones a problemas operacionales mediante el modelado, limpieza y visualización de datos (Telemetría IoT). Actúa como una herramienta centralizada para transformar datos crudos en estrategias accionables, reduciendo el *downtime* y facilitando un monitoreo continuo basado en métricas clave de confiabilidad.
+
+---
+
+## 🚀 Highlights del Proyecto (Orientado a Data Engineering & Analytics)
+
+- **Diseño y Desarrollo de Procesos ETL:** Canalización, limpieza y procesamiento automatizado de **+870,000 registros** históricos de telemetría y eventos utilizando **Polars** y **PyArrow**, garantizando la integridad, calidad y alta disponibilidad para análisis.
+- **Analítica Avanzada y KPIs Estratégicos:** Desarrollo de modelos analíticos descriptivos para el cálculo en tiempo real de indicadores críticos de confiabilidad, tales como **MTBF** (Tiempo Medio Entre Fallas) y **MTTR** (Tiempo Medio de Reparación).
+- **Inteligencia Artificial y Modelos Prescriptivos:** Integración profunda con modelos generativos (**Gemini 3 Flash**) que actúa como un "Analista Virtual". Permite a los operadores realizar consultas complejas sobre la flota, generando diagnósticos automatizados y recomendaciones (prescriptivas) frente a anomalías detectadas.
+- **Monitoreo Operacional de Alto Desempeño:** Dashboard interactivo construido con **Dash/Plotly** que permite la supervisión de señales de IoT (Vibración, Voltaje, Presión) y el registro de eventos en tiempo real, ideal para un *Trainee Specialist* o Especialista de Centro Remoto.
+- **UX/UI Dinámica (Dark Mode Integral):** Aplicación de interfaces modernas con adaptación de temas dinámicos (Claro/Oscuro) que se sincronizan desde el contenedor HTML hasta el renderizado gráfico avanzado de Plotly y DataTables.
+- **DevSecOps y Seguridad de Datos:** Aplicación de mejores prácticas de ciberseguridad, incluyendo el *hardening* de la API con **FastAPI**, inyección de cabeceras de seguridad estrictas (HSTS, Anti-Clickjacking), prevención contra fuga de información (*Stack Traces*) e integración CORS segura.
+- **Arquitectura Híbrida y Cloud Native:** Desarrollo e integración nativa de tecnologías desplegadas en contenedores **Docker**, con bases de datos relacionales manejadas mediante **SQLAlchemy 2.0** y hospedadas en la nube (**PostgreSQL Serverless** / Railway).', '["FastAPI", "Polars", "PostgreSQL", "Cloud Computing", "Dash", "Plotly", "AI/LLM", "ETL", "Docker", "Git"]'::json, '2024-01-01', 'https://github.com/jcampillay8/Predictive_Maintenance.git', 'https://predictivemaintenance-production.up.railway.app/dashboard/', '{"Nivel de Ciberseguridad Aplicado": "Hardening Estricto (Protecci\u00f3n OWASP B\u00e1sica)", "M\u00e9tricas de Confiabilidad Target": "Aumento del MTBF y reducci\u00f3n del MTTR", "Volumen de Datos Procesados (ETL)": "+870,000 registros de telemetr\u00eda", "Rendimiento de Consultas Anal\u00edticas": "< 100ms utilizando Polars"}'::json, '["Data Engineering", "Predictive Maintenance", "ETL", "Data Analytics", "Artificial Intelligence", "IoT", "Centro de Control Remoto", "Dashboard", "Data Pipeline"]'::json, '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('6f64b94f-983b-44b4-9d53-47500a8e50e6', '00000000-0000-4000-8000-000000000000', 'Consultoría Estratégica de Migración Cloud y Arquitectura Híbrida de Alta Disponibilidad', '**Consultoría estratégica para Redbanc** enfocada en la hoja de ruta para migrar su infraestructura crítica a un modelo de Nube Híbrida. Evalúa riesgos, seguridad y *FinOps*, definiendo una arquitectura basada en Docker y Kubernetes para asegurar la resiliencia del sistema interbancario.',
+    '## 📋 Contexto y Desafío Operacional
+
+Como actor clave del ecosistema financiero chileno, **Redbanc** procesa de forma segura y masiva las transacciones electrónicas e interconexiones de cajeros automáticos de la banca nacional, operando una infraestructura crítica para la continuidad del sistema financiero del país.
+
+Ante las nuevas demandas del mercado y la necesidad de mayor adaptabilidad tecnológica, surgió el desafío de modernizar una infraestructura tradicional **On-Premise**, reduciendo la rigidez de servidores locales y aumentando la capacidad de responder eficientemente a cargas transaccionales variables.
+
+El principal reto de esta asesoría estratégica consistía en equilibrar las ventajas de la computación en la nube —flexibilidad, escalabilidad elástica y optimización de costos operativos— con el cumplimiento estricto de las exigentes normativas bancarias relacionadas con:
+
+- Seguridad de la información  
+- Auditoría y trazabilidad  
+- Gobernanza de datos  
+- Alta disponibilidad operacional  
+
+Era fundamental diseñar una transición tecnológica que eliminara riesgos de interrupción en un servicio interbancario considerado crítico para la estabilidad económica nacional.
+
+---
+
+## 🛠️ Solución Implementada (La Acción)
+
+Lideré el análisis y estructuración de una **Cloud Strategy** orientada a conectar viabilidad técnica, eficiencia financiera y cumplimiento regulatorio, construyendo un marco de referencia integral para la toma de decisiones.
+
+### ☁️ Análisis comparativo de proveedores Cloud mediante Power BI
+
+Diseñé y desarrollé un **dashboard interactivo en Power BI** utilizado como herramienta central para la toma de decisiones estratégicas.
+
+La plataforma consolidó y parametrizó información crítica para comparar de manera transversal a los principales proveedores de nube:
+
+- Google Cloud Platform (GCP)  
+- Amazon Web Services (AWS)  
+- Oracle Cloud Infrastructure (OCI)  
+- Microsoft Azure  
+
+El dashboard permitió evaluar visualmente y en tiempo real:
+
+- Capacidades técnicas  
+- Escalabilidad y desempeño  
+- Costos proyectados  
+- Riesgos regulatorios  
+- Seguridad y cumplimiento normativo  
+- Fortalezas y debilidades arquitectónicas  
+
+Esto permitió a la gerencia construir una evaluación objetiva y basada en datos para determinar la alternativa tecnológica más conveniente para Redbanc.
+
+---
+
+### 🏗️ Diseño de estrategia de nube híbrida (Hybrid Cloud Architecture)
+
+Definí una arquitectura de migración basada en un enfoque **Hybrid Cloud**, identificada como la alternativa óptima para equilibrar seguridad, escalabilidad y cumplimiento regulatorio.
+
+El diseño propuso:
+
+- **Nube privada/local** para almacenamiento de datos altamente sensibles y procesos regulatorios críticos  
+- **Nube pública** para absorber cargas variables y escalar dinámicamente ante peaks transaccionales  
+
+Este enfoque permitía maximizar elasticidad operativa sin comprometer integridad ni confidencialidad de los datos financieros.
+
+---
+
+### 🐳 Modernización mediante contenedores (Docker & Kubernetes)
+
+Incorporé al diseño arquitectónico el uso de tecnologías de contenedorización y orquestación empresarial mediante **Docker** y **Kubernetes**.
+
+Estas tecnologías fueron definidas como estándar técnico para:
+
+- Garantizar portabilidad entre entornos On-Premise y Cloud  
+- Facilitar despliegues ágiles y consistentes  
+- Mejorar tolerancia a fallos y resiliencia operativa  
+- Escalar aplicaciones desacopladas según demanda transaccional  
+- Reducir dependencia de infraestructura física tradicional  
+
+---
+
+### 📊 Evaluación multidimensional (FinOps & Ciberseguridad)
+
+Estructuré el caso de negocio evaluando la transformación tecnológica desde una perspectiva integral de **FinOps, arquitectura empresarial y seguridad**.
+
+El análisis consideró:
+
+- Modelos de costos (**CapEx vs. OpEx**)  
+- Reducción proyectada de costos de infraestructura física  
+- Requerimientos de seguridad perimetral  
+- Integridad y continuidad operacional  
+- Protección de transacciones financieras críticas  
+
+Esto permitió construir una propuesta técnicamente viable, financieramente sustentable y alineada con los estándares de seguridad exigidos por la industria bancaria.', '["Cloud Strategy", "Cloud Migration Architecture", "Kubernetes", "Docker", "Hybrid Cloud Ecosystems", "FinOps (Cost Optimization)", "IT Governance", "Risk & Compliance (GRC)", "Infrastructure Modernization", "Power BI\""]'::json, '2024-01-01', '', '', '{"Estrategia & Gobernanza": {"Foco Regulatorio": "Gobernanza de Datos Sensibles e Integridad Financiera", "Modelo de Enfoque": "Cloud Strategy (Estrategia de Nube Corp)", "Topolog\u00eda Dise\u00f1ada": "Arquitectura de Nube H\u00edbrida (P\u00fablica + Privada)", "Paradigmas de Despliegue": "Contenedorizaci\u00f3n y Orquestaci\u00f3n Microservicios"}, "Componentes Tecnol\u00f3gicos": {"Gesti\u00f3n de Cargas": "Enrutamiento din\u00e1mico seg\u00fan criticidad del Payload", "Infraestructura Origen": "Servidores Locales Tradicionales On-Premise", "Tecnolog\u00eda de Empaquetado": "Docker (Im\u00e1genes livianas y portables)", "Plataforma de Orquestaci\u00f3n": "Kubernetes (Estrategias de Auto-scaling y Self-healing)"}, "Impacto & Valor de Negocio": {"Ventaja Competitiva": "Aceleraci\u00f3n del Time-to-Market para responder a las necesidades cambiantes del mercado financiero", "Eficiencia Financiera": "Reducci\u00f3n proyectada de costos operativos e inversi\u00f3n en infraestructura f\u00edsica (OpEx Optimization)", "Flexibilidad Operativa": "Escalabilidad el\u00e1stica de recursos de c\u00f3mputo ante fluctuaciones de demanda", "Objetivo de Disponibilidad": "Mitigaci\u00f3n del riesgo de downtime en la red interbancaria"}}'::json, '["Estrategia Cloud", "Arquitectura H\u00edbrida", "Contenedores", "Redbanc", "Continuidad Operativa", "Transformaci\u00f3n Digital", "Consultor\u00eda Tecnol\u00f3gica", "FinOps", "Alta Disponibilidad", "Infraestructura Bancaria."]'::json, '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('2bd3ebc5-e3fb-45db-9d0b-d1806d448e14', '00000000-0000-4000-8000-000000000000', 'ReportWorks — Sistema Automatizado de Captura y Reportabilidad en Terreno', 'Aplicación móvil Android y motor de automatización low-code** que transformó radicalmente el control operacional en alta cordillera. Automatiza la captura de datos en terreno de 9 a 15 células de trabajo simultáneas, eliminando reportes en papel y formatos corruptos de Excel mediante la ingesta, depuración e integración asíncrona de datos en un reporte gerencial unificado en tiempo real.',
+    '# 🚀 Caso de Éxito: ReportWorks (Techint)
+
+**Empresa / Cliente:** Techint Ingeniería y Construcción | Proyecto Mina Los Bronces (Anglo American Sur)  
+**Rol:** Ingeniero Analista en Programación y Control de Gestión *(Creador y Desarrollador del Proyecto)*  
+**Periodo:** 2019 – 2020  
+**Stack Tecnológico:** MIT App Inventor (Android), Excel Avanzado (VBA / Macros), Google Apps Script, Google Sheets
+
+---
+
+## 📋 Contexto y Desafío Operacional (La Problemática)
+
+Durante el macroproyecto de reparación y reemplazo de cañerías de transporte de minerales en Mina Los Bronces, múltiples células de trabajo operaban de manera simultánea a lo largo de varios kilómetros de alta cordillera. Las actividades incluían procesos críticos y heterogéneos tales como:
+
+- Reconocimiento de terreno  
+- Movimiento de tierras  
+- Transporte de materiales  
+- Soldadura y doblado de cañerías  
+- Descenso de tubos mediante maquinaria pesada (*sidebooms*)  
+- Controles de calidad operacionales  
+
+Para mantener el control diario de las operaciones, cada frente de trabajo contaba con un **“Apuntador”**, responsable de registrar:
+
+- Actividades ejecutadas durante la jornada  
+- Asistencia del personal  
+- Uso de maquinaria pesada  
+- Consumo de combustible e insumos operacionales  
+
+### El problema de gestión de datos
+
+Cada día, el área de **Control de Gestión** recibía entre **9 y 15 reportes independientes** que debían consolidarse manualmente en un único informe ejecutivo para la gerencia de obra.
+
+El proceso presentaba dos cuellos de botella críticos:
+
+#### 1. Datos inconsistentes y estructuras destruidas
+
+Los apuntadores trabajaban con planillas libres de Excel que frecuentemente:
+
+- Modificaban tamaños de celdas  
+- Fusionaban filas o columnas de manera inconsistente  
+- Alteraban nomenclaturas y estructuras del reporte  
+
+Esto impedía cualquier posibilidad de consolidación automatizada y generaba una alta carga de trabajo manual.
+
+#### 2. Brecha digital en alta cordillera
+
+En múltiples zonas sin conectividad a internet, los reportes eran completados manualmente en papel.
+
+Posteriormente, el equipo administrativo debía reconstruir la información desde:
+
+- Fotografías de baja calidad  
+- Registros manuscritos difíciles de interpretar  
+
+Esto provocaba extensas jornadas de transcripción, retrasos operacionales y un alto riesgo de error humano.
+
+---
+
+## 🛠️ Solución Implementada (La Acción)
+
+Aprovechando conocimientos adquiridos durante mi formación de postgrado, diseñé y desarrollé **ReportWorks**, una solución integral de extremo a extremo que combinó movilidad, automatización local y consolidación inteligente de datos.
+
+### 📱 Desarrollo móvil para captura en terreno (Android)
+
+Construí una aplicación móvil utilizando **MIT App Inventor**, orientada al uso directo por los apuntadores en terreno.
+
+La solución incorporó:
+
+- Persistencia local de datos  
+- Memoria de equipos de trabajo y maquinaria asignada  
+- Autocompletado de variables repetitivas  
+
+Esto permitió automatizar aproximadamente el **80% del llenado del reporte**, dejando solo variables dinámicas para edición manual, tales como:
+
+- Avances diarios  
+- Horas Hombre (HH)  
+- Metros cúbicos procesados  
+
+---
+
+### 📊 Estandarización mediante reportes inteligentes en Excel (VBA)
+
+Para garantizar interoperabilidad incluso sin acceso a internet, la aplicación exportaba automáticamente información estructurada hacia reportes Excel individuales.
+
+Cada planilla incluía **macros VBA embebidas** responsables de:
+
+- Validar consistencia de datos  
+- Bloquear celdas críticas para evitar corrupción de formatos  
+- Estandarizar estructura documental  
+- Generar automáticamente el reporte diario local de cada frente de trabajo  
+
+Esto eliminó por completo los errores derivados de modificaciones accidentales de formato.
+
+---
+
+### ⚙️ Motor de consolidación automatizada (Excel VBA + Google Apps Script)
+
+Desarrollé un motor centralizado de consolidación construido en **Excel VBA** conectado con **Google Apps Script**.
+
+Una vez recibidos los reportes independientes:
+
+- El sistema abría automáticamente múltiples archivos Excel  
+- Extraía datos estructurados de forma automatizada  
+- Depuraba inconsistencias y validaba integridad  
+- Consolidaba toda la operación en una única base de datos operativa  
+
+El resultado era un informe gerencial centralizado generado automáticamente desde múltiples frentes de trabajo distribuidos en alta cordillera.
+
+---
+
+## 🚀 Resultados e Impacto (KPIs)
+
+La implementación de **ReportWorks** generó beneficios inmediatos tanto para operaciones en terreno como para la toma de decisiones ejecutiva.
+
+### ⏱️ Eficiencia en consolidación
+
+El tiempo de construcción del reporte gerencial pasó de **horas de transcripción manual** a una ejecución prácticamente instantánea mediante automatización.
+
+### ⚡ Velocidad de entrega
+
+Los informes ejecutivos comenzaron a estar disponibles de forma significativamente más rápida, permitiendo una reacción operativa más ágil frente a desviaciones en obra.
+
+### ✅ Calidad e integridad del dato
+
+Se eliminó prácticamente el error humano por transcripción y se erradicó la corrupción de formatos Excel gracias a validaciones automáticas y bloqueo estructural mediante macros.
+
+### 👷 Optimización operacional en terreno
+
+Los apuntadores redujeron drásticamente el tiempo administrativo invertido al finalizar sus jornadas, enfocándose más en supervisión y menos en tareas burocráticas.
+
+---
+
+## 💡 Hito de Inflexión Profesional
+
+El impacto tangible de **ReportWorks** marcó un punto de inflexión en mi desarrollo profesional.
+
+Ver cómo automatización, lógica computacional y unas pocas líneas de código podían transformar la operación de una obra minera de gran escala despertó mi interés profundo por la ingeniería de software y la analítica aplicada.
+
+Este proyecto representó el inicio de mi transición hacia el desarrollo de sistemas, automatización avanzada, ingeniería de datos y construcción de soluciones tecnológicas orientadas a resolver problemas reales de negocio.', '["MIT App Inventor", "Android SDK", "Google Apps Script", "Google Sheets", "Excel Macros", "JavaScript (V8 Engine)", "JSON", "Local Storage/Persistence", "Excel", "Macros"]'::json, '2024-01-01', '', '', '{"Tecnolog\u00eda": {"Motor Backend": "Google Apps Script (JavaScript V8)", "Plataforma Mobile": "Android (MIT App Inventor)", "Persistencia Local": "Memoria del dispositivo (Estructuras de datos nativas)", "Almacenamiento Central": "Google Sheets"}, "Rendimiento & Impacto": {"Disponibilidad en terreno": "100% offline (llenado sin cobertura en alta cordillera)", "Estructura de datos corruptas": "0% (bloqueo total de alteraciones de formato Excel)", "Velocidad de entrega a gerencia": "Optimizaci\u00f3n dr\u00e1stica para toma de decisiones diaria", "Tasa de error por transcripci\u00f3n": "0% (eliminaci\u00f3n de digitaci\u00f3n manual de datos)", "Tiempo de procesamiento de reportes": "Reducci\u00f3n de horas a consolidaci\u00f3n casi instant\u00e1nea"}, "Operaciones & Cobertura": {"Fuentes de datos unificadas": "Formatos digitales estandarizados y transcripci\u00f3n de papel obsoleta", "Fases del proyecto cubiertas": "Reconocimiento, movimiento de tierras, transporte, doblado, soldadura, sidebooms, control de calidad", "C\u00e9lulas de trabajo monitoreadas": "9 a 15 frentes simult\u00e1neos", "Automatizaci\u00f3n del llenado en terreno": "80% (mediante persistencia de equipos y maquinaria)"}}'::json, '["Automatizaci\u00f3n", "Transformaci\u00f3n Digital", "Miner\u00eda", "Control de Gesti\u00f3n", "Procesamiento de Datos", "Apps M\u00f3viles", "Operaciones", "Optimizaci\u00f3n de Procesos", "Eficiencia Operativa", "Gesti\u00f3n de Terreno."]'::json, '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('7615a33c-506c-441b-8ef7-87225a4a81ab', '00000000-0000-4000-8000-000000000000', 'Sistema de Integración Legacy y Automatización de Back-Office Hipotecario (RPA)', 'Robot de automatización de procesos robóticos (RPA) de nivel empresarial enfocado en la interoperabilidad de sistemas bancarios incomunicados para Scotiabank. El sistema orquesta la extracción masiva de casos desde bases de datos, descarga y procesa informes notariales complejos en formato PDF mediante técnicas avanzadas de depuración de datos no estructurados, y ejecuta la mantención automatizada de garantías en el sistema web legado (*Legacy*) del banco.',
+    '### 📋 Contexto y Desafío Operacional
+El departamento de Operaciones de Garantía Hipotecaria de Scotiabank gestiona diariamente las mantenciones y actualizaciones de los contratos de crédito. Este proceso requería que el equipo consultara manualmente una base de datos de casos pendientes, tomara el ID del documento e ingresara a una plataforma web interna moderna para descargar los informes legales emitidos por diversas notarías del país en formato PDF.
+
+El proceso enfrentaba dos fricciones técnicas mayores:
+1. **Complejidad y Variabilidad de los Documentos:** Los archivos PDF notariales carecían de una estructura estándar. Venían con formatos inconsistentes y datos "sucios", dificultando la localización exacta de los múltiples campos clave requeridos para la mantención.
+2. **Incompatibilidad de Sistemas (Silos Tecnológicos):** Una vez extraída la información, los operadores debían transcribirla ingresando a un sistema web antiguo e institucional del banco. Esta plataforma legada no poseía comunicación ni APIs de integración con el portal moderno de descargas, generando un flujo de trabajo manual, repetitivo, lento y propenso a errores de digitación en datos financieros críticos.
+
+### 🛠️ Solución Implementada (Acción)
+Desarrollé e implementé un flujo automatizado de extremo a extremo utilizando la arquitectura estándar de la industria para resolver la brecha de integración entre sistemas:
+
+* **Orquestación y Robustez (RPA):** Diseñé el robot bajo el framework empresarial **UiPath REFramework**, asegurando una ejecución controlada por estados, manejo seguro de excepciones de negocio y de sistema, y un historial completo de logs para auditoría interna.
+* **Ingeniería de Datos en PDFs Inconsistentes:** Implementé lógica de parsing avanzada mediante código **.NET** y `UiPath` para leer y limpiar los strings de los PDFs "sucios". Utilicé métodos ingeniosos de extracción para normalizar los datos dispersos y asegurar que los campos críticos de la garantía hipotecaria se capturaran de forma exacta y estructurada en archivos temporales **JSON**.
+* **Integración y Automatización de Navegación Web:** El robot automatiza la navegación asíncrona bi-plataforma a través del navegador Edge. Primero interactúa con el portal moderno para extraer el insumo, y posteriormente inyecta de forma precisa la información depurada en los campos correspondientes del sistema legado más antiguo, actuando como un puente de comunicación de datos en tiempo real.
+* **Persistencia y Control de Versiones:** El proceso inicia consumiendo las colas de trabajo directamente desde consultas optimizadas en **SQL** y todo el ciclo de código fue versionado rigurosamente utilizando **Git**.', '["UiPath REFramework", ".NET (VB.NET/C#)", "SQL", "Microsoft Edge Automation", "PDF Data Extraction", "JSON", "Git", "Legacy Web Integration."]'::json, '2024-01-01', '', '', '{"Rendimiento & Negocio": {"Eficiencia Operativa": "Liberaci\u00f3n de tiempo cr\u00edtico en el Back-Office de Operaciones de Garant\u00eda", "Brecha de Integraci\u00f3n resuelta": "100% automatizada sin necesidad de desarrollo de APIs en sistemas antiguos", "Consistencia de la Informaci\u00f3n": "Validaci\u00f3n cross-system asegurando que la data del PDF calce exactamente con el registro del cliente", "Tasa de error en digitaci\u00f3n de garant\u00edas": "Reducida a 0% mediante inyecci\u00f3n directa de datos depurados"}, "Tecnolog\u00eda & Arquitectura": {"Framework Utilizado": "UiPath REFramework (State Machine)", "Origen de Transacciones": "Base de datos relacional orientada a SQL", "Motor de Lectura de Datos": "UiPath PDF Automation + L\u00f3gica de Expresiones en .NET", "Automatizaci\u00f3n de Interfaz": "UI Automation sobre Browser Microsoft Edge", "Formato de Intercambio Local": "Estructuras estructuradas en formato JSON"}, "Operaciones & Interoperabilidad": {"Sistemas Integrados": "2 plataformas web independientes (Portal Moderno y Sistema Legado)", "Manejo de Excepciones": "Clasificaci\u00f3n autom\u00e1tica de casos de dif\u00edcil lectura para revisi\u00f3n humana (Business Rule Exception)", "Tipo de Insumo Procesado": "Informes notariales en PDF no estructurados con alta variabilidad", "Trazabilidad del Proceso": "Control de cambios de estados en base de datos mediante ID de Documento"}}'::json, '["RPA", "Sistemas Legados", "Procesamiento de PDFs", "Operaciones Hipotecarias", "Integraci\u00f3n de Sistemas", "UiPath", "SQL", "Back-Office", "Banca", "Automatizaci\u00f3n Web."]'::json, '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('08781a71-4265-4bcb-9369-0a5a3216a244', '00000000-0000-4000-8000-000000000000', 'Pipeline ETL de Migración Cloud e Integración de Datos Financieros FactSet', '**Proyecto de Ingeniería de Datos y Migración Cloud** para BICE Inversiones enfocado en el diseño, desarrollo y optimización de pipelines ETL masivos. Automatiza la extracción, limpieza y estandarización de grandes volúmenes de datos financieros históricos y en tiempo real desde servidores locales (*On-Premise*) hacia Google Cloud Platform (GCP), integrando la suite analítica de FactSet mediante procedimientos almacenados optimizados y flujos corporativos en Talend.',
+    '### 📋 Contexto y Desafío Operacional
+BICE Inversiones requería modernizar su infraestructura analítica migrando su repositorio de datos financieros desde servidores locales (*On-Premise*) hacia un entorno moderno en la nube de Google Cloud Platform (GCP). El objetivo estratégico era centralizar la información transaccional e histórica del banco y enriquecerla mediante la integración de **FactSet**, una plataforma de provisión de datos financieros globales utilizada para el análisis de portafolios y gestión de patrimonios.
+
+El desafío de ingeniería radicaba en la criticidad y el volumen de la información: los datos financieros venían segmentados en estructuras complejas y de difícil acceso. Era imperativo garantizar el cumplimiento de estrictos estándares de calidad del dato (*Data Quality*), latencia mínima, integridad referencial absoluta y seguridad bancaria durante todo el proceso de tránsito y transformación antes de disponibilizar la data en la nube para la toma de decisiones del área de inversiones.
+
+### 🛠️ Solución Implementada (Acción)
+Diseñé y ejecuté la arquitectura de integración y movimiento de datos utilizando herramientas y metodologías de nivel empresarial para entornos de alto rendimiento:
+
+* **Ingeniería de Datos con SQL Avanzado:** Desarrollé y optimicé estructuras de bases de datos relacionales mediante **Stored Procedures** (Procedimientos Almacenados) complejos. Estos motores intermedios se encargaron de realizar la limpieza profunda, normalización y depuración de datos duplicados o inconsistentes directamente en el origen transaccional.
+* **Construcción de Pipelines con Talend:** Programé flujos **ETL** (Extracción, Transformación y Carga) corporativos utilizando **Talend**. Diseñé la lógica de orquestación para la extracción asíncrona de los servidores locales, aplicando reglas de negocio financieras complejas y validaciones cruzadas que aseguraron la consistencia de los datos antes de su carga final.
+* **Migración e Integración Multifuente (On-Premise to Cloud):** Implementé los canales de comunicación y carga de datos desde la infraestructura local hacia los almacenes analíticos de **Google Cloud**, integrando las estructuras de esquemas de **FactSet**. Esto facilitó la centralización de datos macroeconómicos, precios de activos y métricas operacionales de mercado en un solo ecosistema en la nube.
+* **Gobernanza e Interoperabilidad:** Actué como nexo técnico para traducir los requerimientos del área de negocio y analistas financieros en estructuras de datos optimizadas, reduciendo los tiempos de ejecución de consultas pesadas y garantizando la trazabilidad del dato (*Data Lineage*).', '["Talend Open Studio (ETL)", "SQL", "Stored Procedures", "Google Cloud Platform (GCP)", "FactSet Financial Data", "On-Premise Servers", "Data Warehousing", "Data Quality", "Linux/Bash Scripting."]'::json, '2024-01-01', '', '', '{"Gobernanza & Calidad": {"Seguridad del Dato": "Tr\u00e1nsito cifrado desde infraestructura local hacia la nube", "Estrategia de Carga": "ETL / Pipeline de Datos Automatizado", "Normalizaci\u00f3n de Datos": "Estandarizaci\u00f3n de nomenclaturas financieras y tipos de activos", "Validaci\u00f3n de Integridad": "Automatizada en tr\u00e1nsito mediante reglas Talend"}, "Rendimiento & Negocio": {"Impacto Estrat\u00e9gico": "Disponibilizaci\u00f3n de datos optimizados para an\u00e1lisis de portafolios y toma de decisiones", "Interoperabilidad lograda": "Fusi\u00f3n exitosa de data hist\u00f3rica interna con feeds globales de FactSet", "Eficiencia de Procesamiento": "Reducci\u00f3n en tiempos de carga y procesamiento anal\u00edtico masivo", "Calidad del Dato (Data Quality Target)": "Garant\u00eda de consistencia absoluta entre origen y destino"}, "Tecnolog\u00eda & Infraestructura": {"Entorno de Origen": "Servidores Locales On-Premise (BICE Inversiones)", "Entorno de Destino": "Google Cloud Platform (GCP)", "L\u00f3gica de Base de Datos": "Stored Procedures (Procedimientos Almacenados) Optimizados", "Herramienta ETL Principal": "Talend Enterprise Data Integration", "Proveedor de Data Externa": "FactSet Insight & Data Feeds"}}'::json, '["Ingenier\u00eda de Datos", "Migraci\u00f3n Cloud", "ETL", "Talend", "SQL Avanzado", "Google Cloud", "FactSet", "Finanzas", "Big Data", "Inteligencia de Negocios."]'::json, '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('0785d731-f762-4a6d-8b70-b26a1267097b', '00000000-0000-4000-8000-000000000000', 'Plataforma Analítica y Módulo de Cobertura para la Mitigación de Riesgos Cambiarios (Data Science)', '**Sistema analítico e interactivo de Data Science** desarrollado para el Banco Internacional con el objetivo de cuantificar y mitigar los riesgos cambiarios en inversiones mediante instrumentos derivados. Diseñado en Python con procesamiento masivo en Pandas y modelamiento estadístico en SciPy, implementa una interfaz ejecutiva dinámica en Dash y Plotly para la evaluación de estrategias de cobertura financiera, hito técnico que consolidó la obtención del *EY Data Science Bronze Badge*.',
+    '### 📋 Contexto y Desafío Operacional
+En el sector bancario y de inversiones de alta exigencia, las fluctuaciones del mercado de divisas representan un riesgo crítico para los portafolios institucionales. El Banco Internacional requería robustecer sus capacidades analíticas para la gestión de riesgos cambiarios asociados a inversiones expuestas que utilizaban instrumentos financieros derivados[cite: 1, 2].
+
+El desafío consistía en transformar flujos de variables macroeconómicas y datos transaccionales financieros dispersos en un modelo cuantitativo unificado. El área de gestión requería evaluar de forma inmediata el impacto de diferentes escenarios de mercado y modelar estrategias de cobertura (*hedging*) eficientes, lo cual exigía una herramienta interactiva que superara las limitaciones de los reportes estáticos y permitiera a los tomadores de decisiones visualizar riesgos complejos en tiempo real.
+
+### 🛠️ Solución Implementada (Acción)
+Diseñé y ejecuté el desarrollo de un módulo de ingeniería financiera y ciencia de datos de extremo a extremo, cumpliendo con los estándares globales de calidad analítica exigidos por la metodología de certificación corporativa de EY:
+
+* **Ingeniería de Datos y Analítica Cuantitativa:** Utilicé **Python** y la biblioteca **Pandas** para la ingesta, limpieza profunda y manipulación de series de tiempo financieras complejas. Implementé modelos matemáticos y estadísticos utilizando **SciPy** para evaluar volatilidades, correlaciones de activos y efectividad de coberturas.
+* **Desarrollo del Entorno Analítico Interactivo:** Construí un dashboard ejecutivo interactivo utilizando **Dash** y **Plotly**. Esta interfaz permite realizar simulaciones dinámicas de portafolios, visualizar distribuciones de riesgo y analizar la sensibilidad de los instrumentos derivados ante variaciones del tipo de cambio mediante gráficos de alta fidelidad.
+* **Marcos de Arquitectura y Buenas Prácticas:** Estructuré el módulo bajo los pilares de la ciencia de datos aplicada a negocios, aislando de forma estricta la lógica de cálculo matemático del renderizado visual de la interfaz.
+
+### 🥇 Certificación de Excelencia (EY Data Science Bronze Badge)
+Este proyecto sirvió como la evidencia técnica fundamental para la adjudicación de la medalla internacional **EY Analytics - Data Science - Bronze**[cite: 1, 2]. Para su aprobación por el comité revisor global, completé un riguroso proceso de documentación académica (*Experience Evidence Form*), demostrando habilidades de:
+* **Gobernanza y Confidencialidad:** Redacción bajo estrictos estándares éticos, aplicando técnicas de anonimización para omitir datos de identificación personal de clientes o miembros del banco.
+* **Aplicación Práctica y Cambio de Comportamiento:** Validación de la capacidad de traducir conceptos estadísticos avanzados en soluciones de software de alto impacto operacional y financiero para el cliente.', '["Python", "Pandas", "SciPy", "Dash (Plotly)", "Plotly.js", "Git", "HTML5/CSS3 (Estructuras de layout anal\u00edtico)", "Jupyter Notebooks."]'::json, '2024-01-01', '', '', '{"Gobernanza & Credenciales": {"Certificaci\u00f3n Asociada": "EY Analytics - Data Science - Bronze Medal", "Est\u00e1ndar de Documentaci\u00f3n": "EEF (Experience Evidence Form) bajo normas APA", "Evaluaci\u00f3n de Comportamiento": "Pr\u00e1ctica y cambio de comportamiento validada en entorno real", "Pol\u00edticas de Datos Aplicadas": "Confidencialidad bancaria absoluta y anonimizaci\u00f3n de stakeholders"}, "Tecnolog\u00eda & Ciencia de Datos": {"Framework del Dashboard": "Dash (Plotly Framework)", "Lenguaje de Programaci\u00f3n": "Python", "Motor Gr\u00e1fico Interactivo": "Plotly.js", "Motor de Modelamiento Estad\u00edstico": "SciPy (Scientific Computing Tools)", "Librer\u00eda de Manipulaci\u00f3n de Datos": "Pandas"}, "Rendimiento & Impacto de Negocio": {"\u00c1rea de Aplicaci\u00f3n": "Gesti\u00f3n de Riesgo Cambiario y Estrategias de Cobertura (Hedging)", "Interactividad Lograda": "Transici\u00f3n de reportes est\u00e1ticos a simulaciones de escenarios en tiempo real", "Tipo de Activos Evaluados": "Inversiones institucionales e Instrumentos Derivados", "Impacto en la Toma de Decisiones": "Visualizaci\u00f3n intuitiva de m\u00e9tricas anal\u00edticas complejas para mesas de dinero"}}'::json, '["Data Science", "Gesti\u00f3n de Riesgos", "Instrumentos Derivados", "Finanzas Cuantitativas", "Dashboards Anal\u00edticos", "Python", "Banca", "Modelamiento Estad\u00edstico", "Cobertura Financiera."]'::json, '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('7b60ff2d-e646-4bfe-8a3f-e71cf7be92ac', '00000000-0000-4000-8000-000000000000', 'Sistema Event-Driven para Procesamiento e Ingesta de Pólizas de Seguros en Tiempo Real (RPA)', 'Robot de automatización e integración híbrida: que opera en modalidad continua (24/7) para la gestión y activación de pólizas en Scotiabank Corredora de Seguros. El sistema captura eventos por correo electrónico, extrae información no estructurada, consume APIs de validación empresarial mediante integraciones criptográficas en Python y actualiza en tiempo real los sistemas internos del banco (*Core Bancario*), notificando de forma automática al cliente el estado de su aprobación.',
+    '### 📋 Contexto y Desafío Operacional
+La Corredora de Seguros de Scotiabank requería procesar de manera inmediata las respuestas de aceptación o rechazo de seguros emitidas por los clientes. El flujo tradicional dependía de la revisión periódica de bandejas de entrada corporativas y la posterior digitación manual de los datos del cliente en múltiples plataformas internas para activar o dar de baja las pólizas.
+
+Este enfoque presentaba tres problemas críticos: el retraso en la activación del seguro (dejando al cliente desprotegido durante horas), la alta carga administrativa de monitoreo constante y la complejidad técnica de interactuar con servicios web y APIs de validación que requerían el manejo seguro de llaves de autenticación e intercambio de estructuras complejas de datos (JSON).
+
+### 🛠️ Solución Implementada (Acción)
+Desarrollé un ecosistema de automatización híbrido que funciona de manera ininterrumpida, integrando flujos de interfaz con lógica de desarrollo de software avanzada:
+
+* **Arquitectura Orientada a Eventos:** Implementé un robot basado en **UiPath REFramework** configurado para monitorear continuamente bandejas de correo en tiempo real. Al detectar un asunto específico de aceptación/rechazo, gatilla de forma síncrona el flujo transaccional.
+* **Consumo de APIs e Integración con Python:** Diseñé la lógica de conexión con los microservicios de validación del banco. Para las APIs más complejas que exigían el manejo de tokens dinámicos y llaves de seguridad (*API Keys*), integré scripts de **Python** que actúan como pasarelas seguras de comunicación para procesar los payloads en formato **JSON**. Realicé pruebas y mapeo de estos servicios utilizando **Postman**.
+* **Sincronización del Core Bancario (SQL Server):** El robot extrae los datos del correo, los normaliza en una base de datos de staging en SQL Server y, tras superar las validaciones de las APIs, orquesta la actualización simultánea de los datos del cliente en los sistemas legados e internos del banco.
+* **Ciclo de Notificación Automatizado:** Desarrollé el flujo de salida que discrimina el resultado de las reglas de negocio: en caso de aprobación, genera y envía la póliza activa y el kit de bienvenida al cliente; en caso de rechazo, actualiza el estado de la campaña y envía el cierre formal del caso, manteniendo la trazabilidad con control de versiones en **Git**.', '["UiPath REFramework", "Python", "Servicios API REST", "Postman", "SQL Server", ".NET", "JSON", "Git", "Microsoft Outlook Automation."]'::json, '2024-01-01', '', '', '{"Rendimiento & Negocio": {"Mitigaci\u00f3n de Riesgo": "Eliminaci\u00f3n de p\u00f3lizas sin activar o procesadas fuera de plazo legal", "Trazabilidad de respuestas": "100% de los casos (Aprobados y Rechazados) registrados con logs auditarles", "Tiempo de respuesta/procesamiento": "Segundos por caso tras la llegada del correo", "Tasa de error en actualizaci\u00f3n de sistemas": "0% mediante transaccionalidad controlada en SQL/APIs"}, "Disponibilidad & Cobertura": {"Sistemas Actualizados": "Core Bancario Interno + Bases de datos de la Corredora de Seguros", "R\u00e9gimen de Operaci\u00f3n": "Continuo (24/7 / Always-on)", "Automatizaci\u00f3n de Ciclo Cerrado": "Desde la lectura del correo hasta la notificaci\u00f3n final al cliente", "Disparador del Proceso (Trigger)": "Detecci\u00f3n de eventos por correo electr\u00f3nico en tiempo real"}, "Tecnolog\u00eda & Integraci\u00f3n": {"Motor de Base de Datos": "Microsoft SQL Server", "Arquitectura del Sistema": "H\u00edbrida (UiPath REFramework + Motores de Scripting Python)", "Seguridad de Credenciales": "Manejo seguro de API Keys y criptograf\u00eda mediante Python", "Protocolo de Comunicaci\u00f3n": "APIs RESTful (Payloads JSON)", "Herramienta de Testing de APIs": "Postman"}}'::json, '["RPA", "APIs", "Python", "Integraci\u00f3n de Sistemas", "Core Bancario", "Seguros", "Automatizaci\u00f3n 24/7", "SQL Server", "Event-Driven", "Transformaci\u00f3n Digital."]'::json, '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('18e1206e-2feb-4d90-a457-dd8ef9ae3635', '00000000-0000-4000-8000-000000000000', 'Procesamiento Automatizado de Telemarketing y Conciliación Back-Office (RPA)', 'Robot de automatización empresarial (RPA): desarrollado bajo arquitectura corporativa que centraliza, depura y valida transaccionalmente las ventas diarias de Telemarketing para Scotiabank. Procesa archivos masivos mediante reglas de negocio complejas en SQL, generando salidas estructuradas en formatos específicos (.TXT) listas para su inyección directa en plataformas externas de procesamiento financiero (Nexus), reduciendo a cero el procesamiento manual diario.',
+    '### 📋 Contexto y Desafío Operacional
+En el área de operaciones y Back-Office de Scotiabank, el canal de Telemarketing genera un volumen masivo de ventas diarias distribuidas en múltiples fuentes de información. Al cierre de cada jornada laboral, se requería recopilar de forma manual 6 archivos Excel críticos alojados en distintas carpetas compartidas de la red corporativa.
+
+El desafío principal radicaba en la criticidad y el procesamiento de estos datos: la información venía cruda y requería una profunda depuración y validación respecto a complejas reglas de negocio internas del banco antes de poder ser autorizada. El proceso manual no solo consumía valiosas horas de la célula de operaciones del Back-Office, sino que incrementaba el riesgo operativo de fuga de datos o errores de digitación en la estructura de los archivos de salida, los cuales debían cumplir con un estándar sumamente estricto y específico en formato de texto plano (.TXT) para poder ser cargados en la plataforma de procesamiento financiero **Nexus**.
+
+### 🛠️ Solución Implementada (Acción)
+Diseñé y desarrollé un proceso de automatización integral de extremo a extremo utilizando herramientas de nivel empresarial para centralizar y asegurar la consistencia del flujo operativo:
+
+* **Arquitectura de Software (RPA):** Implementé el robot utilizando **UiPath REFramework (Robotic Enterprise Framework)**, asegurando una solución escalable, con un manejo avanzado de excepciones (sistémicas y de negocio), persistencia de estados y logging detallado para auditoría.
+* **Ingeniería y Procesamiento de Datos:** El robot automatiza la extracción asíncrona de los 6 archivos Excel desde las redes compartidas. Diseñé un motor intermedio en **SQL** para la ingesta y depuración de la data cruda, aplicando procedimientos de validación lógica basados en las reglas de negocio bancarias mediante código **.NET**.
+* **Estandarización y Salida Estructurada:** El sistema automatizado procesa y clasifica las ventas del día dividiéndolas en dos tablas maestras de bases de datos. Finalmente, genera de manera automatizada archivos `.TXT` con la estructura de caracteres y posiciones requerida de manera exacta por **Nexus**, acompañados de un reporte detallado de casos rechazados con sus respectivos códigos de error para el análisis del equipo de operaciones.
+* **Control de Versiones:** Todo el ciclo de desarrollo, pruebas y despliegue del bot fue gestionado utilizando **Git**, garantizando buenas prácticas de ingeniería de software.', '["UiPath REFramework", "SQL", ".NET (VB.NET/C#)", "Git", "Microsoft Excel Automation", "Windows Credential Manager", "Nexus API/File Specifications."]'::json, '2024-01-01', '', '', '{"Operaciones & Volumen": {"Destino de la data": "Plataforma transaccional Nexus", "Or\u00edgenes de datos": "2 servidores / carpetas compartidas corporativas", "Frecuencia de ejecuci\u00f3n": "Diaria (Cierre de jornada de Telemarketing)", "Archivos procesados por ciclo": "6 archivos Excel consolidados"}, "Rendimiento & Calidad": {"Consistencia de datos": "Validaci\u00f3n masiva cruzada mediante motor de base de datos", "Trazabilidad de rechazos": "100% (Reporte automatizado de excepciones con c\u00f3digo de negocio)", "Tiempo de procesamiento manual": "Reducido a cero (0) en Back-Office", "Tasa de error en formato de salida (.TXT)": "0% (Garant\u00eda de cumplimiento estricto de especificaci\u00f3n Nexus)"}, "Tecnolog\u00eda & Arquitectura": {"Motor de Validaci\u00f3n": "SQL Queries & .NET Integration", "Manejo de Excepciones": "Autom\u00e1tico (System Exception vs Business Rule Exception)", "Gesti\u00f3n de Configuraci\u00f3n": "Assets de Orquestador / Git", "Framework de Automatizaci\u00f3n": "UiPath REFramework (State Machine)"}}'::json, '["RPA", "Automatizaci\u00f3n de Procesos", "Banca", "Back-Office", "Finanzas", "UiPath", "SQL", "Ingenier\u00eda de Datos", "Integraci\u00f3n de Sistemas", "Mitigaci\u00f3n de Riesgo Operativo."]'::json, '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('b77dc2b7-37a5-4aae-ab7c-5172ed2566fa', '00000000-0000-4000-8000-000000000000', 'OppyTec - Business Management System', '**Plataforma inteligente de gestión integral para restaurantes y negocios gastronómicos** que combina control de inventario en tiempo real, recetas con costing automatizado, compras, facturación con IA, y reportes ejecutivos con insights predictivos — todo en una interfaz moderna, multi-tema y lista para usar.',
+    'OppyTec no es un ERP genérico más. Es un **sistema vertical diseñado específicamente para la industria food service** que resuelve los problemas reales del día a día de restaurantes, cafeterías, hoteles, bares, pastelerías y servicios de catering.
+
+Nuestra plataforma unifica en un solo lugar lo que antes requería múltiples herramientas: control de stock con trazabilidad completa por lote y vencimiento, gestión de recetas con cálculo automático de costos y márgenes, órdenes de compra inteligentes, facturación potenciada por inteligencia artificial (Google Gemini), y un panel ejecutivo con ingeniería de menú (matriz BCG), punto de equilibrio, prime cost, rotación de inventario y detección de anomalías en pérdidas.
+
+Construida con tecnologías modernas (FastAPI + React 19 + PostgreSQL), es rápida, escalable, multi-tenant por schema, y completamente dockerizada para deployment inmediato.
+
+### Highlights del Proyecto
+
+- **🚀 Control de Stock en Tiempo Real** — Trazabilidad completa de cada movimiento con undo/redo, soporte multi-lote con fechas de vencimiento, transferencias entre bodegas, y snapshot de stock calculado con Polars para alto rendimiento
+- **🤖 Facturación con Inteligencia Artificial** — Sube una foto de tu factura y Gemini extrae automáticamente proveedor, RUT, montos, impuestos, items y hasta detecta el país de origen. Genera audit flags y alertas de inconsistencias
+- **📊 Ingeniería de Menú (BCG Matrix)** — Clasifica automáticamente tus platos en Estrellas, Perros, Vacas e Interrogantes según margen y popularidad. Toma decisiones de menú basadas en datos, no en corazonadas
+- **📈 Reportes Ejecutivos con Insights IA** — No solo mostramos números: la IA analiza tu inventario, ventas y mermas para generar recomendaciones prescriptivas: fugas de dinero, sobrestock, oportunidades de ahorro
+- **🛒 Flujo Completo de Compras** — Desde la orden al proveedor hasta la recepción con control de incidencias, notificaciones automáticas por email, fill rate, variación de precios y calendario de pagos
+- **📐 Ingeniería de Costos** — Costo de receta calculado automáticamente, prime cost, punto de equilibrio, variación de precios de insumos. Saber exactamente cuánto cuesta cada plato
+- **🧠 Proyecciones Inteligentes** — Forecasting de inventario basado en consumo histórico + eventos agendados. Anticipa desabastecimientos antes de que ocurran
+- **🔔 Alertas Proactivas** — Stock crítico, productos próximos a vencer, anomalías en mermas (desviación estándar), productos cerca del punto de reorden. El sistema te avisa antes de que sea un problema
+- **🏢 Multi-tenant Nativo** — Cada restaurante opera en su propio schema de PostgreSQL. Datos aislados, seguros y escalables
+- **🎨 3 Temas Visuales Premium** — Light, Dark y Cosmic Blue (tema oscuro con animaciones nebula, destellos y glassmorphism). Una experiencia visual que encanta a los usuarios
+- **📱 Mobile-First** — Interfaz responsive con drawer en móvil, selectores táctiles, escáner de códigos de barras y QR integrado
+- **🔌 Integraciones Listas** — Exportación contable a SII (Chile), QuickBooks, Xero, Odoo, ContaPlus. Webhooks para integración con cualquier sistema externo. Google OAuth para login sin password
+- **🔐 Seguridad Empresarial** — JWT dual (access + refresh tokens), cookies HttpOnly, roles granulares (propietario, admin, supervisor, usuario), permisos específicos por funcionalidad, historial de sesiones
+- **🐳 Dockerizado** — docker-compose con PostgreSQL, Redis, pgAdmin y la API. Se levanta en segundos
+- **🇨🇱 Hecho en Chile** — Soporte nativo para SII (libro de compras y ventas), moneda CLP, RUT, huso horario Santiago. Pero preparado para operar internacionalmente', '["Python 3.12", "FastAPI", "SQLAlchemy 2.0", "PostgreSQL 15", "Redis", "Alembic", "Google Gemini", "Authlib", "SQLAdmin", "Polars", "Sentry", "Docker", "React 19", "TypeScript 6", "Vite 8", "Tailwind CSS 3", "shadcn/ui (Radix)", "Axios", "TanStack React Query", "Framer Motion", "Recharts", "React Hook Form", "Zod", "Sonner", "Lucide React", "date-fns", "xlsx", "html5-qrcode", "Docker Compose", "AWS S3", "Resend API", "SMTP", "WebSockets", "Webhooks"]'::json, '2024-01-01', 'https://github.com/OppyTec/OppyTec_Backend', '', '{"Negocio": {"Ideal para": "Restaurantes, cafeter\u00edas, hoteles, bares, pasteler\u00edas, catering, casinos", "Pa\u00edses objetivo": "Chile (nativo) + Internacional", "Tipo de proyecto": "ERP vertical para food service", "Reducci\u00f3n estimada de mermas": "15-30% con tracking y alertas", "Tiempo estimado de implementaci\u00f3n": "Horas (SaaS), D\u00edas (on-premise)", "Ahorro estimado en costos operativos": "10-20% con ingenier\u00eda de men\u00fa y compras inteligentes"}, "Cobertura": {"Endpoints API": 140, "Componentes UI": 48, "P\u00e1ginas frontend": 20, "Reportes ejecutivos": 5, "M\u00f3dulos funcionales": 15, "Tablas en base de datos": 40, "Formatos de exportaci\u00f3n": 10}, "Seguridad": {"OAuth": "Google (web + mobile)", "Roles": 4, "Monitoreo": "Sentry (errores + tracing)", "Transmisi\u00f3n": "Cookies HttpOnly, HTTPS enforced", "Rate limiting": "Redis (configurable)", "Autenticaci\u00f3n": "JWT dual (access + refresh)", "Permisos granulares": 4}, "Rendimiento": {"Cache Redis TTL": "30 minutos", "Snapshot de stock": "Tiempo real (Polars)", "Latencia WebSocket": "< 50ms", "Pool de conexiones DB": "40 conexiones + 20 overflow", "Tiempo de respuesta API": "< 200ms (p95)", "Procesamiento de factura con IA": "5-15 segundos"}, "Tecnolog\u00eda": {"IA": "Google Gemini", "Cache": "Redis", "Frontend": "React 19 + TypeScript 5.x + Vite 6.x", "Contenedores": "Docker + Docker Compose", "Base de datos": "PostgreSQL 15", "Framework API": "FastAPI (async)", "Gestor Paquetes": "pnpm", "Lenguaje Backend": "Python 3.12"}, "Escalabilidad": {"Migraciones": "Alembic autom\u00e1ticas", "Arquitectura": "Multi-tenant por schema PostgreSQL", "Horizontal scaling": "Stateless, multiple instances", "Tiempo de deployment": "< 5 minutos (Docker)"}, "Disponibilidad": {"Backup": "PostgreSQL + snapshots", "Entornos": "Desarrollo, Test, Producci\u00f3n", "Uptime target": "99.9%", "Recuperaci\u00f3n ante fallos": "Autom\u00e1tica (Docker healthchecks + restart)"}}'::json, '["ERP", "Gesti\u00f3n de Inventario", "Restaurantes", "Food Service", "Hoteler\u00eda", "Gastronom\u00eda", "Control de Stock", "Facturaci\u00f3n Electr\u00f3nica", "IA Generativa", "Gemini", "FastAPI", "React", "Gesti\u00f3n de Recetas", "Ingenier\u00eda de Men\u00fa", "Food Cost", "Supply Chain", "Log\u00edstica", "Compras", "Reportes Ejecutivos", "Finanzas", "SII Chile", "Multi-tenant", "SaaS"]'::json, '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('516e33d2-cf6c-4e3f-974f-e15555b47b69', '00000000-0000-4000-8000-000000000000', 'FastAlert - Sistema de Seguridad Vecinal con IoT y WhatsApp', 'Sistema de alerta vecinal que integra una cámara ESP32-CAM con notificaciones en tiempo real vía WhatsApp para la seguridad del vecindario.',
+    'FastAlert es una plataforma de seguridad comunitaria que combina hardware IoT (ESP32-CAM), una API backend en Python/FastAPI, y una aplicación móvil en Flet para crear un sistema de alerta vecinal automatizado.
+
+### Highlights del Proyecto
+
+- **Activación multicanal**: Los vecinos pueden activar la alerta desde la app móvil Flet o mediante comandos de texto por WhatsApp (palabras clave: ALERTA, SOS, 🚨).
+- **Captura de evidencia en vivo**: Al activarse la alerta, el ESP32-CAM captura una ráfaga de **5 fotos** en tiempo real y las envía automáticamente al grupo de WhatsApp vecinal.
+- **Sirena local integrada**: El ESP32 activa un buzzer (sirena) en el lugar del evento como disuasivo físico.
+- **Notificaciones vía WhatsApp**: Utiliza Evolution API como gateway de WhatsApp para enviar mensajes de texto e imágenes al grupo de vecinos de forma asíncrona.
+- **Webhook bidireccional**: Recibe comandos desde WhatsApp para activar/detener la alarma, permitiendo interacción sin necesidad de la app.
+- **Auto-apagado de seguridad**: La alarma se desactiva automáticamente tras **45 segundos** para evitar que quede activa indefinidamente si el ESP32 se desconecta.
+- **Control de acceso por número telefónico**: Solo vecinos registrados con números autorizados pueden activar el sistema.
+- **Polling eficiente del ESP32**: El microcontrolador consulta el estado de la alarma cada **1.5 segundos** con un consumo mínimo de recursos.
+- **Cooldown anti-disparos múltiples**: Previene activaciones repetidas mientras la alarma ya está en curso.
+- **Registro de eventos en base de datos**: Cada alerta queda registrada con timestamp, vecino responsable y cantidad de fotos capturadas.
+- **Despliegue containerizado**: Todo el sistema (API + Evolution API + PostgreSQL) se despliega con Docker Compose.
+- **App móvil multiplataforma**: Desarrollada en Flet (Python), compatible con Android, iOS y escritorio desde un solo código base.', '["Python", "FastAPI", "SQLAlchemy", "SQLite", "Pydantic", "Uvicorn", "Flet", "HTTPX", "Arduino/ESP32-CAM", "Evolution API (WhatsApp Gateway)", "Docker", "Docker Compose", "PostgreSQL"]'::json, '2024-01-01', 'https://github.com/jcampillay8/FastAlert', '', '{"Polling ESP32": "1.5s", "R\u00e1faga de fotos por evento": "5", "Tiempo m\u00e1ximo de alerta activa": "45s", "Tasa de \u00e9xito en env\u00edo de fotos": ">95%", "Latencia de notificaci\u00f3n WhatsApp": "<3s", "Tiempo de respuesta ESP32 -> Backend": "<1.5s"}'::json, '["Seguridad", "IoT", "AppMobile", "ESP32", "WhatsApp", "Vecinal", "Alarma", "Python"]'::json, '', true);
+
+
+INSERT INTO oppy.proyectos 
+    (id, usuario_id, titulo, descripcion_corta, descripcion_detallada, stack_tecnologico, fecha_proyecto, link_github, link_demo, kpis, tags, youtube_url, is_active)
+    VALUES ('23f5fd30-f9c1-4e73-bbc7-1f058391d42f', '00000000-0000-4000-8000-000000000000', 'OppyTalent (Portafolio Inteligente)', 'Plataforma interactiva construida con un backend asíncrono en FastAPI (Python) y base de datos PostgreSQL, integrada con agentes de IA autónomos con persistencia de memoria para interactuar y responder consultas ejecutivas y métricas de trayectoria profesional en tiempo real. Despliegue automatizado contenerizado en Railway acoplado a la capa de seguridad, optimización y administración DNS global de Cloudflare.',
+    'Plataforma interactiva construida con un backend asíncrono en FastAPI (Python) y base de datos PostgreSQL, integrada con agentes de IA autónomos con persistencia de memoria para interactuar y responder consultas ejecutivas y métricas de trayectoria profesional en tiempo real. Despliegue automatizado contenerizado en Railway acoplado a la capa de seguridad, optimización y administración DNS global de Cloudflare.', '["FastAPI", "Python", "PostgreSQL", "IA", "Docker", "Railway", "Cloudflare"]'::json, '2024-01-01', '', '', '{"Comuna": "Illapel", "Entidad": "Gobierno Regional de Coquimbo.", "Proyecto": "FNDR", "Inversi\u00f3n": "$599.323.000", "Superficie": "286.5 m2.", "Ubicaci\u00f3n": "Localidad de Huintil Sur.", "A\u00f1o de aprobaci\u00f3n": "2019"}'::json, '["FastAPI", "Python", "PostgreSQL", "IA", "Docker", "Railway", "Cloudflare"]'::json, '', true);
+
 COMMIT;
 
 -- ==============================================================
