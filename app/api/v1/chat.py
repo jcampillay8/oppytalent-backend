@@ -27,6 +27,8 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 def _serialize(obj):
     if isinstance(obj, (datetime, date)):
         return obj.isoformat()
+    if isinstance(obj, UUID):
+        return str(obj)
     return obj
 
 def _model_to_dict(entity):
