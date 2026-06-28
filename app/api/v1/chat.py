@@ -345,6 +345,49 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
     full_name = f"{portfolio_user.first_name} {portfolio_user.last_name}".strip()
     if not full_name:
         full_name = portfolio_user.username.split("@")[0]
+
+    # -------------------------------------------------------------
+    # FREEMIUM CREDIT CYCLE & DEDUCTION LOGIC
+    # -------------------------------------------------------------
+    from datetime import datetime, timezone
+    
+    # 1. Lazy evaluation for monthly credit reset
+    now = datetime.now(timezone.utc)
+    cycle_start = getattr(portfolio_user, "credit_cycle_start_date", None)
+    
+    if cycle_start:
+        if cycle_start.tzinfo is None:
+            cycle_start = cycle_start.replace(tzinfo=timezone.utc)
+            
+        # Check if 30 days have passed
+        if (now - cycle_start).days >= 30:
+            portfolio_user.credit_cycle_start_date = now
+            tier = getattr(portfolio_user, "freemium_tier", "BASIC")
+            if tier == "BASIC":
+                portfolio_user.base_credits_balance = 30
+            elif tier == "PRO":
+                portfolio_user.base_credits_balance = 40
+            elif tier in ["PREMIUM", "AMBASSADOR"]:
+                portfolio_user.base_credits_balance = 50
+    else:
+        portfolio_user.credit_cycle_start_date = now
+
+    # 2. Check and deduct credits
+    has_credits = False
+    if getattr(portfolio_user, "base_credits_balance", 0) > 0:
+        portfolio_user.base_credits_balance -= 1
+        has_credits = True
+    elif getattr(portfolio_user, "bonus_credits_balance", 0) > 0:
+        portfolio_user.bonus_credits_balance -= 1
+        has_credits = True
+        
+    if not has_credits:
+        await db.commit() # Save cycle date if updated
+        raise HTTPException(status_code=402, detail="Sin créditos disponibles")
+    
+    await db.commit() # Lock in the deduction early to prevent race conditions
+    # -------------------------------------------------------------
+
         
     pitch_rules_text = ""
     if getattr(portfolio_user, "ai_pitch_rules", None):

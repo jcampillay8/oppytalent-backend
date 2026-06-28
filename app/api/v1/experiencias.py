@@ -99,6 +99,10 @@ async def update_experiencia(
     exp = await get_by_id(db, Experiencia, experiencia_id)
     if not exp:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiencia not found")
+        
+    from app.services.freemium import check_portfolio_limit
+    await check_portfolio_limit(db, current_user, "experiencias", item_id=experiencia_id)
+    
     entity = await update(db, exp, body.model_dump(exclude_none=True))
     await clear_cache_namespace("api:experiencias")
     await clear_ai_context(exp.usuario_id)

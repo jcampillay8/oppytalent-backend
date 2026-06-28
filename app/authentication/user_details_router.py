@@ -95,7 +95,10 @@ async def read_current_user_profile(
         "ai_credits": getattr(full_user, 'ai_credits', 0),
         "storage_used": getattr(full_user, 'storage_used', 0),
         "is_visible_b2b": getattr(full_user, 'is_visible_b2b', False),
-        "is_recruiter": getattr(full_user, 'is_recruiter', False)
+        "is_recruiter": getattr(full_user, 'is_recruiter', False),
+        "freemium_tier": getattr(full_user, 'freemium_tier', 'BASIC'),
+        "base_credits_balance": getattr(full_user, 'base_credits_balance', 30),
+        "bonus_credits_balance": getattr(full_user, 'bonus_credits_balance', 0)
     }
     
 from pydantic import BaseModel

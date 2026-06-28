@@ -17,11 +17,13 @@ from app.models.conversation import Conversation, Message
 from app.authentication.models import UsuarioSessionHistory, PasswordResetToken, RefreshToken, EmailConfirmationToken
 from app.models.networking import NetworkConnection, NetworkFollow, FeedEvent, NetworkSuggestion
 from app.models.demo_chat_script import DemoChatScript
+from app.models.review import Review, ReviewLike
 
 __all__ = [
     "Usuario", "Proyecto", "Experiencia", "Estudio", "Perfil", "FraseCelebre", 
     "SeccionConfig", "ChatLog", "Reconocimiento", "Habilitacion", "PortfolioDocument", 
     "TribunalLog", "TribunalParticipant", "Role", "Permission", "Conversation", "Message",
     "UsuarioSessionHistory", "PasswordResetToken", "RefreshToken", "EmailConfirmationToken",
-    "NetworkConnection", "NetworkFollow", "FeedEvent", "NetworkSuggestion", "DemoChatScript"
+    "NetworkConnection", "NetworkFollow", "FeedEvent", "NetworkSuggestion", "DemoChatScript",
+    "Review", "ReviewLike"
 ]

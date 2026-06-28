@@ -41,6 +41,17 @@ class Usuario(BaseModel):
     
     # Premium & Integrations
     is_premium: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false", nullable=False)
+    
+    # Freemium B2C Model
+    freemium_tier: Mapped[str] = mapped_column(String(20), default="BASIC", server_default="'BASIC'", nullable=False)
+    base_credits_balance: Mapped[int] = mapped_column(Integer, default=30, server_default="30", nullable=False)
+    bonus_credits_balance: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
+    credit_cycle_start_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, nullable=True)
+    has_liked_linkedin: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false", nullable=False)
+    has_left_review: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false", nullable=False)
+    referral_code: Mapped[str | None] = mapped_column(String(20), unique=True, index=True, nullable=True)
+    referred_by_id: Mapped[uuid.UUID | None] = mapped_column(Uuid, ForeignKey("usuarios.id"), nullable=True)
+
     google_access_token: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     google_refresh_token: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     google_token_expiry: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

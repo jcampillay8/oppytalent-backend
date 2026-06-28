@@ -76,12 +76,17 @@ async def update_estudio(
     estudio_id: UUID,
     body: EstudioUpdate,
     db: AsyncSession = Depends(get_db),
-    _=Depends(get_current_user),
+    current_user=Depends(get_current_user),
 ):
     estudio = await get_by_id(db, Estudio, estudio_id)
     if not estudio:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Estudio not found")
+        
+    from app.services.freemium import check_portfolio_limit
+    await check_portfolio_limit(db, current_user, "estudios", item_id=estudio_id)
+    
     entity = await update(db, estudio, body.model_dump(exclude_none=True))
+
     await clear_ai_context(estudio.usuario_id)
     return entity
 

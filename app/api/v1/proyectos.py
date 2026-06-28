@@ -100,6 +100,10 @@ async def update_proyecto(
     proyecto = await get_by_id(db, Proyecto, proyecto_id)
     if not proyecto:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Proyecto not found")
+        
+    from app.services.freemium import check_portfolio_limit
+    await check_portfolio_limit(db, current_user, "proyectos", item_id=proyecto_id)
+    
     entity = await update(db, proyecto, body.model_dump(exclude_none=True))
     await clear_cache_namespace("api:proyectos")
     await clear_ai_context(proyecto.usuario_id)

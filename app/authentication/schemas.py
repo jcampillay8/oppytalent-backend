@@ -41,6 +41,13 @@ class UsuarioPublicSchema(BaseModel):
     settings: Dict[str, Any] = Field(default_factory=dict)
     has_accepted_terms: bool = Field(..., alias="termsAccepted")
     token_expires_at: Optional[int] = Field(None, alias="tokenExpiresAt")
+    
+    # Freemium Fields
+    freemium_tier: str = Field("BASIC", alias="freemiumTier")
+    base_credits_balance: int = Field(30, alias="baseCreditsBalance")
+    bonus_credits_balance: int = Field(0, alias="bonusCreditsBalance")
+    referral_code: Optional[str] = Field(None, alias="referralCode")
+    
     role: str = "user"
     permissions: list[str] = Field(default_factory=list)
     direct_permissions: list[str] = Field(default_factory=list, alias="directPermissions")

@@ -66,6 +66,9 @@ async def update_habilitacion(
     if item.usuario_id != current_user.id and current_user.role != 'ADMIN':
          raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized")
 
+    from app.services.freemium import check_portfolio_limit
+    await check_portfolio_limit(db, current_user, "habilitaciones", item_id=item_id)
+
     entity = await update(db, item, body.model_dump(exclude_none=True))
     await clear_ai_context(item.usuario_id)
     return entity
