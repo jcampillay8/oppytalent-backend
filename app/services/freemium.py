@@ -20,12 +20,14 @@ CATEGORY_MODELS = {
 
 def get_tier_limit(tier: str) -> int:
     limits = {
-        "BASIC": 3,
+        "BASIC": 2,
         "PRO": 4,
         "PREMIUM": 6,
-        "AMBASSADOR": 10
+        "AMBASSADOR": 8,
+        "PROFESSIONAL": 9999,
+        "BYOK": 9999
     }
-    return limits.get(tier.upper(), 3)
+    return limits.get(tier.upper(), 2)
 
 async def check_portfolio_limit(db: AsyncSession, current_user: Usuario, category: str, item_id: UUID = None):
     """

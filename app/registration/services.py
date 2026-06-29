@@ -129,7 +129,7 @@ async def create_user_from_confirmation(
                         referrer.bonus_credits_balance = 250
                     
                     # Ascender a EMBAJADOR si no lo es y si tiene un plan menor
-                    if referrer.freemium_tier in ["BASIC", "PRO", "PREMIUM"]:
+                    if referrer.freemium_tier == "PREMIUM":
                         referrer.freemium_tier = "AMBASSADOR"
                 
                 # Aumenta el contador de notificaciones no leídas

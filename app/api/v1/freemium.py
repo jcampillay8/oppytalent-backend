@@ -136,9 +136,11 @@ async def create_review(
     db_session.add(new_review)
     
     # Misión Cumplida: Subir a Nivel PREMIUM
-    if current_user.freemium_tier in ["BASIC", "PRO"]:
+    if current_user.freemium_tier == "PRO":
         current_user.freemium_tier = "PREMIUM"
         current_user.base_credits_balance = 50
+    elif current_user.freemium_tier == "BASIC":
+        raise HTTPException(status_code=400, detail="Debes ser nivel PRO antes de desbloquear el plan Premium.")
     
     await db_session.commit()
     return {"status": "success", "message": "¡Reseña publicada! Eres nivel PREMIUM."}
