@@ -21,9 +21,13 @@ class ReviewCreate(BaseModel):
 
 @router.get("/freemium/stats")
 async def get_freemium_stats(db_session: Annotated[AsyncSession, Depends(get_db)]):
-    # 1. Total users
+    from app.models.rbac import Role
+    # 1. Total users (Talents)
     users_result = await db_session.execute(
-        sa_select(func.count(Usuario.id)).where(Usuario.email.notlike('%@demo.oppytalent.com%'))
+        sa_select(func.count(Usuario.id))
+        .join(Role, Usuario.role_id == Role.id)
+        .where(Role.name == 'Talent')
+        .where(Usuario.email.notlike('%@demo.oppytalent.com%'))
     )
     total_users = users_result.scalar() or 0
     
@@ -42,7 +46,10 @@ async def get_freemium_stats(db_session: Annotated[AsyncSession, Depends(get_db)
     
     # 4. Total Hunters
     hunters_result = await db_session.execute(
-        sa_select(func.count(Usuario.id)).where(Usuario.email.notlike('%oppytalent%'))
+        sa_select(func.count(Usuario.id))
+        .join(Role, Usuario.role_id == Role.id)
+        .where(Role.name == 'Hunter')
+        .where(Usuario.email.notlike('%oppytalent%'))
     )
     total_hunters = hunters_result.scalar() or 0
     

@@ -364,9 +364,9 @@ async def chat(payload: ChatRequest, request: Request, db: AsyncSession = Depend
             portfolio_user.credit_cycle_start_date = now
             tier = getattr(portfolio_user, "freemium_tier", "BASIC")
             if tier == "BASIC":
-                portfolio_user.base_credits_balance = 30
+                portfolio_user.base_credits_balance = 25
             elif tier == "PRO":
-                portfolio_user.base_credits_balance = 40
+                portfolio_user.base_credits_balance = 35
             elif tier in ["PREMIUM", "AMBASSADOR"]:
                 portfolio_user.base_credits_balance = 50
     else:

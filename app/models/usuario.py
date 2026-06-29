@@ -44,7 +44,7 @@ class Usuario(BaseModel):
     
     # Freemium B2C Model
     freemium_tier: Mapped[str] = mapped_column(String(20), default="BASIC", server_default="'BASIC'", nullable=False)
-    base_credits_balance: Mapped[int] = mapped_column(Integer, default=30, server_default="30", nullable=False)
+    base_credits_balance: Mapped[int] = mapped_column(Integer, default=25, server_default="25", nullable=False)
     bonus_credits_balance: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
     credit_cycle_start_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, nullable=True)
     has_liked_linkedin: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false", nullable=False)
