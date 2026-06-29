@@ -26,6 +26,7 @@ async def register_user(
     email: str = Form(..., max_length=100),
     password: str = Form(..., min_length=8),
     terms_accepted: bool = Form(...),
+    referral_code: str | None = Form(None),
     user_image: UploadFile | None = File(None, description="Profile image of the user"),
 ):
     user_data = UsuarioRegisterSchema(
@@ -35,6 +36,7 @@ async def register_user(
         email=email,
         password=password,
         terms_accepted=terms_accepted,
+        referral_code=referral_code,
     )
 
     # Validación contraseña

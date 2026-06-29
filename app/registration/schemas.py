@@ -9,3 +9,4 @@ class UsuarioRegisterSchema(BaseModel):
     first_name: str = Field(max_length=150)
     last_name: str = Field(max_length=150)
     terms_accepted: bool = Field(..., description="Usuario's acceptance of terms and conditions")
+    referral_code: str | None = Field(default=None, max_length=100)

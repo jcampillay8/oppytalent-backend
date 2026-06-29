@@ -83,6 +83,7 @@ class EmailConfirmationToken(BaseModel):
     last_name: Mapped[str] = mapped_column(String(255), nullable=True)
     terms_accepted: Mapped[bool] = mapped_column(Boolean, nullable=False)
     image_url: Mapped[str] = mapped_column(String(1048), nullable=True)
+    referral_code: Mapped[str | None] = mapped_column(String(100), nullable=True)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     is_used: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     

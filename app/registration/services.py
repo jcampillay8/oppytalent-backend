@@ -112,6 +112,30 @@ async def create_user_from_confirmation(
             is_deleted=False,
         )
 
+        referral_code = user_data.get("referral_code")
+        if referral_code:
+            # Encuentra al usuario que invitó
+            referrer_query = sa_select(Usuario).where(Usuario.username == referral_code.lower())
+            referrer_result = await db_session.execute(referrer_query)
+            referrer = referrer_result.scalar_one_or_none()
+            
+            if referrer:
+                new_user.referred_by_id = referrer.id
+                
+                # Otorga créditos y nivel al referidor si no ha llegado al tope
+                if referrer.bonus_credits_balance < 250:
+                    referrer.bonus_credits_balance += 50
+                    if referrer.bonus_credits_balance > 250:
+                        referrer.bonus_credits_balance = 250
+                    
+                    # Ascender a EMBAJADOR si no lo es y si tiene un plan menor
+                    if referrer.freemium_tier in ["BASIC", "PRO", "PREMIUM"]:
+                        referrer.freemium_tier = "AMBASSADOR"
+                
+                # Aumenta el contador de notificaciones no leídas
+                referrer.unread_referrals_count += 1
+                db_session.add(referrer)
+
         db_session.add(new_user)
         await db_session.commit()
         await db_session.refresh(new_user)
@@ -183,6 +207,7 @@ async def register_user_and_send_confirmation(
         last_name=user_schema.last_name,
         terms_accepted=user_schema.terms_accepted,
         image_url=image_url,
+        referral_code=user_schema.referral_code,
         expires_at=datetime.now(timezone.utc) + timedelta(minutes=60),
         is_used=True if user_email_lower in TEST_EMAILS_BYPASS else False # Marcar como usado si es bypass
     )
@@ -203,6 +228,7 @@ async def register_user_and_send_confirmation(
             "password_hash": confirmation_token_entry.password_hash,
             "terms_accepted": confirmation_token_entry.terms_accepted,
             "image_url": confirmation_token_entry.image_url,
+            "referral_code": confirmation_token_entry.referral_code,
         }
         await create_user_from_confirmation(db_session, user_data=user_data)
 
@@ -294,6 +320,7 @@ async def confirm_user_email(db_session: AsyncSession, token: str) -> dict:
         "password_hash": token_entry.password_hash,
         "terms_accepted": token_entry.terms_accepted,
         "image_url": token_entry.image_url,
+        "referral_code": token_entry.referral_code,
     }
 
     await create_user_from_confirmation(db_session, user_data=user_data)

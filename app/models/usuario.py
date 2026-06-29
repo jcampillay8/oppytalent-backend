@@ -51,6 +51,7 @@ class Usuario(BaseModel):
     has_left_review: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false", nullable=False)
     referral_code: Mapped[str | None] = mapped_column(String(20), unique=True, index=True, nullable=True)
     referred_by_id: Mapped[uuid.UUID | None] = mapped_column(Uuid, ForeignKey("usuarios.id"), nullable=True)
+    unread_referrals_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
 
     google_access_token: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     google_refresh_token: Mapped[str | None] = mapped_column(String(2048), nullable=True)

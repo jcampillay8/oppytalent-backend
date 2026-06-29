@@ -192,3 +192,47 @@ async def support_us_upgrade(
     
     await db_session.commit()
     return {"status": "success", "message": "Gracias por tu apoyo."}
+
+@router.get("/freemium/check-referrals")
+async def check_referrals(
+    current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)]
+):
+    """
+    Returns unread referrals count without clearing.
+    """
+    unread_count = current_user.unread_referrals_count
+    recent_names = []
+    
+    if unread_count > 0:
+        query = sa_select(Usuario).where(Usuario.referred_by_id == current_user.id).order_by(Usuario.created_at.desc()).limit(unread_count)
+        result = await db_session.execute(query)
+        recent_users = result.scalars().all()
+        recent_names = [u.first_name or u.username.split('@')[0] for u in recent_users]
+
+    return {
+        "has_unread": unread_count > 0,
+        "unread_count": unread_count,
+        "bonus_credits": current_user.bonus_credits_balance,
+        "freemium_tier": current_user.freemium_tier,
+        "recent_names": recent_names
+    }
+
+@router.post("/freemium/clear-referrals")
+async def clear_referrals(
+    current_user: Annotated[Usuario, Depends(get_current_user)],
+    db_session: Annotated[AsyncSession, Depends(get_db)]
+):
+    """
+    Clears unread referrals count and returns it.
+    """
+    unread_count = current_user.unread_referrals_count
+    if unread_count > 0:
+        current_user.unread_referrals_count = 0
+        db_session.add(current_user)
+        await db_session.commit()
+        
+    return {
+        "status": "success",
+        "cleared_count": unread_count
+    }
