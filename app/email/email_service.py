@@ -17,7 +17,7 @@ templates_path = os.path.normpath(os.path.join(current_dir, '..', 'templates', '
 
 # Configuración Global desde Settings
 PROVIDER = (getattr(settings, "EMAIL_PROVIDER", "smtp")).lower()
-EMAIL_FROM = settings.MAIL_FROM
+EMAIL_FROM = getattr(settings, "EMAIL_FROM", None) or settings.MAIL_FROM
 RESEND_API_KEY = settings.RESEND_API_KEY if settings.RESEND_API_KEY else None
 
 # Configuración SMTP para FastMail
@@ -50,7 +50,7 @@ class EmailService:
             template = self.template_env.get_template(template_name)
             # Variables globales para todos los correos
             vars = {
-                "app_name": "OppyChat",
+                "app_name": "OppyTalent",
                 "support_email": settings.SUPPORT_EMAIL,
                 **(template_vars or {})
             }
@@ -120,9 +120,12 @@ class EmailService:
 
     async def send_verification_email(self, email: str, user_name: str, token: str):
         """Envía el correo con el link para activar la cuenta."""
-        confirmation_url = f"{settings.API_URL}/confirm-email/{token}"
+        base = str(settings.API_URL).rstrip('/')
+        if not base.endswith('/api'):
+            base += '/api'
+        confirmation_url = f"{base}/v1/auth/confirm-email/{token}"
         await self.send_email(
-            subject="Activa tu cuenta de OppyChat",
+            subject="Activa tu Agente de IA en OppyTalent",
             recipients=[email],
             template_name="email_confirmation.html",
             template_vars={
@@ -134,9 +137,10 @@ class EmailService:
 
     async def send_password_reset_email(self, email: str, user_name: str, token: str):
         """Envía el correo para cambiar la contraseña olvidada."""
-        reset_url = f"{settings.API_URL}/reset-password?token={token}"
+        base = str(settings.WEBSITE_URL).rstrip('/')
+        reset_url = f"{base}/reset-password?token={token}"
         await self.send_email(
-            subject="Restablece tu contraseña de OppyChat",
+            subject="Restablece tu contraseña de OppyTalent",
             recipients=[email],
             template_name="password_reset.html",
             template_vars={

@@ -29,6 +29,17 @@ def get_tier_limit(tier: str) -> int:
     }
     return limits.get(tier.upper(), 2)
 
+def get_skills_limit(tier: str) -> int:
+    limits = {
+        "BASIC": 0,
+        "PRO": 2,
+        "PREMIUM": 3,
+        "AMBASSADOR": 5,
+        "PROFESSIONAL": 9999,
+        "BYOK": 9999
+    }
+    return limits.get(tier.upper(), 0)
+
 async def check_portfolio_limit(db: AsyncSession, current_user: Usuario, category: str, item_id: UUID = None):
     """
     If item_id is None, it means the user is trying to CREATE a new item. We check if they exceed the max allowed.

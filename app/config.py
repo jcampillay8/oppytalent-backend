@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     MAIL_USERNAME: str = "dummy_user"
     MAIL_PASSWORD: str = "dummy_password"
     MAIL_FROM: str = "no-reply@example.com"
+    EMAIL_FROM: str | None = None
     MAIL_PORT: int = 587
     MAIL_SERVER: str = "smtp.example.com"
     MAIL_FROM_NAME: str = "OppyTalent"

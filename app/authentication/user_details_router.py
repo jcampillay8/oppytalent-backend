@@ -116,6 +116,14 @@ async def update_chat_config(
     if body.chat_welcome_message is not None:
         current_user.chat_welcome_message = body.chat_welcome_message
     if body.ai_pitch_rules is not None:
+        from app.services.freemium import get_skills_limit
+        tier = getattr(current_user, 'freemium_tier', 'BASIC') or 'BASIC'
+        max_skills = get_skills_limit(tier)
+        if len(body.ai_pitch_rules) > max_skills:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Tu plan actual ({tier}) solo permite hasta {max_skills} Skills. ¡Mejora tu plan gratis en la plataforma para añadir más!"
+            )
         current_user.ai_pitch_rules = body.ai_pitch_rules
         
     await db_session.commit()

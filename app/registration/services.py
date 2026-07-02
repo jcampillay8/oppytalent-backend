@@ -197,10 +197,13 @@ async def register_user_and_send_confirmation(
     )
     await db_session.commit()
 
-    # 3. Guardar los datos del usuario en la tabla de tokens (necesario incluso para el bypass)
+    # 3. Validar si el correo está en bypass (pruebas o demos)
+    is_bypass = (user_email_lower in TEST_EMAILS_BYPASS) or user_email_lower.endswith(('@oppytest.com', '@demo.oppytalent.com'))
+
+    # 4. Guardar los datos del usuario en la tabla de tokens (necesario incluso para el bypass)
     confirmation_token_entry = EmailConfirmationToken(
         user_email=user_email_lower,
-        token=secrets.token_urlsafe(32), # Genera un token dummy o real, según el caso
+        token=secrets.token_urlsafe(32),
         username=user_schema.username.lower(),
         password_hash=hashed_password,
         first_name=user_schema.first_name,
@@ -209,17 +212,16 @@ async def register_user_and_send_confirmation(
         image_url=image_url,
         referral_code=user_schema.referral_code,
         expires_at=datetime.now(timezone.utc) + timedelta(minutes=60),
-        is_used=True if user_email_lower in TEST_EMAILS_BYPASS else False # Marcar como usado si es bypass
+        is_used=is_bypass # Marcar como usado si es bypass
     )
     db_session.add(confirmation_token_entry)
     await db_session.commit()
     await db_session.refresh(confirmation_token_entry)
 
-    # ⭐️ LÓGICA DE BYPASS ⭐️
-    if True: # user_email_lower in TEST_EMAILS_BYPASS: (Bypass for testing)
-        logger.info(f"Bypassing email confirmation for test user: {user_email_lower}")
+    # ⭐️ LÓGICA DE BYPASS (Exención para testing y cuentas demo) ⭐️
+    if is_bypass:
+        logger.info(f"Bypassing email confirmation for test/demo user: {user_email_lower}")
         
-        # 4. Crear el usuario inmediatamente
         user_data = {
             "username": confirmation_token_entry.username,
             "email": confirmation_token_entry.user_email,
@@ -232,59 +234,40 @@ async def register_user_and_send_confirmation(
         }
         await create_user_from_confirmation(db_session, user_data=user_data)
 
-        # 5. Retornar mensaje de éxito de creación
-        return {"message": "Usuario de prueba creado exitosamente (Confirmación de email omitida).", "user_created": True}
+        return {"message": "Usuario creado exitosamente (Confirmación de email omitida).", "user_created": True, "email": user_schema.email}
     
     # ⭐️ FLUJO NORMAL (Enviar Email) ⭐️
-    
-    base = str(settings.API_URL).rstrip('/') # Asegúrate de tener API_URL en tu config/env
+    base = str(settings.API_URL).rstrip('/')
+    if not base.endswith('/api'):
+        base += '/api'
 
-    # La URL ahora debe ser la ruta exacta que definiste en el router del backend
-    confirmation_url = f"{base}/confirm-email/{confirmation_token_entry.token}"
+    # Ruta exacta del router en el backend montado en /api/v1/auth
+    confirmation_url = f"{base}/v1/auth/confirm-email/{confirmation_token_entry.token}"
 
     context = {
         "user_name": user_schema.first_name or user_schema.username or user_schema.email,
-        "confirmation_url": confirmation_url, # Ahora apunta al puerto 8000
-        "app_name": settings.MAIL_FROM_NAME,
+        "confirmation_url": confirmation_url,
+        "app_name": "OppyTalent",
         "expiration_minutes": 60,
     }
     
-    # -------------------------------------------------------------------------
-    # 🎯 Lógica de Redirección y Definición de Destinatarios (Corregida) 🎯
-    # -------------------------------------------------------------------------
-    
-    # Definir el sujeto y el destinatario por defecto (el real)
-    subject = "Confirma tu correo electrónico"
-    
-    # El destinatario será el de redirección si está activo, de lo contrario, el real del usuario.
-    # El requerimiento dice: si NO está en TEST_EMAILS_BYPASS, debe ser enviado al correo que se ingresa.
-    # Esto implica que si el flujo es normal, se debe usar el email del usuario,
-    # A MENOS que se quiera forzar la redirección (ej. en desarrollo).
-
-    # El siguiente bloque implementa:
-    # 1. Destino = TEST_EMAIL_REDIRECT si está definido (modo debug/redirección activa).
-    # 2. Destino = user_schema.email si NO está definido.
-    
-    # La variable TEST_EMAIL_REDIRECT ya está definida como "jgcampill@gmail.com"
-    # Este bloque cumple con la lógica de redirección de debug.
+    subject = "Activa tu Agente de IA en OppyTalent"
 
     if TEST_EMAIL_REDIRECT:
-        recipients_list = [TEST_EMAIL_REDIRECT] # Redirigir la lista
+        recipients_list = [TEST_EMAIL_REDIRECT]
         logger.warning(f"DEBUG: Email de confirmación para '{user_schema.email}' redirigido a: {TEST_EMAIL_REDIRECT}")
-        # Modificar el asunto para facilitar la identificación
         subject = f"[REDIRECTED - ORIGINAL: {user_schema.email}] {subject}"
     else:
-        recipients_list = [user_schema.email] # Usar el correo real del usuario
+        recipients_list = [user_schema.email]
         
-    # Asumo que tu email_service.send_email ya maneja tareas en segundo plano
     await email_service.send_email(
-        subject=subject,                       # ✅ USAR LA VARIABLE CALCULADA
-        recipients=recipients_list,            # ✅ USAR LA VARIABLE CALCULADA
+        subject=subject,
+        recipients=recipients_list,
         template_name="email_confirmation.html",
         template_vars=context,
     )
 
-    return {"message": "Email de confirmación enviado exitosamente.", "user_created": False}
+    return {"message": "Email de confirmación enviado exitosamente.", "user_created": False, "email": user_schema.email}
 
 
 async def confirm_user_email(db_session: AsyncSession, token: str) -> dict:

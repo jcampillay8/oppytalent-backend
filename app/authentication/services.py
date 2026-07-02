@@ -247,8 +247,7 @@ async def get_user_by_refresh_token(db_session: AsyncSession, token: str) -> Usu
 
 async def process_forgot_password(
     db_session: AsyncSession, 
-    email: str, 
-    background_tasks: BackgroundTasks
+    email: str
 ) -> bool:
     """
     Orquesta el flujo de 'olvidé mi contraseña':
@@ -268,13 +267,11 @@ async def process_forgot_password(
         # 1. Generar el token (esto ya hace commit según tu función)
         token = await generate_password_reset_token(db_session, user)
         
-        # 2. Enviar el email usando BackgroundTasks para no bloquear la respuesta
-        # Asegúrate de que email_service.send_password_reset_email exista
-        background_tasks.add_task(
-            email_service.send_password_reset_email,
-            email_to=user.email,
+        # 2. Enviar el email directamente ya que process_forgot_password corre en BackgroundTasks
+        await email_service.send_password_reset_email(
+            email=user.email,
             token=token,
-            username=user.username or user.first_name
+            user_name=user.first_name or user.username or user.email
         )
         
         return True
