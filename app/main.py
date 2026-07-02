@@ -1,8 +1,15 @@
+import sys
+import traceback
 from contextlib import asynccontextmanager
+from fastapi.responses import JSONResponse
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from app.config import settings
 from app.database import async_session, init_db, sync_database_sequences
@@ -56,9 +63,19 @@ app = FastAPI(
     openapi_url="/openapi.json" if show_docs else None
 )
 
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    print("GLOBAL EXCEPTION:", traceback.format_exc(), file=sys.stderr)
+    return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
 # Reglas de Seguridad CORS por ambiente
 if is_production:
-    cors_origins = [settings.WEBSITE_URL] # Muy estricto
+    cors_origins = [
+        "https://oppytalent-frontend-production.up.railway.app",
+        "https://www.oppytalent.com",
+        "https://oppytalent.com",
+        settings.WEBSITE_URL
+    ]
 elif is_test:
     cors_origins = ["http://localhost:5173", settings.WEBSITE_URL] # Híbrido para QA
 else:
@@ -72,6 +89,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
+
+limiter = Limiter(key_func=get_remote_address, default_limits=["100/minute"])
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        if "server" in response.headers:
+            del response.headers["server"]
+        return response
+
+class HTTPSRedirectMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        if is_production and request.headers.get("x-forwarded-proto") == "https":
+            request.scope["scheme"] = "https"
+        response = await call_next(request)
+        return response
+
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(HTTPSRedirectMiddleware)
 
 app.include_router(auth_router, prefix="/api/v1/auth")
 app.include_router(google_router, prefix="/api/v1")
@@ -99,5 +137,6 @@ app.include_router(og.router)
 
 
 @app.get("/health")
-async def health():
+@limiter.limit("5/minute")
+async def health(request: Request):
     return {"status": "ok"}

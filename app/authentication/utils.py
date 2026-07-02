@@ -14,7 +14,8 @@ def create_access_token(subject: str | Any, expires_delta: timedelta = None, imp
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    to_encode = {"exp": expire, "sub": str(subject)}
+    import uuid
+    to_encode = {"exp": expire, "sub": str(subject), "jti": str(uuid.uuid4())}
     if impersonated_role_id is not None:
         to_encode["impersonated_role_id"] = impersonated_role_id
     if schema_name is not None:
@@ -27,7 +28,8 @@ def create_refresh_token(subject: str | Any, expires_delta: timedelta = None, im
     # Cambiar int por timedelta en el type hint y usar timezone.utc
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES))
     
-    to_encode = {"exp": expire, "sub": str(subject)}
+    import uuid
+    to_encode = {"exp": expire, "sub": str(subject), "jti": str(uuid.uuid4())}
     if impersonated_role_id is not None:
         to_encode["impersonated_role_id"] = impersonated_role_id
     if schema_name is not None:
@@ -39,5 +41,6 @@ def create_admin_access_token(subject: str | Any, expires_delta: timedelta = Non
     # Consistencia total con timezone.utc
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(hours=24))
     
-    to_encode = {"exp": expire, "sub": str(subject)}
+    import uuid
+    to_encode = {"exp": expire, "sub": str(subject), "jti": str(uuid.uuid4())}
     return jwt.encode(to_encode, settings.ADMIN_SECRET_KEY, settings.ENCRYPTION_ALGORITHM)

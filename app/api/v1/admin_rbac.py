@@ -44,7 +44,7 @@ class UserWithRoleSchema(BaseModel):
     email: str
     first_name: Optional[str]
     last_name: Optional[str]
-    role_id: Optional[int]
+    role_id: Optional[UUID]
     
     class Config:
         from_attributes = True

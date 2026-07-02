@@ -1,8 +1,8 @@
 import asyncio
 from passlib.context import CryptContext
 
-# Configurar CryptContext para usar argon2
-pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
+# Configurar CryptContext para usar argon2 y bcrypt para compatibilidad legacy
+pwd_context = CryptContext(schemes=["argon2", "bcrypt"], deprecated="auto")
 
 async def get_hashed_password(password: str) -> str:
     """Genera un hash seguro para la contraseña usando Argon2."""

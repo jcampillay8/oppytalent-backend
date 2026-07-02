@@ -26,8 +26,8 @@ async def get_current_user(
         if username is None:
             print("JWT decode failed: sub is None")
             raise credentials_exception
-    except JWTError as e:
-        print(f"JWTError: {e}")
+    except Exception as e:
+        print(f"JWTError/Exception: {e}")
         raise credentials_exception
 
     from sqlalchemy import or_

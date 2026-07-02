@@ -13,10 +13,12 @@ from app.models.networking import FeedEvent, FeedEventType
 router = APIRouter(prefix="/proyectos", tags=["proyectos"])
 
 
+from fastapi import APIRouter, Depends, HTTPException, status, Query
+
 @router.get("/", response_model=list[ProyectoOut])
 async def list_proyectos(
-    skip: int = 0,
-    limit: int = 100,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
     tag: str | None = None,
     username: str | None = None,
     db: AsyncSession = Depends(get_db),
